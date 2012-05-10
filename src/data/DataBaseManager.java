@@ -9,10 +9,9 @@ import com.sun.rowset.CachedRowSetImpl;
 import commons.Material;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.sql.Statement;
 import javax.sql.rowset.CachedRowSet;
-import javax.sql.rowset.spi.SyncProviderException;
 
 /**
  *
@@ -31,11 +30,11 @@ public class DataBaseManager {
     private CachedRowSet logisticRowSet;
     private CachedRowSet projectRowSet;
     private CachedRowSet workmanshipRowSet;
-    private Statement serviceStmt;
-    private final Statement materialStmt;
-    private final Statement logisticStmt;
-    private final Statement projectStmt;
-    private final Statement workmanshipStmt;
+    private PreparedStatement serviceStmt;
+    private final PreparedStatement materialStmt;
+    private final PreparedStatement logisticStmt;
+    private final PreparedStatement projectStmt;
+    private final PreparedStatement workmanshipStmt;
     static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
     static final String DATABASE_URL = "jdbc:mysql://localhost/ares";
     static final String USERNAME = "ares";
@@ -45,6 +44,7 @@ public class DataBaseManager {
     public DataBaseManager() throws ClassNotFoundException, SQLException {
         Class.forName(JDBC_DRIVER);
         conn = DriverManager.getConnection(DATABASE_URL, USERNAME, PASSWORD);
+        conn.setAutoCommit(false);
         
         serviceRowSet = new CachedRowSetImpl();
         projectRowSet = new CachedRowSetImpl();
@@ -52,26 +52,20 @@ public class DataBaseManager {
         logisticRowSet = new CachedRowSetImpl();
         workmanshipRowSet = new CachedRowSetImpl();
 
+        serviceStmt = conn.prepareStatement("SELECT * FROM service WHERE service_id=?");
         projectStmt = conn.prepareStatement("SELECT * FROM project WHERE service_id=?");
         materialStmt = conn.prepareStatement("SELECT * FROM material WHERE service_id=?");
         logisticStmt = conn.prepareStatement("SELECT * FROM logistics WHERE service_id=?");
         workmanshipStmt = conn.prepareStatement("SELECT * FROM workmanship WHERE service_id=?");
-
-        //serviceRowSet.a
-    }
-    /*
-    public void executeServiceQuery() {
-        serviceRowSet.setCommand(query);
-        serviceRowSet.execute();
-    }
-     *
-     */
-    public void executeServiceQuery(String query) throws SQLException {
-        serviceRowSet.setCommand(query);
-        serviceRowSet.execute(conn);
     }
 
-    public CachedRowSet getRowSet() {
+    public CachedRowSet executeServiceQuery(int ID) throws SQLException {
+        serviceStmt.setInt(1, ID);
+        serviceRowSet.populate(serviceStmt.executeQuery());
+        return serviceRowSet;
+    }
+
+    public CachedRowSet getServiceRowSet() {
         return serviceRowSet;
     }
 
@@ -80,20 +74,11 @@ public class DataBaseManager {
         if(budget.length() == 0) budget = null;
         //System.out.printf("budget: %s.\tService: %s.\n", budget, service);
         serviceRowSet.moveToCurrentRow();
- /*       rowSet.updateString("topic_struct", service.estTopicos);
-        rowSet.updateShort("service_ID", service.ID);
-        rowSet.updateString("service_name", service.getDescricao());
-        rowSet.updateDate("begin_date", (Date) service.dataInicio);
-        rowSet.updateDate("end_date", (Date) service.dataTermino);
-  */    serviceRowSet.updateString("comments", comment);
-        //rowSet.updateBlob("comments", new SerialBlob(comment.getBytes()));
+        serviceRowSet.updateString("comments", comment);
         serviceRowSet.updateString("budget", budget);
         serviceRowSet.updateRow();
-        //serviceRowSet.acceptChanges();
-    }
-
-    public void acceptChanges() throws SyncProviderException{
-        serviceRowSet.acceptChanges();
+        serviceRowSet.acceptChanges(conn);
+        serviceRowSet.close();
     }
 
     public void updateMaterial(Material material) {
@@ -102,6 +87,6 @@ public class DataBaseManager {
     }
 
     public void closeConnection() throws SQLException{
-        serviceRowSet.close();
+        conn.close();
     }
 }

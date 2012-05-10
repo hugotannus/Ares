@@ -89,4 +89,10 @@ public class DataBaseManager {
     public void closeConnection() throws SQLException{
         conn.close();
     }
+
+    public CachedRowSet executeMaterialQuery(short ID) throws SQLException {
+        materialStmt.setInt(1, ID);
+        materialRowSet.populate(materialStmt.executeQuery());
+        return materialRowSet;
+    }
 }

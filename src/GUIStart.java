@@ -585,6 +585,10 @@ public class GUIStart extends javax.swing.JFrame {
                 setComponentsEnabled(servicePanel, true);
                 try {
                     loadServiceData(currentService);
+                    loadMaterialData(currentService.ID);
+                    loadProjectData(currentService.ID);
+                    loadLogisticData(currentService.ID);
+                    loadWorkmanshipData(currentService.ID);
                     jTextArea1.setText(currentService.comments);
                     //jTextArea1.setText(currentService.comments.toString());
                     jTextField1.setText(currentService.budget);
@@ -699,6 +703,25 @@ public class GUIStart extends javax.swing.JFrame {
         catch (Exception exception) {
         } // fim do catch
     } // fim do m?todo changeTheLookAndFeel
+
+    private void loadMaterialData(short ID) throws SQLException {
+        CachedRowSet rowSet = dbManager.executeMaterialQuery(ID);
+        while(rowSet.next()){
+            // Imprimir a tabela resultante;
+        }
+    }
+
+    private void loadProjectData(short ID) {
+        throw new UnsupportedOperationException("Not yet implemented");
+    }
+
+    private void loadLogisticData(short ID) {
+        throw new UnsupportedOperationException("Not yet implemented");
+    }
+
+    private void loadWorkmanshipData(short ID) {
+        throw new UnsupportedOperationException("Not yet implemented");
+    }
 
     private class ItemHandler implements ItemListener {
 

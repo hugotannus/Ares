@@ -675,7 +675,7 @@ public class GUIStart extends javax.swing.JFrame {
 
     public void loadServiceData(Service service) throws SQLException {
         String query = String.format("SELECT * FROM service WHERE service_ID = %d", service.ID);
-        dbManager.executeQuery(query);
+        // dbManager.executeServiceQuery(query);
         CachedRowSet rowSet = dbManager.getRowSet();
         if(rowSet.next()) {
             currentService.budget = rowSet.getString(6);

@@ -34,12 +34,11 @@ public class DataStructBuilder {
     static final String USERNAME = "ares";
     static final String PASSWORD = "vernacula";
 
-    public DataStructBuilder() {
+    public DataStructBuilder() throws ClassNotFoundException, SQLException {
         this("ASCII_input.csv");
     }
 
-    public DataStructBuilder(String fileName) {
-        try {
+    public DataStructBuilder(String fileName) throws ClassNotFoundException, SQLException {
             Class.forName(JDBC_DRIVER);
 
             startingRowSet = new JdbcRowSetImpl();
@@ -55,11 +54,6 @@ public class DataStructBuilder {
                 readFromCSV(fileName);
             }
             startingRowSet.close();
-        } catch (SQLException ex) {
-            Logger.getLogger(DataStructBuilder.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(JdbcRowSetTest.class.getName()).log(Level.SEVERE, null, ex);
-        }
 
         setRequirementData((Service) obra.getRoot());
     }

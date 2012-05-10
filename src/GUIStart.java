@@ -9,6 +9,7 @@ import java.awt.event.ItemListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -706,9 +707,7 @@ public class GUIStart extends javax.swing.JFrame {
 
     private void loadMaterialData(short ID) throws SQLException {
         CachedRowSet rowSet = dbManager.executeMaterialQuery(ID);
-        while(rowSet.next()){
-            // Imprimir a tabela resultante;
-        }
+        printTable(rowSet);
     }
 
     private void loadProjectData(short ID) {
@@ -721,6 +720,20 @@ public class GUIStart extends javax.swing.JFrame {
 
     private void loadWorkmanshipData(short ID) {
         throw new UnsupportedOperationException("Not yet implemented");
+    }
+
+    private void printTable(CachedRowSet rowSet) throws SQLException{
+        ResultSetMetaData meta = rowSet.getMetaData();
+        for(int i=1; i<=meta.getColumnCount(); i++){
+            System.out.printf(" %s\t", meta.getColumnLabel(i));
+        }
+        System.out.println("");
+        while(rowSet.next()){
+            for(int i=1; i<=meta.getColumnCount(); i++){
+                System.out.printf(" %s\t", rowSet.getObject(i));
+            }
+        }
+        System.out.println("");
     }
 
     private class ItemHandler implements ItemListener {

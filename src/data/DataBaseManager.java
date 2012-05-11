@@ -81,9 +81,24 @@ public class DataBaseManager {
         serviceRowSet.close();
     }
 
-    public void updateMaterial(Material material) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public void updateMaterial() throws SQLException {
+//        materialRowSet.acceptChanges(conn);
+        materialRowSet.close();
+    }
 
+    public void updateProject() throws SQLException {
+//        projectRowSet.acceptChanges(conn);
+        projectRowSet.close();
+    }
+
+    public void updateLogistic() throws SQLException {
+//        logisticRowSet.acceptChanges(conn);
+        logisticRowSet.close();
+    }
+
+    public void updateWorkmanship() throws SQLException {
+//        workmanshipRowSet.acceptChanges(conn);
+        workmanshipRowSet.close();
     }
 
     public void closeConnection() throws SQLException{
@@ -94,5 +109,23 @@ public class DataBaseManager {
         materialStmt.setInt(1, ID);
         materialRowSet.populate(materialStmt.executeQuery());
         return materialRowSet;
+    }
+
+    public CachedRowSet executeProjectQuery(short ID) throws SQLException {
+        projectStmt.setInt(1, ID);
+        projectRowSet.populate(projectStmt.executeQuery());
+        return projectRowSet;
+    }
+
+    public CachedRowSet executeLogisticQuery(short ID) throws SQLException {
+        logisticStmt.setInt(1, ID);
+        logisticRowSet.populate(logisticStmt.executeQuery());
+        return logisticRowSet;
+    }
+
+    public CachedRowSet executeWorkmanshipQuery(short ID) throws SQLException {
+        workmanshipStmt.setInt(1, ID);
+        workmanshipRowSet.populate(workmanshipStmt.executeQuery());
+        return workmanshipRowSet;
     }
 }

@@ -50,11 +50,11 @@ public class GUIStart extends javax.swing.JFrame {
         }
         this.treeModel = treeModel;
         projectTableModel = new javax.swing.table.DefaultTableModel();
-        projectTableModel.addColumn(new Object[]{"Descr","Resp", "Def", "Aprov"});
-        
+        projectTableModel.addColumn(new Object[]{"Descr", "Resp", "Def", "Aprov"});
+
         handler = new ItemHandler(); // Handler da apar?ncia e do comportamento
         initComponents();
-        this.addWindowListener (exitListener);
+        this.addWindowListener(exitListener);
         changeTheLookAndFeel("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
     }
 
@@ -558,17 +558,18 @@ public class GUIStart extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void treeServicosValueChanged(javax.swing.event.TreeSelectionEvent evt) {//GEN-FIRST:event_treeServicosValueChanged
-        if(currentService != null) {
-            if(currentService.isLeaf())
-            try {
-                dbManager.updateService(jTextArea1.getText(), jTextField1.getText());
-            } catch (SQLException ex) {
-                Logger.getLogger(GUIStart.class.getName()).log(Level.SEVERE, null, ex);
+        if (currentService != null) {
+            if (currentService.isLeaf()) {
+                try {
+                    dbManager.updateService(jTextArea1.getText(), jTextField1.getText());
+                } catch (SQLException ex) {
+                    Logger.getLogger(GUIStart.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         }
 
         currentService = (Service) treeServicos.getLastSelectedPathComponent();
-        
+
         serviceDescriptionLabel.setText(currentService.getDescricao());
         System.out.printf("Noh selecionado: %s\n", currentService);
         System.out.printf("Data de inicio: %s\n", currentService.dataInicio);
@@ -583,7 +584,15 @@ public class GUIStart extends javax.swing.JFrame {
         } else {
             serviceDescriptionLabel.setText(currentService.getDescricao());
             if (currentService.isLeaf()) {
-                setComponentsEnabled(servicePanel, true);
+                try {
+                    dbManager.updateMaterial();
+                    dbManager.updateLogistic();
+                    dbManager.updateProject();
+                    dbManager.updateWorkmanship();
+                    setComponentsEnabled(servicePanel, true);
+                } catch (SQLException ex) {
+                    Logger.getLogger(GUIStart.class.getName()).log(Level.SEVERE, null, ex);
+                }
                 try {
                     loadServiceData(currentService);
                     loadMaterialData(currentService.ID);
@@ -606,7 +615,7 @@ public class GUIStart extends javax.swing.JFrame {
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         DefaultTableModel model = (DefaultTableModel) jTable3.getModel();
-        model.addRow(new Object[]{"prestador","responsavel",false,false});
+        model.addRow(new Object[]{"prestador", "responsavel", false, false});
         jScrollPane3.setViewportView(jTable3);
         int line = jTable3.getRowCount() - 1;
         clearSelection(3);
@@ -615,7 +624,7 @@ public class GUIStart extends javax.swing.JFrame {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
-        model.addRow(new Object[]{"material","responsavel",false,false});
+        model.addRow(new Object[]{"material", "responsavel", false, false});
         jScrollPane1.setViewportView(jTable1);
         int line = jTable1.getRowCount() - 1;
         System.out.println("lineNumber: " + line);
@@ -641,7 +650,7 @@ public class GUIStart extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         DefaultTableModel model = (DefaultTableModel) jTable2.getModel();
-        model.addRow(new Object[]{"projeto","responsavel",false,false,false});
+        model.addRow(new Object[]{"projeto", "responsavel", false, false, false});
         jScrollPane2.setViewportView(jTable2);
         int line = jTable2.getRowCount() - 1;
         clearSelection(2);
@@ -650,7 +659,7 @@ public class GUIStart extends javax.swing.JFrame {
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         DefaultTableModel model = (DefaultTableModel) jTable4.getModel();
-        model.addRow(new Object[]{"logistica","responsavel",false,false});
+        model.addRow(new Object[]{"logistica", "responsavel", false, false});
         jScrollPane4.setViewportView(jTable4);
         int line = jTable4.getRowCount() - 1;
         clearSelection(4);
@@ -660,14 +669,22 @@ public class GUIStart extends javax.swing.JFrame {
     private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextField1ActionPerformed
-    
+
     private void clearSelection(int panel) {
-        if(panel != 1) jTable1.clearSelection();
-        if(panel != 2) jTable2.clearSelection();
-        if(panel != 3) jTable3.clearSelection();
-        if(panel != 4) jTable4.clearSelection();
+        if (panel != 1) {
+            jTable1.clearSelection();
+        }
+        if (panel != 2) {
+            jTable2.clearSelection();
+        }
+        if (panel != 3) {
+            jTable3.clearSelection();
+        }
+        if (panel != 4) {
+            jTable4.clearSelection();
+        }
     }
-    
+
     public void setComponentsEnabled(Container component, boolean b) {
         Component[] com = component.getComponents();
         for (int a = 0; a < com.length; a++) {
@@ -681,7 +698,7 @@ public class GUIStart extends javax.swing.JFrame {
     public void loadServiceData(Service service) throws SQLException {
         //String query = String.format("SELECT * FROM service WHERE service_ID = %d", service.ID);
         CachedRowSet rowSet = dbManager.executeServiceQuery(service.ID);
-        if(rowSet.next()) {
+        if (rowSet.next()) {
             currentService.budget = rowSet.getString(6);
             currentService.comments = rowSet.getString(7);
             //currentService.comments = rowSet.getBlob(7);
@@ -710,28 +727,32 @@ public class GUIStart extends javax.swing.JFrame {
         printTable(rowSet);
     }
 
-    private void loadProjectData(short ID) {
-        throw new UnsupportedOperationException("Not yet implemented");
+    private void loadProjectData(short ID) throws SQLException {
+        CachedRowSet rowSet = dbManager.executeProjectQuery(ID);
+        printTable(rowSet);
     }
 
-    private void loadLogisticData(short ID) {
-        throw new UnsupportedOperationException("Not yet implemented");
+    private void loadLogisticData(short ID) throws SQLException {
+        CachedRowSet rowSet = dbManager.executeLogisticQuery(ID);
+        printTable(rowSet);
     }
 
-    private void loadWorkmanshipData(short ID) {
-        throw new UnsupportedOperationException("Not yet implemented");
+    private void loadWorkmanshipData(short ID) throws SQLException {
+        CachedRowSet rowSet = dbManager.executeWorkmanshipQuery(ID);
+        printTable(rowSet);
     }
 
-    private void printTable(CachedRowSet rowSet) throws SQLException{
+    private void printTable(CachedRowSet rowSet) throws SQLException {
         ResultSetMetaData meta = rowSet.getMetaData();
-        for(int i=1; i<=meta.getColumnCount(); i++){
+        for (int i = 1; i <= meta.getColumnCount(); i++) {
             System.out.printf(" %s\t", meta.getColumnLabel(i));
         }
         System.out.println("");
-        while(rowSet.next()){
-            for(int i=1; i<=meta.getColumnCount(); i++){
+        while (rowSet.next()) {
+            for (int i = 1; i <= meta.getColumnCount(); i++) {
                 System.out.printf(" %s\t", rowSet.getObject(i));
             }
+            System.out.println("");
         }
         System.out.println("");
     }
@@ -769,7 +790,6 @@ public class GUIStart extends javax.swing.JFrame {
     private javax.swing.table.DefaultTableModel logisticTableModel;
     private javax.swing.table.DefaultTableModel materialTableModel;
     private javax.swing.table.DefaultTableModel manpowerTableModel;
-
     private WindowListener exitListener = new WindowAdapter() {
 
         @Override
@@ -791,8 +811,6 @@ public class GUIStart extends javax.swing.JFrame {
             }
         }
     };
-
-    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenu editMenu;
     private javax.swing.JMenu fileMenu;

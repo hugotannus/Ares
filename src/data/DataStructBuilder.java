@@ -39,39 +39,31 @@ public class DataStructBuilder {
     }
 
     public DataStructBuilder(String fileName) throws ClassNotFoundException, SQLException {
-            Class.forName(JDBC_DRIVER);
+        Class.forName(JDBC_DRIVER);
 
-            startingRowSet = new JdbcRowSetImpl();
-            startingRowSet.setUrl(DATABASE_URL);
-            startingRowSet.setUsername(USERNAME);
-            startingRowSet.setPassword(PASSWORD);
-            startingRowSet.setCommand("SELECT * FROM service");
-            startingRowSet.execute();
+        startingRowSet = new JdbcRowSetImpl();
+        startingRowSet.setUrl(DATABASE_URL);
+        startingRowSet.setUsername(USERNAME);
+        startingRowSet.setPassword(PASSWORD);
+        startingRowSet.setCommand("SELECT * FROM service");
+        startingRowSet.execute();
 
-            if (startingRowSet.next()) {
-                readFromDataBase();
-            } else {
-                readFromCSV(fileName);
-            }
-            startingRowSet.close();
+        if (startingRowSet.next()) {
+            readFromDataBase();
+        } else {
+            readFromCSV(fileName);
+        }
+        startingRowSet.close();
 
         setRequirementData((Service) obra.getRoot());
     }
 
     private void readFromDataBase() throws SQLException {
+        boolean flag = true;
         Service service;
         String[] topics;
-        service = new Service(
-                startingRowSet.getString(1),
-                startingRowSet.getShort(2),
-                startingRowSet.getString(3),
-                startingRowSet.getDate(4),
-                startingRowSet.getDate(5),
-                startingRowSet.getString(6),
-                startingRowSet.getString(7));
-        this.obra = new ObraTreeModel(service);
 
-        while (startingRowSet.next()) {
+        do {
             service = new Service(
                     startingRowSet.getString(1),
                     startingRowSet.getShort(2),
@@ -80,9 +72,15 @@ public class DataStructBuilder {
                     startingRowSet.getDate(5),
                     startingRowSet.getString(6),
                     startingRowSet.getString(7));
-            topics = service.estTopicos.split(":", 2);
-            this.obra.addNode(topics, (Node) obra.getRoot(), service);
-        }
+            if (flag) {
+                this.obra = new ObraTreeModel(service);
+                flag = false;
+            } else {
+                topics = service.estTopicos.split(":", 2);
+                this.obra.addNode(topics, (Node) obra.getRoot(), service);
+            }
+        } while (startingRowSet.next());
+        
         System.out.println("DADOS CARREGADOS COM SUCESSO!!!!!");
     }
 

@@ -20,7 +20,7 @@ public class ObraTreeModel implements TreeModel {
 
     private String raiz = "Serviços";
     private List<TreeModelListener> listeners = new ArrayList<TreeModelListener>();
-    private Node root;
+    private Node root = null;
 
     public ObraTreeModel(Node root) {
         this.root = root;

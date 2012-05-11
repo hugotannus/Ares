@@ -27,7 +27,6 @@ import javax.swing.table.DefaultTableModel;
  *
  * Created on 06/06/2011, 16:12:27
  */
-
 /**
  *
  * @author Hugo
@@ -49,9 +48,8 @@ public class GUIStart extends javax.swing.JFrame {
         for (int i = 0; i < looks.length; i++) {
             lookNames[i] = looks[i].getName();
         }
-        this.treeModel = treeModel;
-        projectTableModel = new javax.swing.table.DefaultTableModel();
-        projectTableModel.addColumn(new Object[]{"Descr", "Resp", "Def", "Aprov"});
+
+        this.treeModel = treeModel; // Faz referência ao objeto de modelagem da árvore de serviços.
 
         handler = new ItemHandler(); // Handler da apar?ncia e do comportamento
         initComponents();
@@ -73,7 +71,7 @@ public class GUIStart extends javax.swing.JFrame {
         servicePanel = new javax.swing.JPanel();
         subPanelProject = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable(){
+        projectJTable = new javax.swing.JTable(){
             public boolean isCellEditable(int row,int column){
                 if (column <= 2) return true;
                 Object o = getValueAt(row,column-1);
@@ -88,7 +86,7 @@ public class GUIStart extends javax.swing.JFrame {
         subPanelLabour = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jScrollPane3 = new javax.swing.JScrollPane();
-        jTable3 = new javax.swing.JTable(){
+        labourJTable = new javax.swing.JTable(){
             public boolean isCellEditable(int row,int column){
                 if (column <= 2) return true;
                 Object o = getValueAt(row,column-1);
@@ -102,7 +100,7 @@ public class GUIStart extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTable2 = new javax.swing.JTable(){
+        materialJTable = new javax.swing.JTable(){
             public boolean isCellEditable(int row,int column){
                 if (column <= 2) return true;
                 Object o = getValueAt(row,column-1);
@@ -115,7 +113,7 @@ public class GUIStart extends javax.swing.JFrame {
         jLabel5 = new javax.swing.JLabel();
         jButton4 = new javax.swing.JButton();
         jScrollPane4 = new javax.swing.JScrollPane();
-        jTable4 = new javax.swing.JTable(){
+        logisticJTable = new javax.swing.JTable(){
             public boolean isCellEditable(int row,int column){
                 if (column <= 2) return true;
                 Object o = getValueAt(row,column-1);
@@ -158,7 +156,7 @@ public class GUIStart extends javax.swing.JFrame {
         subPanelProject.setMaximumSize(new java.awt.Dimension(342, 32767));
         subPanelProject.setPreferredSize(new java.awt.Dimension(342, 85));
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        projectJTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -174,12 +172,12 @@ public class GUIStart extends javax.swing.JFrame {
                 return types [columnIndex];
             }
         });
-        jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
+        projectJTable.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jTable1MouseClicked(evt);
+                projectJTableMouseClicked(evt);
             }
         });
-        jScrollPane1.setViewportView(jTable1);
+        jScrollPane1.setViewportView(projectJTable);
 
         jLabel3.setText("Projetos");
 
@@ -216,7 +214,7 @@ public class GUIStart extends javax.swing.JFrame {
 
         jLabel1.setText("Prestador do serviço:");
 
-        jTable3.setModel(new javax.swing.table.DefaultTableModel(
+        labourJTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -232,12 +230,12 @@ public class GUIStart extends javax.swing.JFrame {
                 return types [columnIndex];
             }
         });
-        jTable3.addMouseListener(new java.awt.event.MouseAdapter() {
+        labourJTable.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jTable3MouseClicked(evt);
+                labourJTableMouseClicked(evt);
             }
         });
-        jScrollPane3.setViewportView(jTable3);
+        jScrollPane3.setViewportView(labourJTable);
 
         jButton3.setText("Adicionar Mao de Obra");
         jButton3.addActionListener(new java.awt.event.ActionListener() {
@@ -283,7 +281,7 @@ public class GUIStart extends javax.swing.JFrame {
             }
         });
 
-        jTable2.setModel(new javax.swing.table.DefaultTableModel(
+        materialJTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -299,12 +297,12 @@ public class GUIStart extends javax.swing.JFrame {
                 return types [columnIndex];
             }
         });
-        jTable2.addMouseListener(new java.awt.event.MouseAdapter() {
+        materialJTable.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jTable2MouseClicked(evt);
+                materialJTableMouseClicked(evt);
             }
         });
-        jScrollPane2.setViewportView(jTable2);
+        jScrollPane2.setViewportView(materialJTable);
 
         javax.swing.GroupLayout subPanelMaterialLayout = new javax.swing.GroupLayout(subPanelMaterial);
         subPanelMaterial.setLayout(subPanelMaterialLayout);
@@ -340,7 +338,7 @@ public class GUIStart extends javax.swing.JFrame {
             }
         });
 
-        jTable4.setModel(new javax.swing.table.DefaultTableModel(
+        logisticJTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -356,12 +354,12 @@ public class GUIStart extends javax.swing.JFrame {
                 return types [columnIndex];
             }
         });
-        jTable4.addMouseListener(new java.awt.event.MouseAdapter() {
+        logisticJTable.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jTable4MouseClicked(evt);
+                logisticJTableMouseClicked(evt);
             }
         });
-        jScrollPane4.setViewportView(jTable4);
+        jScrollPane4.setViewportView(logisticJTable);
 
         javax.swing.GroupLayout subPanelLogisticsLayout = new javax.swing.GroupLayout(subPanelLogistics);
         subPanelLogistics.setLayout(subPanelLogisticsLayout);
@@ -612,59 +610,60 @@ public class GUIStart extends javax.swing.JFrame {
             }
         }
         System.out.println("-----------------------------");
+
     }//GEN-LAST:event_treeServicosValueChanged
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        DefaultTableModel model = (DefaultTableModel) jTable3.getModel();
+        DefaultTableModel model = (DefaultTableModel) labourJTable.getModel();
         model.addRow(new Object[]{"prestador", "responsavel", false, false});
-        jScrollPane3.setViewportView(jTable3);
-        int line = jTable3.getRowCount() - 1;
+        jScrollPane3.setViewportView(labourJTable);
+        int line = labourJTable.getRowCount() - 1;
         clearSelection(3);
-        jTable3.changeSelection(line, 0, false, false);
+        labourJTable.changeSelection(line, 0, false, false);
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+        DefaultTableModel model = (DefaultTableModel) projectJTable.getModel();
         model.addRow(new Object[]{"material", "responsavel", false, false});
-        jScrollPane1.setViewportView(jTable1);
-        int line = jTable1.getRowCount() - 1;
+        jScrollPane1.setViewportView(projectJTable);
+        int line = projectJTable.getRowCount() - 1;
         System.out.println("lineNumber: " + line);
         clearSelection(1);
-        jTable1.changeSelection(line, 0, false, false);
+        projectJTable.changeSelection(line, 0, false, false);
     }//GEN-LAST:event_jButton2ActionPerformed
 
-    private void jTable3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable3MouseClicked
+    private void labourJTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_labourJTableMouseClicked
         clearSelection(3);
-    }//GEN-LAST:event_jTable3MouseClicked
+    }//GEN-LAST:event_labourJTableMouseClicked
 
-    private void jTable2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable2MouseClicked
+    private void materialJTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_materialJTableMouseClicked
         clearSelection(2);
-    }//GEN-LAST:event_jTable2MouseClicked
+    }//GEN-LAST:event_materialJTableMouseClicked
 
-    private void jTable4MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable4MouseClicked
+    private void logisticJTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_logisticJTableMouseClicked
         clearSelection(4);
-    }//GEN-LAST:event_jTable4MouseClicked
+    }//GEN-LAST:event_logisticJTableMouseClicked
 
-    private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
+    private void projectJTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_projectJTableMouseClicked
         clearSelection(1);
-    }//GEN-LAST:event_jTable1MouseClicked
+    }//GEN-LAST:event_projectJTableMouseClicked
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        DefaultTableModel model = (DefaultTableModel) jTable2.getModel();
+        DefaultTableModel model = (DefaultTableModel) materialJTable.getModel();
         model.addRow(new Object[]{"projeto", "responsavel", false, false, false});
-        jScrollPane2.setViewportView(jTable2);
-        int line = jTable2.getRowCount() - 1;
+        jScrollPane2.setViewportView(materialJTable);
+        int line = materialJTable.getRowCount() - 1;
         clearSelection(2);
-        jTable2.changeSelection(line, 0, false, false);
+        materialJTable.changeSelection(line, 0, false, false);
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        DefaultTableModel model = (DefaultTableModel) jTable4.getModel();
+        DefaultTableModel model = (DefaultTableModel) logisticJTable.getModel();
         model.addRow(new Object[]{"logistica", "responsavel", false, false});
-        jScrollPane4.setViewportView(jTable4);
-        int line = jTable4.getRowCount() - 1;
+        jScrollPane4.setViewportView(logisticJTable);
+        int line = logisticJTable.getRowCount() - 1;
         clearSelection(4);
-        jTable4.changeSelection(line, 0, false, false);
+        logisticJTable.changeSelection(line, 0, false, false);
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
@@ -673,16 +672,16 @@ public class GUIStart extends javax.swing.JFrame {
 
     private void clearSelection(int panel) {
         if (panel != 1) {
-            jTable1.clearSelection();
+            projectJTable.clearSelection();
         }
         if (panel != 2) {
-            jTable2.clearSelection();
+            materialJTable.clearSelection();
         }
         if (panel != 3) {
-            jTable3.clearSelection();
+            labourJTable.clearSelection();
         }
         if (panel != 4) {
-            jTable4.clearSelection();
+            logisticJTable.clearSelection();
         }
     }
 
@@ -726,6 +725,7 @@ public class GUIStart extends javax.swing.JFrame {
     private void loadMaterialData(short ID) throws SQLException {
         CachedRowSet rowSet = dbManager.executeMaterialQuery(ID);
         printTable(rowSet);
+        fillMaterialTable(rowSet);
     }
 
     private void loadProjectData(short ID) throws SQLException {
@@ -756,6 +756,28 @@ public class GUIStart extends javax.swing.JFrame {
             System.out.println("");
         }
         System.out.println("");
+    }
+
+    private void fillMaterialTable(CachedRowSet rowSet) throws SQLException {
+        rowSet.beforeFirst();
+        javax.swing.table.DefaultTableModel model = (DefaultTableModel) materialJTable.getModel();
+        model.setNumRows(0);
+        for (int i = 0; rowSet.next(); i++) {
+            /*for (int k = 3; k < 8; k++) {
+            System.out.println(rowSet.getObject(k));
+            }*/
+            Object obj[] = new Object[5];
+            obj[0] = rowSet.getString(3);
+            obj[1] = rowSet.getString(4);
+            obj[2] = obj[4] = false;
+            obj[3] = true;
+            model.addRow(obj);
+            //materialJTable.setValueAt(rowSet.getObject(3), i, 0);
+            //materialJTable.setValueAt(rowSet.getString(4), i, 1);
+            //materialJTable.setValueAt(rowSet.getBoolean(5), i, 3);
+            //materialJTable.setValueAt(rowSet.getBoolean(6), i, 4);
+            //materialJTable.setValueAt(rowSet.getBoolean(7), i, 5);
+        }
     }
 
     private class ItemHandler implements ItemListener {
@@ -840,13 +862,13 @@ public class GUIStart extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JTabbedPane jTabbedPane1;
-    private javax.swing.JTable jTable1;
-    private javax.swing.JTable jTable2;
-    private javax.swing.JTable jTable3;
-    private javax.swing.JTable jTable4;
     private javax.swing.JTextArea jTextArea1;
     private javax.swing.JTextField jTextField1;
+    private javax.swing.JTable labourJTable;
+    private javax.swing.JTable logisticJTable;
     private javax.swing.JMenu lookMenu;
+    private javax.swing.JTable materialJTable;
+    private javax.swing.JTable projectJTable;
     private javax.swing.JScrollPane scrlTree;
     private javax.swing.JLabel serviceDescriptionLabel;
     private javax.swing.JPanel servicePanel;

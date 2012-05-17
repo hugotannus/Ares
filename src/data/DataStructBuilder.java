@@ -122,8 +122,8 @@ public class DataStructBuilder {
         Service service = (Service) lastNode;
         startingRowSet.moveToInsertRow();
         startingRowSet.updateString("topic_struct", service.estTopicos);
-        startingRowSet.updateShort("service_ID", service.ID);
-        startingRowSet.updateString("service_name", service.getDescricao());
+        startingRowSet.updateShort("ID", service.ID);
+        startingRowSet.updateString("name", service.getDescricao());
         startingRowSet.updateDate("begin_date", (Date) service.dataInicio);
         startingRowSet.updateDate("end_date", (Date) service.dataTermino);
         startingRowSet.insertRow();

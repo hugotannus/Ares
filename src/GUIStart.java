@@ -9,11 +9,11 @@ import java.awt.event.ItemListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.sql.rowset.CachedRowSet;
-import javax.sql.rowset.JdbcRowSet;
 import javax.swing.table.DefaultTableModel;
 
 /*
@@ -716,7 +716,7 @@ public class GUIStart extends javax.swing.JFrame {
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) throws SQLException, ClassNotFoundException {
+    public static void main(String args[]) throws SQLException, ClassNotFoundException, IOException {
 
         DataStructBuilder structBuilder = new DataStructBuilder("utf8-AGO-sede-R04.csv");
         GUIStart tela = new GUIStart(structBuilder.getObra());

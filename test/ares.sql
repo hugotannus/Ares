@@ -27,8 +27,7 @@ create table project (
 	PRIMARY KEY (ID),
 	FOREIGN KEY (service_ID)
 	  REFERENCES service(ID)
-	  	ON DELETE NO ACTION
-	  	ON UPDATE NO ACTION
+	  	ON UPDATE CASCADE ON DELETE NO ACTION
 	);
 
 drop table if exists logistic;
@@ -43,8 +42,7 @@ create table logistic (
 	PRIMARY KEY (ID),
 	FOREIGN KEY (service_ID)
 	  REFERENCES service(ID)
-	  	ON DELETE NO ACTION
-	  	ON UPDATE NO ACTION
+	  	ON UPDATE CASCADE ON DELETE NO ACTION
 	);
 
 drop table if exists material;
@@ -60,8 +58,7 @@ create table material (
 	PRIMARY KEY (ID),
 	FOREIGN KEY (service_ID)
 	  REFERENCES service(ID)
-	  	ON DELETE NO ACTION
-	  	ON UPDATE NO ACTION	 
+	  	ON UPDATE CASCADE ON DELETE NO ACTION	 
 	);
 
 drop table if exists workmanship;
@@ -76,35 +73,6 @@ create table workmanship (
 	PRIMARY KEY (ID),
 	FOREIGN KEY (service_ID)
 	  REFERENCES service(ID)
-	  	ON DELETE NO ACTION
-	  	ON UPDATE NO ACTION
+	  	ON UPDATE CASCADE ON DELETE NO ACTION
 	);
-
-INSERT INTO material (service_ID, name, sponsor)
-	VALUES	(219,'material 1', 'Joao'),
-		(12, 'material 2', 'Joao'),
-		(12, 'material 3', 'Jose'),
-		(12, 'material 4', 'Paulo'),
-		(12, 'material 5', 'Antonio'),
-		(219,'material 6', 'Jose'),
-		(219,'material 7', 'Jose'),
-		(219,'material 8', 'Antonio'),
-		(219,'material 9', 'Antonio');
-
-INSERT INTO workmanship (service_ID, name, sponsor)
-	VALUES	(12, 'mão-de-obra 1', 'Joao'),
-		(12, 'mão-de-obra 2', 'Joao'),
-		(12, 'mão de obra 3', 'Joao'),
-		(219,'mão de obra 4', 'Jose'),
-		(219,'mão de obra 5', 'Antonio');
-
-INSERT INTO project (service_ID, name, sponsor)
-	VALUES	(12, 'projeto 1', 'Adriano'),
-		(219,'projeto 2', 'Adriano');
-	
-INSERT INTO logisitc (service_ID, name, sponsor)
-	VALUES	(12, 'Linha de base', 'Luis Henrique'),
-		(219,'Linha de base', 'Luis Henrique');
-
-
 

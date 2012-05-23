@@ -86,7 +86,7 @@ public class GUIStart extends javax.swing.JFrame {
         subPanelLabour = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jScrollPane3 = new javax.swing.JScrollPane();
-        labourJTable = new javax.swing.JTable(){
+        workmanJTable = new javax.swing.JTable(){
             public boolean isCellEditable(int row,int column){
                 if (column <= 2) return true;
                 Object o = getValueAt(row,column-1);
@@ -125,8 +125,8 @@ public class GUIStart extends javax.swing.JFrame {
         serviceDescriptionLabel = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
-        jLabel7 = new javax.swing.JLabel();
-        jLabel8 = new javax.swing.JLabel();
+        startDateLabel = new javax.swing.JLabel();
+        endDateLabel = new javax.swing.JLabel();
         jButton5 = new javax.swing.JButton();
         jLabel9 = new javax.swing.JLabel();
         jTextField1 = new javax.swing.JTextField();
@@ -196,7 +196,7 @@ public class GUIStart extends javax.swing.JFrame {
                 .addGroup(subPanelProjectLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButton2)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 361, Short.MAX_VALUE))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 355, Short.MAX_VALUE))
                 .addContainerGap())
         );
         subPanelProjectLayout.setVerticalGroup(
@@ -214,7 +214,7 @@ public class GUIStart extends javax.swing.JFrame {
 
         jLabel1.setText("Prestador do serviço:");
 
-        labourJTable.setModel(new javax.swing.table.DefaultTableModel(
+        workmanJTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -230,12 +230,12 @@ public class GUIStart extends javax.swing.JFrame {
                 return types [columnIndex];
             }
         });
-        labourJTable.addMouseListener(new java.awt.event.MouseAdapter() {
+        workmanJTable.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                labourJTableMouseClicked(evt);
+                workmanJTableMouseClicked(evt);
             }
         });
-        jScrollPane3.setViewportView(labourJTable);
+        jScrollPane3.setViewportView(workmanJTable);
 
         jButton3.setText("Adicionar Mao de Obra");
         jButton3.addActionListener(new java.awt.event.ActionListener() {
@@ -315,7 +315,7 @@ public class GUIStart extends javax.swing.JFrame {
                         .addComponent(jLabel2))
                     .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 174, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(169, 169, 169))
-            .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 370, Short.MAX_VALUE)
+            .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 368, Short.MAX_VALUE)
         );
         subPanelMaterialLayout.setVerticalGroup(
             subPanelMaterialLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -374,7 +374,7 @@ public class GUIStart extends javax.swing.JFrame {
                 .addContainerGap())
             .addGroup(subPanelLogisticsLayout.createSequentialGroup()
                 .addGap(1, 1, 1)
-                .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 369, Short.MAX_VALUE))
+                .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 367, Short.MAX_VALUE))
         );
         subPanelLogisticsLayout.setVerticalGroup(
             subPanelLogisticsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -393,9 +393,9 @@ public class GUIStart extends javax.swing.JFrame {
 
         jLabel6.setText("Data prevista para Termino:");
 
-        jLabel7.setText("    /   /");
+        startDateLabel.setText("    /   /");
 
-        jLabel8.setText("    /   /");
+        endDateLabel.setText("    /   /");
 
         jButton5.setText("Salvar");
 
@@ -419,7 +419,7 @@ public class GUIStart extends javax.swing.JFrame {
             .addGroup(servicePanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(servicePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(serviceDescriptionLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 773, Short.MAX_VALUE)
+                    .addComponent(serviceDescriptionLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 791, Short.MAX_VALUE)
                     .addGroup(servicePanelLayout.createSequentialGroup()
                         .addGap(6, 6, 6)
                         .addGroup(servicePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -429,20 +429,20 @@ public class GUIStart extends javax.swing.JFrame {
                                     .addComponent(jLabel6))
                                 .addGap(63, 63, 63)
                                 .addGroup(servicePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, 138, Short.MAX_VALUE)))
+                                    .addComponent(endDateLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(startDateLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 138, Short.MAX_VALUE)))
                             .addGroup(servicePanelLayout.createSequentialGroup()
                                 .addComponent(jLabel9)
                                 .addGap(18, 18, 18)
                                 .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(18, 18, 18)
-                        .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 317, Short.MAX_VALUE)
+                        .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 313, Short.MAX_VALUE)
                         .addGap(12, 12, 12)
                         .addComponent(jButton5))
                     .addGroup(servicePanelLayout.createSequentialGroup()
                         .addGroup(servicePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(subPanelLabour, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(subPanelProject, javax.swing.GroupLayout.DEFAULT_SIZE, 385, Short.MAX_VALUE))
+                            .addComponent(subPanelProject, javax.swing.GroupLayout.DEFAULT_SIZE, 389, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(servicePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(subPanelLogistics, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -459,21 +459,21 @@ public class GUIStart extends javax.swing.JFrame {
                     .addGroup(servicePanelLayout.createSequentialGroup()
                         .addGroup(servicePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel4)
-                            .addComponent(jLabel7))
+                            .addComponent(startDateLabel))
                         .addGap(10, 10, 10)
                         .addGroup(servicePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel6)
-                            .addComponent(jLabel8))
+                            .addComponent(endDateLabel))
                         .addGap(18, 18, 18)
                         .addGroup(servicePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel9)
                             .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(22, 22, 22))
-                    .addComponent(jButton5, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 117, Short.MAX_VALUE)
+                    .addComponent(jButton5, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 107, Short.MAX_VALUE)
                     .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(servicePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(subPanelProject, javax.swing.GroupLayout.DEFAULT_SIZE, 197, Short.MAX_VALUE)
+                    .addComponent(subPanelProject, javax.swing.GroupLayout.DEFAULT_SIZE, 207, Short.MAX_VALUE)
                     .addComponent(subPanelMaterial, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(servicePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -568,16 +568,12 @@ public class GUIStart extends javax.swing.JFrame {
         }
 
         currentService = (Service) treeServicos.getLastSelectedPathComponent();
-
-        serviceDescriptionLabel.setText(currentService.getDescricao());
         System.out.printf("Noh selecionado: %s\n", currentService);
-        System.out.printf("Data de inicio: %s\n", currentService.dataInicio);
-        System.out.printf("Data de termino: %s\n", currentService.dataTermino);
-        jLabel7.setText(currentService.dataInicio.toString());
-        jLabel8.setText(currentService.dataTermino.toString());
-
-        //service = (Service) treeServicos.getLastSelectedPathComponent();
-
+        
+        serviceDescriptionLabel.setText(currentService.getDescricao());
+        startDateLabel.setText(currentService.dataInicio.toString());
+        endDateLabel.setText(currentService.dataTermino.toString());
+        
         if (currentService == null) {
             return;
         } else {
@@ -587,19 +583,16 @@ public class GUIStart extends javax.swing.JFrame {
                     dbManager.updateMaterial();
                     dbManager.updateLogistic();
                     dbManager.updateProject();
-                    dbManager.updateWorkmanship();
+                    dbManager.updateWorkman();
                     setComponentsEnabled(servicePanel, true);
-                } catch (SQLException ex) {
-                    Logger.getLogger(GUIStart.class.getName()).log(Level.SEVERE, null, ex);
-                }
-                try {
+
                     loadServiceData(currentService);
-                    loadMaterialData(currentService.ID);
-                    loadProjectData(currentService.ID);
-                    loadLogisticData(currentService.ID);
-                    loadWorkmanshipData(currentService.ID);
+                    loadData(currentService.ID,MATERIAL);
+                    loadData(currentService.ID,LOGISTIC);
+                    loadData(currentService.ID,PROJECT);
+                    loadData(currentService.ID,WORKMAN);
+                    
                     jTextArea1.setText(currentService.comments);
-                    //jTextArea1.setText(currentService.comments.toString());
                     jTextField1.setText(currentService.budget);
                 } catch (SQLException ex) {
                     Logger.getLogger(GUIStart.class.getName()).log(Level.SEVERE, null, ex);
@@ -614,12 +607,12 @@ public class GUIStart extends javax.swing.JFrame {
     }//GEN-LAST:event_treeServicosValueChanged
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        DefaultTableModel model = (DefaultTableModel) labourJTable.getModel();
+        DefaultTableModel model = (DefaultTableModel) workmanJTable.getModel();
         model.addRow(new Object[]{"prestador", "responsavel", false, false});
-        jScrollPane3.setViewportView(labourJTable);
-        int line = labourJTable.getRowCount() - 1;
+        jScrollPane3.setViewportView(workmanJTable);
+        int line = workmanJTable.getRowCount() - 1;
         clearSelection(3);
-        labourJTable.changeSelection(line, 0, false, false);
+        workmanJTable.changeSelection(line, 0, false, false);
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
@@ -632,9 +625,9 @@ public class GUIStart extends javax.swing.JFrame {
         projectJTable.changeSelection(line, 0, false, false);
     }//GEN-LAST:event_jButton2ActionPerformed
 
-    private void labourJTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_labourJTableMouseClicked
+    private void workmanJTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_workmanJTableMouseClicked
         clearSelection(3);
-    }//GEN-LAST:event_labourJTableMouseClicked
+    }//GEN-LAST:event_workmanJTableMouseClicked
 
     private void materialJTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_materialJTableMouseClicked
         clearSelection(2);
@@ -678,7 +671,7 @@ public class GUIStart extends javax.swing.JFrame {
             materialJTable.clearSelection();
         }
         if (panel != 3) {
-            labourJTable.clearSelection();
+            workmanJTable.clearSelection();
         }
         if (panel != 4) {
             logisticJTable.clearSelection();
@@ -722,27 +715,6 @@ public class GUIStart extends javax.swing.JFrame {
         } // fim do catch
     } // fim do m?todo changeTheLookAndFeel
 
-    private void loadMaterialData(short ID) throws SQLException {
-        CachedRowSet rowSet = dbManager.executeMaterialQuery(ID);
-        printTable(rowSet);
-        fillMaterialTable(rowSet);
-    }
-
-    private void loadProjectData(short ID) throws SQLException {
-        CachedRowSet rowSet = dbManager.executeProjectQuery(ID);
-        printTable(rowSet);
-    }
-
-    private void loadLogisticData(short ID) throws SQLException {
-        CachedRowSet rowSet = dbManager.executeLogisticQuery(ID);
-        printTable(rowSet);
-    }
-
-    private void loadWorkmanshipData(short ID) throws SQLException {
-        CachedRowSet rowSet = dbManager.executeWorkmanshipQuery(ID);
-        printTable(rowSet);
-    }
-
     private void printTable(CachedRowSet rowSet) throws SQLException {
         ResultSetMetaData meta = rowSet.getMetaData();
         for (int i = 1; i <= meta.getColumnCount(); i++) {
@@ -758,26 +730,58 @@ public class GUIStart extends javax.swing.JFrame {
         System.out.println("");
     }
 
-    private void fillMaterialTable(CachedRowSet rowSet) throws SQLException {
+    private void fillTable(CachedRowSet rowSet, int table_id) throws SQLException {
         rowSet.beforeFirst();
-        javax.swing.table.DefaultTableModel model = (DefaultTableModel) materialJTable.getModel();
+        javax.swing.table.DefaultTableModel model;
+        switch (table_id) {
+            case MATERIAL:
+                model = (DefaultTableModel) materialJTable.getModel();
+                break;
+            case LOGISTIC:
+                model = (DefaultTableModel) logisticJTable.getModel();
+                break;
+            case PROJECT:
+                model = (DefaultTableModel) projectJTable.getModel();
+                break;
+            case WORKMAN:
+                model = (DefaultTableModel) workmanJTable.getModel();
+                break;
+            default:
+                model = (DefaultTableModel) materialJTable.getModel();
+        }
+        
         model.setNumRows(0);
+        
         for (int i = 0; rowSet.next(); i++) {
-            /*for (int k = 3; k < 8; k++) {
-            System.out.println(rowSet.getObject(k));
-            }*/
-            Object obj[] = new Object[5];
+            int N = model.getColumnCount();
+            Object obj[] = new Object[N];
             obj[0] = rowSet.getString(3);
             obj[1] = rowSet.getString(4);
-            obj[2] = obj[4] = false;
-            obj[3] = true;
+            for(int k=2; k<N; k++)
+                obj[k] = rowSet.getBoolean(k+3);
             model.addRow(obj);
-            //materialJTable.setValueAt(rowSet.getObject(3), i, 0);
-            //materialJTable.setValueAt(rowSet.getString(4), i, 1);
-            //materialJTable.setValueAt(rowSet.getBoolean(5), i, 3);
-            //materialJTable.setValueAt(rowSet.getBoolean(6), i, 4);
-            //materialJTable.setValueAt(rowSet.getBoolean(7), i, 5);
         }
+    }
+
+    private void loadData(short service_ID, int table_ID) throws SQLException {
+        CachedRowSet rowSet;
+        switch(table_ID){
+            case MATERIAL:
+                rowSet = dbManager.executeMaterialQuery(service_ID);
+                break;
+            case LOGISTIC:
+                rowSet = dbManager.executeLogisticQuery(service_ID);
+                break;
+                case PROJECT:
+                rowSet = dbManager.executeProjectQuery(service_ID);
+                break;
+                case WORKMAN:
+                rowSet = dbManager.executeWorkmanQuery(service_ID);
+                break;
+                default: rowSet = dbManager.executeMaterialQuery(service_ID);
+        }
+        printTable(rowSet);
+        fillTable(rowSet, table_ID);
     }
 
     private class ItemHandler implements ItemListener {
@@ -796,11 +800,14 @@ public class GUIStart extends javax.swing.JFrame {
      * @param args the command line arguments
      */
     public static void main(String args[]) throws SQLException, ClassNotFoundException, IOException {
-
         DataStructBuilder structBuilder = new DataStructBuilder("utf8-AGO-sede-R04.csv");
         GUIStart tela = new GUIStart(structBuilder.getObra());
         tela.setVisible(true);
     }
+    private final int MATERIAL = 0;
+    private final int LOGISTIC = 1;
+    private final int PROJECT = 2;
+    private final int WORKMAN = 3;
     private String lookNames[];
     private ItemHandler handler;
     private DataBaseManager dbManager;
@@ -836,6 +843,7 @@ public class GUIStart extends javax.swing.JFrame {
     };
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenu editMenu;
+    private javax.swing.JLabel endDateLabel;
     private javax.swing.JMenu fileMenu;
     private javax.swing.JMenu helpMenu;
     private javax.swing.JButton jButton1;
@@ -849,8 +857,6 @@ public class GUIStart extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
-    private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
@@ -864,7 +870,6 @@ public class GUIStart extends javax.swing.JFrame {
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTextArea jTextArea1;
     private javax.swing.JTextField jTextField1;
-    private javax.swing.JTable labourJTable;
     private javax.swing.JTable logisticJTable;
     private javax.swing.JMenu lookMenu;
     private javax.swing.JTable materialJTable;
@@ -872,10 +877,12 @@ public class GUIStart extends javax.swing.JFrame {
     private javax.swing.JScrollPane scrlTree;
     private javax.swing.JLabel serviceDescriptionLabel;
     private javax.swing.JPanel servicePanel;
+    private javax.swing.JLabel startDateLabel;
     private javax.swing.JPanel subPanelLabour;
     private javax.swing.JPanel subPanelLogistics;
     private javax.swing.JPanel subPanelMaterial;
     private javax.swing.JPanel subPanelProject;
     private javax.swing.JTree treeServicos;
+    private javax.swing.JTable workmanJTable;
     // End of variables declaration//GEN-END:variables
 }

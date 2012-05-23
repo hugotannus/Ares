@@ -9,7 +9,7 @@ INSERT INTO material (service_ID, name, sponsor)
 		(219,'material 8', 'Antonio'),
 		(219,'material 9', 'Antonio');
 
-INSERT INTO workmanship (service_ID, name, sponsor)
+INSERT INTO workman (service_ID, name, sponsor)
 	VALUES	(12, 'mao-de-obra 1', 'Joao'),
 		(12, 'mao-de-obra 2', 'Joao'),
 		(12, 'mao de obra 3', 'Joao'),

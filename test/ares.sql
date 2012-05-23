@@ -61,8 +61,8 @@ create table material (
 	  	ON UPDATE CASCADE ON DELETE NO ACTION	 
 	);
 
-drop table if exists workmanship;
-create table workmanship (
+drop table if exists workman;
+create table workman (
 	ID		mediumint	NOT NULL	AUTO_INCREMENT,
 	service_ID	smallint	NOT NULL,
 	name		varchar(255)	NOT NULL,

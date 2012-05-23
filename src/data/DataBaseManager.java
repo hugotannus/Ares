@@ -4,9 +4,7 @@
  */
 package data;
 
-
 import com.sun.rowset.CachedRowSetImpl;
-import commons.Material;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -29,12 +27,12 @@ public class DataBaseManager {
     private CachedRowSet materialRowSet;
     private CachedRowSet logisticRowSet;
     private CachedRowSet projectRowSet;
-    private CachedRowSet workmanshipRowSet;
+    private CachedRowSet workmanRowSet;
     private PreparedStatement serviceStmt;
     private final PreparedStatement materialStmt;
     private final PreparedStatement logisticStmt;
     private final PreparedStatement projectStmt;
-    private final PreparedStatement workmanshipStmt;
+    private final PreparedStatement workmanStmt;
     static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
     static final String DATABASE_URL = "jdbc:mysql://localhost/ares";
     static final String USERNAME = "ares";
@@ -45,18 +43,18 @@ public class DataBaseManager {
         Class.forName(JDBC_DRIVER);
         conn = DriverManager.getConnection(DATABASE_URL, USERNAME, PASSWORD);
         conn.setAutoCommit(false);
-        
+
         serviceRowSet = new CachedRowSetImpl();
         projectRowSet = new CachedRowSetImpl();
         materialRowSet = new CachedRowSetImpl();
         logisticRowSet = new CachedRowSetImpl();
-        workmanshipRowSet = new CachedRowSetImpl();
+        workmanRowSet = new CachedRowSetImpl();
 
         serviceStmt = conn.prepareStatement("SELECT * FROM service WHERE ID=?");
         projectStmt = conn.prepareStatement("SELECT * FROM project WHERE service_id=?");
         materialStmt = conn.prepareStatement("SELECT * FROM material WHERE service_id=?");
         logisticStmt = conn.prepareStatement("SELECT * FROM logistic WHERE service_id=?");
-        workmanshipStmt = conn.prepareStatement("SELECT * FROM workmanship WHERE service_id=?");
+        workmanStmt = conn.prepareStatement("SELECT * FROM workman WHERE service_id=?");
     }
 
     public CachedRowSet executeServiceQuery(int ID) throws SQLException {
@@ -65,13 +63,35 @@ public class DataBaseManager {
         return serviceRowSet;
     }
 
-    public CachedRowSet getServiceRowSet() {
-        return serviceRowSet;
+    public CachedRowSet executeMaterialQuery(short ID) throws SQLException {
+        materialStmt.setInt(1, ID);
+        materialRowSet.populate(materialStmt.executeQuery());
+        return materialRowSet;
+    }
+
+    public CachedRowSet executeProjectQuery(short ID) throws SQLException {
+        projectStmt.setInt(1, ID);
+        projectRowSet.populate(projectStmt.executeQuery());
+        return projectRowSet;
+    }
+
+    public CachedRowSet executeLogisticQuery(short ID) throws SQLException {
+        logisticStmt.setInt(1, ID);
+        logisticRowSet.populate(logisticStmt.executeQuery());
+        return logisticRowSet;
+    }
+
+    public CachedRowSet executeWorkmanQuery(short ID) throws SQLException {
+        workmanStmt.setInt(1, ID);
+        workmanRowSet.populate(workmanStmt.executeQuery());
+        return workmanRowSet;
     }
 
     public void updateService(String comment, String budget) throws SQLException {
         //System.out.printf("budget: %s.\tService: %s.\n", budget, service);
-        if(budget.length() == 0) budget = null;
+        if (budget.length() == 0) {
+            budget = null;
+        }
         //System.out.printf("budget: %s.\tService: %s.\n", budget, service);
         serviceRowSet.moveToCurrentRow();
         serviceRowSet.updateString("comments", comment);
@@ -96,36 +116,32 @@ public class DataBaseManager {
         logisticRowSet.close();
     }
 
-    public void updateWorkmanship() throws SQLException {
-//        workmanshipRowSet.acceptChanges(conn);
-        workmanshipRowSet.close();
+    public void updateWorkman() throws SQLException {
+//        workmanRowSet.acceptChanges(conn);
+        workmanRowSet.close();
     }
 
-    public void closeConnection() throws SQLException{
-        conn.close();
+    public CachedRowSet getServiceRowSet() {
+        return serviceRowSet;
     }
 
-    public CachedRowSet executeMaterialQuery(short ID) throws SQLException {
-        materialStmt.setInt(1, ID);
-        materialRowSet.populate(materialStmt.executeQuery());
-        return materialRowSet;
-    }
-
-    public CachedRowSet executeProjectQuery(short ID) throws SQLException {
-        projectStmt.setInt(1, ID);
-        projectRowSet.populate(projectStmt.executeQuery());
-        return projectRowSet;
-    }
-
-    public CachedRowSet executeLogisticQuery(short ID) throws SQLException {
-        logisticStmt.setInt(1, ID);
-        logisticRowSet.populate(logisticStmt.executeQuery());
+    public CachedRowSet getLogisticRowSet() {
         return logisticRowSet;
     }
 
-    public CachedRowSet executeWorkmanshipQuery(short ID) throws SQLException {
-        workmanshipStmt.setInt(1, ID);
-        workmanshipRowSet.populate(workmanshipStmt.executeQuery());
-        return workmanshipRowSet;
+    public CachedRowSet getMaterialRowSet() {
+        return materialRowSet;
+    }
+
+    public CachedRowSet getProjectRowSet() {
+        return projectRowSet;
+    }
+
+    public CachedRowSet getWorkmanRowSet() {
+        return workmanRowSet;
+    }
+
+    public void closeConnection() throws SQLException {
+        conn.close();
     }
 }

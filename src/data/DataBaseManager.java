@@ -52,10 +52,10 @@ public class DataBaseManager {
         logisticRowSet = new CachedRowSetImpl();
         workmanshipRowSet = new CachedRowSetImpl();
 
-        serviceStmt = conn.prepareStatement("SELECT * FROM service WHERE service_id=?");
+        serviceStmt = conn.prepareStatement("SELECT * FROM service WHERE ID=?");
         projectStmt = conn.prepareStatement("SELECT * FROM project WHERE service_id=?");
         materialStmt = conn.prepareStatement("SELECT * FROM material WHERE service_id=?");
-        logisticStmt = conn.prepareStatement("SELECT * FROM logistics WHERE service_id=?");
+        logisticStmt = conn.prepareStatement("SELECT * FROM logistic WHERE service_id=?");
         workmanshipStmt = conn.prepareStatement("SELECT * FROM workmanship WHERE service_id=?");
     }
 

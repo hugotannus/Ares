@@ -7,7 +7,6 @@ package data;
 import com.sun.rowset.JdbcRowSetImpl;
 import commons.Node;
 import commons.Service;
-import gui.Estrutura;
 import gui.ObraTreeModel;
 import java.io.IOException;
 import java.sql.Date;
@@ -15,8 +14,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.sql.rowset.JdbcRowSet;
 
 /**
@@ -34,11 +31,11 @@ public class DataStructBuilder {
     static final String USERNAME = "ares";
     static final String PASSWORD = "vernacula";
 
-    public DataStructBuilder() throws ClassNotFoundException, SQLException {
+    public DataStructBuilder() throws ClassNotFoundException, SQLException, IOException {
         this("ASCII_input.csv");
     }
 
-    public DataStructBuilder(String fileName) throws ClassNotFoundException, SQLException {
+    public DataStructBuilder(String fileName) throws ClassNotFoundException, SQLException, IOException {
         Class.forName(JDBC_DRIVER);
 
         startingRowSet = new JdbcRowSetImpl();
@@ -55,7 +52,7 @@ public class DataStructBuilder {
         }
         startingRowSet.close();
 
-        setRequirementData((Service) obra.getRoot());
+        //setRequirementData((Service) obra.getRoot());
     }
 
     private void readFromDataBase() throws SQLException {
@@ -80,18 +77,14 @@ public class DataStructBuilder {
                 this.obra.addNode(topics, (Node) obra.getRoot(), service);
             }
         } while (startingRowSet.next());
-        
+
         System.out.println("DADOS CARREGADOS COM SUCESSO!!!!!");
     }
 
-    private void readFromCSV(String fileName) throws SQLException {
+    private void readFromCSV(String fileName) throws SQLException, IOException {
         List<String> lines = new ArrayList<String>(); // variável que receberá as linhas lidas do arquivo CSV
         CSVFileReader csvReader = new CSVFileReader(fileName);
-        try {
-            lines = csvReader.readCSVFile();
-        } catch (IOException ex) {
-            Logger.getLogger(Estrutura.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        lines = csvReader.readCSVFile();
         // Eliminando o cabeçalho CSV da lista:
         String header = lines.remove(0);
         Iterator<String> it = lines.iterator();
@@ -108,9 +101,6 @@ public class DataStructBuilder {
             lastNode = obra.addNode(line);
             insertDatabaseRow(lastNode);
         }
-    }
-
-    private void setRequirementData(Service service) {
     }
 
     public ObraTreeModel getObra() {

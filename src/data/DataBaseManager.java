@@ -33,6 +33,7 @@ public class DataBaseManager {
     private final PreparedStatement logisticStmt;
     private final PreparedStatement projectStmt;
     private final PreparedStatement workmanStmt;
+    private final PreparedStatement addStmt;
     static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
     static final String DATABASE_URL = "jdbc:mysql://localhost/ares";
     static final String USERNAME = "ares";
@@ -55,6 +56,9 @@ public class DataBaseManager {
         materialStmt = conn.prepareStatement("SELECT * FROM material WHERE service_id=?");
         logisticStmt = conn.prepareStatement("SELECT * FROM logistic WHERE service_id=?");
         workmanStmt = conn.prepareStatement("SELECT * FROM workman WHERE service_id=?");
+        addStmt = conn.prepareStatement("INSERT " +
+                "INTO project (service_ID, name, sponsor)" +
+                "VALUES (?,?,?)");
     }
 
     public CachedRowSet executeServiceQuery(int ID) throws SQLException {
@@ -100,7 +104,7 @@ public class DataBaseManager {
         serviceRowSet.acceptChanges(conn);
         serviceRowSet.close();
     }
-
+    
     public void updateMaterial() throws SQLException {
 //        materialRowSet.acceptChanges(conn);
         materialRowSet.close();
@@ -120,7 +124,26 @@ public class DataBaseManager {
 //        workmanRowSet.acceptChanges(conn);
         workmanRowSet.close();
     }
-
+    
+    public void addProject(short ID, String name, String sponsor) throws SQLException {
+/*      projectRowSet.moveToInsertRow();
+        projectRowSet.updateShort("service_ID", ID);
+        projectRowSet.updateString("name", name);
+        projectRowSet.updateString("sponsor", name);
+        projectRowSet.updateBoolean(5, false);
+        projectRowSet.updateBoolean(6, false);
+        projectRowSet.updateBoolean(7, true);
+        projectRowSet.insertRow();
+        projectRowSet.moveToCurrentRow();
+        projectRowSet.acceptChanges(conn);
+ *
+ */
+        addStmt.setShort(1, ID);
+        addStmt.setString(2, name);
+        addStmt.setString(3, sponsor);
+        addStmt.executeUpdate();
+    }
+    
     public CachedRowSet getServiceRowSet() {
         return serviceRowSet;
     }

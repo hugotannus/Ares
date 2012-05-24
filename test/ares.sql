@@ -24,10 +24,7 @@ create table project (
 	defined		bit		NOT NULL	DEFAULT FALSE,
 	approved	bit		NOT NULL	DEFAULT FALSE,
 	visible		bit		NOT NULL	DEFAULT TRUE,
-	PRIMARY KEY (ID),
-	FOREIGN KEY (service_ID)
-	  REFERENCES service(ID)
-	  	ON UPDATE CASCADE ON DELETE NO ACTION
+	PRIMARY KEY (ID)
 	);
 
 drop table if exists logistic;
@@ -39,10 +36,7 @@ create table logistic (
 	defined		bit		NOT NULL	DEFAULT FALSE,
 	approved	bit		NOT NULL	DEFAULT FALSE,
 	visible		bit		NOT NULL	DEFAULT TRUE,
-	PRIMARY KEY (ID),
-	FOREIGN KEY (service_ID)
-	  REFERENCES service(ID)
-	  	ON UPDATE CASCADE ON DELETE NO ACTION
+	PRIMARY KEY (ID)
 	);
 
 drop table if exists material;
@@ -55,10 +49,7 @@ create table material (
 	inloco		bit		NOT NULL	DEFAULT FALSE,
 	available	bit		NOT NULL	DEFAULT FALSE,
 	visible		bit		NOT NULL	DEFAULT TRUE,
-	PRIMARY KEY (ID),
-	FOREIGN KEY (service_ID)
-	  REFERENCES service(ID)
-	  	ON UPDATE CASCADE ON DELETE NO ACTION	 
+	PRIMARY KEY (ID)	 
 	);
 
 drop table if exists workman;
@@ -70,9 +61,6 @@ create table workman (
 	available	bit		NOT NULL	DEFAULT FALSE,
 	engaged		bit		NOT NULL	DEFAULT FALSE,
 	visible		bit		NOT NULL	DEFAULT TRUE,
-	PRIMARY KEY (ID),
-	FOREIGN KEY (service_ID)
-	  REFERENCES service(ID)
-	  	ON UPDATE CASCADE ON DELETE NO ACTION
+	PRIMARY KEY (ID)
 	);
 

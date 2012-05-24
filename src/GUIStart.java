@@ -15,6 +15,7 @@ import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.sql.rowset.CachedRowSet;
+import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.table.DefaultTableModel;
 
 /*
@@ -54,8 +55,54 @@ public class GUIStart extends javax.swing.JFrame {
         handler = new ItemHandler(); // Handler da apar?ncia e do comportamento
         initComponents();
         this.addWindowListener(exitListener);
-        changeTheLookAndFeel("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
+        try {
+            changeTheLookAndFeel("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(GUIStart.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            Logger.getLogger(GUIStart.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            Logger.getLogger(GUIStart.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (UnsupportedLookAndFeelException ex) {
+            Logger.getLogger(GUIStart.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
+    
+    private void changeTheLookAndFeel(int value)
+            throws ClassNotFoundException, InstantiationException,
+            IllegalAccessException, UnsupportedLookAndFeelException {
+        changeTheLookAndFeel(looks[value].getClassName());
+    }
+
+    private void changeTheLookAndFeel(String className)
+            throws ClassNotFoundException, InstantiationException,
+            IllegalAccessException, UnsupportedLookAndFeelException {
+        javax.swing.UIManager.setLookAndFeel(className);
+        System.out.println(className);
+        javax.swing.SwingUtilities.updateComponentTreeUI(this);
+    }
+    
+    private class ItemHandler implements ItemListener {
+
+        public void itemStateChanged(ItemEvent event) {
+            System.out.println("Mudou o estado...");
+            for (int count = 0; count < lookSubMenus.length; count++) {
+                if (lookSubMenus[count].isSelected()) {
+                    try {
+                        changeTheLookAndFeel(count); // muda apar?ncia e comportamento
+                    } catch (ClassNotFoundException ex) {
+                        Logger.getLogger(GUIStart.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (InstantiationException ex) {
+                        Logger.getLogger(GUIStart.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (IllegalAccessException ex) {
+                        Logger.getLogger(GUIStart.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (UnsupportedLookAndFeelException ex) {
+                        Logger.getLogger(GUIStart.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                } // fim do if
+            } // fim do for
+        } // fim do m?todo itemStateChanged
+    } // fim da classe interna privada ItemHandler
 
     /** This method is called from within the constructor to
      * initialize the form.
@@ -82,7 +129,7 @@ public class GUIStart extends javax.swing.JFrame {
         }
         ;
         jLabel3 = new javax.swing.JLabel();
-        jButton2 = new javax.swing.JButton();
+        jButton_addProject = new javax.swing.JButton();
         subPanelLabour = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jScrollPane3 = new javax.swing.JScrollPane();
@@ -95,10 +142,10 @@ public class GUIStart extends javax.swing.JFrame {
                 return b;
             }
         };
-        jButton3 = new javax.swing.JButton();
+        jButton_addWorkman = new javax.swing.JButton();
         subPanelMaterial = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
+        jButton_addMaterial = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         materialJTable = new javax.swing.JTable(){
             public boolean isCellEditable(int row,int column){
@@ -111,7 +158,7 @@ public class GUIStart extends javax.swing.JFrame {
         };
         subPanelLogistics = new javax.swing.JPanel();
         jLabel5 = new javax.swing.JLabel();
-        jButton4 = new javax.swing.JButton();
+        jButton_addLogistic = new javax.swing.JButton();
         jScrollPane4 = new javax.swing.JScrollPane();
         logisticJTable = new javax.swing.JTable(){
             public boolean isCellEditable(int row,int column){
@@ -181,10 +228,10 @@ public class GUIStart extends javax.swing.JFrame {
 
         jLabel3.setText("Projetos");
 
-        jButton2.setText("Adicionar Projeto");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        jButton_addProject.setText("Adicionar Projeto");
+        jButton_addProject.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                jButton_addProjectActionPerformed(evt);
             }
         });
 
@@ -195,7 +242,7 @@ public class GUIStart extends javax.swing.JFrame {
             .addGroup(subPanelProjectLayout.createSequentialGroup()
                 .addGroup(subPanelProjectLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton2)
+                    .addComponent(jButton_addProject)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 355, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -206,7 +253,7 @@ public class GUIStart extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton2))
+                .addComponent(jButton_addProject))
         );
 
         subPanelLabour.setBorder(javax.swing.BorderFactory.createTitledBorder("Mão de Obra"));
@@ -237,10 +284,10 @@ public class GUIStart extends javax.swing.JFrame {
         });
         jScrollPane3.setViewportView(workmanJTable);
 
-        jButton3.setText("Adicionar Mao de Obra");
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
+        jButton_addWorkman.setText("Adicionar Mao de Obra");
+        jButton_addWorkman.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
+                jButton_addWorkmanActionPerformed(evt);
             }
         });
 
@@ -253,7 +300,7 @@ public class GUIStart extends javax.swing.JFrame {
                     .addGroup(subPanelLabourLayout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(jLabel1))
-                    .addComponent(jButton3)
+                    .addComponent(jButton_addWorkman)
                     .addGroup(subPanelLabourLayout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 349, Short.MAX_VALUE)))
@@ -266,7 +313,7 @@ public class GUIStart extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton3))
+                .addComponent(jButton_addWorkman))
         );
 
         subPanelMaterial.setBorder(javax.swing.BorderFactory.createTitledBorder("Material"));
@@ -274,10 +321,10 @@ public class GUIStart extends javax.swing.JFrame {
 
         jLabel2.setText("Lista de Materiais:");
 
-        jButton1.setText("Adicionar Material");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        jButton_addMaterial.setText("Adicionar Material");
+        jButton_addMaterial.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                jButton_addMaterialActionPerformed(evt);
             }
         });
 
@@ -313,7 +360,7 @@ public class GUIStart extends javax.swing.JFrame {
                     .addGroup(subPanelMaterialLayout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(jLabel2))
-                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 174, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jButton_addMaterial, javax.swing.GroupLayout.PREFERRED_SIZE, 174, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(169, 169, 169))
             .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 368, Short.MAX_VALUE)
         );
@@ -324,17 +371,17 @@ public class GUIStart extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton1))
+                .addComponent(jButton_addMaterial))
         );
 
         subPanelLogistics.setBorder(javax.swing.BorderFactory.createTitledBorder("Logística"));
 
         jLabel5.setText("Logística:");
 
-        jButton4.setText("Adicionar Logistica");
-        jButton4.addActionListener(new java.awt.event.ActionListener() {
+        jButton_addLogistic.setText("Adicionar Logistica");
+        jButton_addLogistic.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton4ActionPerformed(evt);
+                jButton_addLogisticActionPerformed(evt);
             }
         });
 
@@ -370,7 +417,7 @@ public class GUIStart extends javax.swing.JFrame {
                     .addGroup(subPanelLogisticsLayout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(jLabel5))
-                    .addComponent(jButton4))
+                    .addComponent(jButton_addLogistic))
                 .addContainerGap())
             .addGroup(subPanelLogisticsLayout.createSequentialGroup()
                 .addGap(1, 1, 1)
@@ -383,7 +430,7 @@ public class GUIStart extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton4))
+                .addComponent(jButton_addLogistic))
         );
 
         serviceDescriptionLabel.setFont(new java.awt.Font("sansserif", 1, 18));
@@ -569,11 +616,11 @@ public class GUIStart extends javax.swing.JFrame {
 
         currentService = (Service) treeServicos.getLastSelectedPathComponent();
         System.out.printf("Noh selecionado: %s\n", currentService);
-        
+
         serviceDescriptionLabel.setText(currentService.getDescricao());
         startDateLabel.setText(currentService.dataInicio.toString());
         endDateLabel.setText(currentService.dataTermino.toString());
-        
+
         if (currentService == null) {
             return;
         } else {
@@ -587,11 +634,11 @@ public class GUIStart extends javax.swing.JFrame {
                     setComponentsEnabled(servicePanel, true);
 
                     loadServiceData(currentService);
-                    loadData(currentService.ID,MATERIAL);
-                    loadData(currentService.ID,LOGISTIC);
-                    loadData(currentService.ID,PROJECT);
-                    loadData(currentService.ID,WORKMAN);
-                    
+                    loadData(currentService.ID, MATERIAL);
+                    loadData(currentService.ID, LOGISTIC);
+                    loadData(currentService.ID, PROJECT);
+                    loadData(currentService.ID, WORKMAN);
+
                     jTextArea1.setText(currentService.comments);
                     jTextField1.setText(currentService.budget);
                 } catch (SQLException ex) {
@@ -606,24 +653,31 @@ public class GUIStart extends javax.swing.JFrame {
 
     }//GEN-LAST:event_treeServicosValueChanged
 
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+    private void jButton_addWorkmanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_addWorkmanActionPerformed
+        clearSelection(WORKMAN);
         DefaultTableModel model = (DefaultTableModel) workmanJTable.getModel();
         model.addRow(new Object[]{"prestador", "responsavel", false, false});
         jScrollPane3.setViewportView(workmanJTable);
         int line = workmanJTable.getRowCount() - 1;
-        clearSelection(3);
         workmanJTable.changeSelection(line, 0, false, false);
-    }//GEN-LAST:event_jButton3ActionPerformed
+    }//GEN-LAST:event_jButton_addWorkmanActionPerformed
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    private void jButton_addProjectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_addProjectActionPerformed
+        clearSelection(PROJECT);
+        try {
+            dbManager.addProject((short)currentService.ID, "projeto", "responsavel");
+        } catch (SQLException ex) {
+            Logger.getLogger(GUIStart.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
         DefaultTableModel model = (DefaultTableModel) projectJTable.getModel();
-        model.addRow(new Object[]{"material", "responsavel", false, false});
+        model.addRow(new Object[]{"projeto", "responsavel", false, false});
         jScrollPane1.setViewportView(projectJTable);
         int line = projectJTable.getRowCount() - 1;
         System.out.println("lineNumber: " + line);
-        clearSelection(1);
+
         projectJTable.changeSelection(line, 0, false, false);
-    }//GEN-LAST:event_jButton2ActionPerformed
+    }//GEN-LAST:event_jButton_addProjectActionPerformed
 
     private void workmanJTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_workmanJTableMouseClicked
         clearSelection(3);
@@ -641,79 +695,60 @@ public class GUIStart extends javax.swing.JFrame {
         clearSelection(1);
     }//GEN-LAST:event_projectJTableMouseClicked
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void jButton_addMaterialActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_addMaterialActionPerformed
+        clearSelection(MATERIAL);
         DefaultTableModel model = (DefaultTableModel) materialJTable.getModel();
-        model.addRow(new Object[]{"projeto", "responsavel", false, false, false});
+        model.addRow(new Object[]{"material", "responsavel", false, false, false});
         jScrollPane2.setViewportView(materialJTable);
         int line = materialJTable.getRowCount() - 1;
-        clearSelection(2);
         materialJTable.changeSelection(line, 0, false, false);
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_jButton_addMaterialActionPerformed
 
-    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+    private void jButton_addLogisticActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_addLogisticActionPerformed
+        clearSelection(LOGISTIC);
         DefaultTableModel model = (DefaultTableModel) logisticJTable.getModel();
         model.addRow(new Object[]{"logistica", "responsavel", false, false});
         jScrollPane4.setViewportView(logisticJTable);
         int line = logisticJTable.getRowCount() - 1;
-        clearSelection(4);
         logisticJTable.changeSelection(line, 0, false, false);
-    }//GEN-LAST:event_jButton4ActionPerformed
+    }//GEN-LAST:event_jButton_addLogisticActionPerformed
 
     private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextField1ActionPerformed
 
-    private void clearSelection(int panel) {
-        if (panel != 1) {
+    private void clearSelection(int tableId) {
+        if (tableId != PROJECT) {
             projectJTable.clearSelection();
         }
-        if (panel != 2) {
+        if (tableId != MATERIAL) {
             materialJTable.clearSelection();
         }
-        if (panel != 3) {
+        if (tableId != WORKMAN) {
             workmanJTable.clearSelection();
         }
-        if (panel != 4) {
+        if (tableId != LOGISTIC) {
             logisticJTable.clearSelection();
         }
     }
 
-    public void setComponentsEnabled(Container component, boolean b) {
+    public void setComponentsEnabled(Container component, boolean enabled) {
         Component[] com = component.getComponents();
         for (int a = 0; a < com.length; a++) {
-            com[a].setEnabled(b);
+            com[a].setEnabled(enabled);
             if (com[a] instanceof Container) {
-                setComponentsEnabled((Container) com[a], b);
+                setComponentsEnabled((Container) com[a], enabled);
             }
         }
     }
 
     public void loadServiceData(Service service) throws SQLException {
-        //String query = String.format("SELECT * FROM service WHERE service_ID = %d", service.ID);
         CachedRowSet rowSet = dbManager.executeServiceQuery(service.ID);
         if (rowSet.next()) {
             currentService.budget = rowSet.getString(6);
             currentService.comments = rowSet.getString(7);
-            //currentService.comments = rowSet.getBlob(7);
         }
     }
-
-    private void changeTheLookAndFeel(int value) {
-        changeTheLookAndFeel(looks[value].getClassName());
-    }
-
-    private void changeTheLookAndFeel(String className) {
-        try // muda apar?ncia e comportamento
-        {
-            // configura apar?ncia e comportamento para esse aplicativo
-            javax.swing.UIManager.setLookAndFeel(className);
-            System.out.println(className);
-            // atualiza os componetnes nesse aplicativo
-            javax.swing.SwingUtilities.updateComponentTreeUI(this);
-        } // fim do try
-        catch (Exception exception) {
-        } // fim do catch
-    } // fim do m?todo changeTheLookAndFeel
 
     private void printTable(CachedRowSet rowSet) throws SQLException {
         ResultSetMetaData meta = rowSet.getMetaData();
@@ -749,53 +784,43 @@ public class GUIStart extends javax.swing.JFrame {
             default:
                 model = (DefaultTableModel) materialJTable.getModel();
         }
-        
+
         model.setNumRows(0);
-        
+
         for (int i = 0; rowSet.next(); i++) {
             int N = model.getColumnCount();
             Object obj[] = new Object[N];
             obj[0] = rowSet.getString(3);
             obj[1] = rowSet.getString(4);
-            for(int k=2; k<N; k++)
-                obj[k] = rowSet.getBoolean(k+3);
+            for (int k = 2; k < N; k++) {
+                obj[k] = rowSet.getBoolean(k + 3);
+            }
             model.addRow(obj);
         }
     }
 
     private void loadData(short service_ID, int table_ID) throws SQLException {
         CachedRowSet rowSet;
-        switch(table_ID){
+        switch (table_ID) {
             case MATERIAL:
                 rowSet = dbManager.executeMaterialQuery(service_ID);
                 break;
             case LOGISTIC:
                 rowSet = dbManager.executeLogisticQuery(service_ID);
                 break;
-                case PROJECT:
+            case PROJECT:
                 rowSet = dbManager.executeProjectQuery(service_ID);
                 break;
-                case WORKMAN:
+            case WORKMAN:
                 rowSet = dbManager.executeWorkmanQuery(service_ID);
                 break;
-                default: rowSet = dbManager.executeMaterialQuery(service_ID);
+            default:
+                rowSet = dbManager.executeMaterialQuery(service_ID);
         }
         printTable(rowSet);
         fillTable(rowSet, table_ID);
     }
-
-    private class ItemHandler implements ItemListener {
-
-        public void itemStateChanged(ItemEvent event) {
-            System.out.println("Mudou o estado...");
-            for (int count = 0; count < lookSubMenus.length; count++) {
-                if (lookSubMenus[count].isSelected()) {
-                    changeTheLookAndFeel(count); // muda apar?ncia e comportamento
-                } // fim do if
-            } // fim do for
-        } // fim do m?todo itemStateChanged
-    } // fim da classe interna privada ItemHandler
-
+    
     /**
      * @param args the command line arguments
      */
@@ -804,6 +829,7 @@ public class GUIStart extends javax.swing.JFrame {
         GUIStart tela = new GUIStart(structBuilder.getObra());
         tela.setVisible(true);
     }
+    
     private final int MATERIAL = 0;
     private final int LOGISTIC = 1;
     private final int PROJECT = 2;
@@ -846,11 +872,11 @@ public class GUIStart extends javax.swing.JFrame {
     private javax.swing.JLabel endDateLabel;
     private javax.swing.JMenu fileMenu;
     private javax.swing.JMenu helpMenu;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
+    private javax.swing.JButton jButton_addLogistic;
+    private javax.swing.JButton jButton_addMaterial;
+    private javax.swing.JButton jButton_addProject;
+    private javax.swing.JButton jButton_addWorkman;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

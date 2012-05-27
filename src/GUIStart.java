@@ -16,6 +16,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.sql.rowset.CachedRowSet;
 import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 
 /*
@@ -33,6 +35,45 @@ import javax.swing.table.DefaultTableModel;
  * @author Hugo
  */
 public class GUIStart extends javax.swing.JFrame {
+
+    private int tableRow;
+    private int tableCol;
+
+    private void clearTables() {
+        DefaultTableModel model;
+        model = (DefaultTableModel)projectJTable.getModel();
+        model.setRowCount(0);
+        model = (DefaultTableModel)logisticJTable.getModel();
+        model.setRowCount(0);
+        model = (DefaultTableModel)materialJTable.getModel();
+        model.setRowCount(0);
+        model = (DefaultTableModel)workmanJTable.getModel();
+        model.setRowCount(0);
+    }
+
+    private class RowListener implements ListSelectionListener {
+
+        public void valueChanged(ListSelectionEvent lse) {
+            if (lse.getValueIsAdjusting()) {
+                return;
+            }
+            tableRow = projectJTable.getSelectionModel().getLeadSelectionIndex();
+        }
+    }
+
+    private class ColumnListener implements ListSelectionListener {
+
+        public void valueChanged(ListSelectionEvent event) {
+            if (event.getValueIsAdjusting()) {
+                return;
+            }
+            tableCol = projectJTable.getColumnModel().getSelectionModel().getLeadSelectionIndex();
+        }
+    }
+    
+    private void outputSelection() {
+        System.out.printf("Seleção: %d %d\n", tableRow, tableCol);
+    }
 
     /** Creates new form testeGui */
     public GUIStart(javax.swing.tree.TreeModel treeModel) {
@@ -67,7 +108,7 @@ public class GUIStart extends javax.swing.JFrame {
             Logger.getLogger(GUIStart.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     private void changeTheLookAndFeel(int value)
             throws ClassNotFoundException, InstantiationException,
             IllegalAccessException, UnsupportedLookAndFeelException {
@@ -81,7 +122,7 @@ public class GUIStart extends javax.swing.JFrame {
         System.out.println(className);
         javax.swing.SwingUtilities.updateComponentTreeUI(this);
     }
-    
+
     private class ItemHandler implements ItemListener {
 
         public void itemStateChanged(ItemEvent event) {
@@ -203,6 +244,8 @@ public class GUIStart extends javax.swing.JFrame {
         subPanelProject.setMaximumSize(new java.awt.Dimension(342, 32767));
         subPanelProject.setPreferredSize(new java.awt.Dimension(342, 85));
 
+        projectJTable.getSelectionModel().addListSelectionListener(new RowListener());
+        projectJTable.getColumnModel().getSelectionModel().addListSelectionListener(new ColumnListener());
         projectJTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
@@ -607,6 +650,7 @@ public class GUIStart extends javax.swing.JFrame {
         if (currentService != null) {
             if (currentService.isLeaf()) {
                 try {
+                    dbManager.acceptChanges();
                     dbManager.updateService(jTextArea1.getText(), jTextField1.getText());
                 } catch (SQLException ex) {
                     Logger.getLogger(GUIStart.class.getName()).log(Level.SEVERE, null, ex);
@@ -627,10 +671,6 @@ public class GUIStart extends javax.swing.JFrame {
             serviceDescriptionLabel.setText(currentService.getDescricao());
             if (currentService.isLeaf()) {
                 try {
-                    dbManager.updateMaterial();
-                    dbManager.updateLogistic();
-                    dbManager.updateProject();
-                    dbManager.updateWorkman();
                     setComponentsEnabled(servicePanel, true);
 
                     loadServiceData(currentService);
@@ -646,6 +686,9 @@ public class GUIStart extends javax.swing.JFrame {
                 }
             } else {
                 System.out.printf("%s é apenas um nó, e não um serviço!\n", currentService);
+                jTextArea1.setText("");
+                jTextField1.setText("");
+                clearTables();
                 setComponentsEnabled(servicePanel, false);
             }
         }
@@ -665,7 +708,7 @@ public class GUIStart extends javax.swing.JFrame {
     private void jButton_addProjectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_addProjectActionPerformed
         clearSelection(PROJECT);
         try {
-            dbManager.addProject((short)currentService.ID, "projeto", "responsavel");
+            dbManager.addProject((short) currentService.ID, "projeto", "responsavel");
         } catch (SQLException ex) {
             Logger.getLogger(GUIStart.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -680,19 +723,19 @@ public class GUIStart extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton_addProjectActionPerformed
 
     private void workmanJTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_workmanJTableMouseClicked
-        clearSelection(3);
+        clearSelection(WORKMAN);
     }//GEN-LAST:event_workmanJTableMouseClicked
 
     private void materialJTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_materialJTableMouseClicked
-        clearSelection(2);
+        clearSelection(MATERIAL);
     }//GEN-LAST:event_materialJTableMouseClicked
 
     private void logisticJTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_logisticJTableMouseClicked
-        clearSelection(4);
+        clearSelection(LOGISTIC);
     }//GEN-LAST:event_logisticJTableMouseClicked
 
     private void projectJTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_projectJTableMouseClicked
-        clearSelection(1);
+        clearSelection(PROJECT);
     }//GEN-LAST:event_projectJTableMouseClicked
 
     private void jButton_addMaterialActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_addMaterialActionPerformed
@@ -785,7 +828,7 @@ public class GUIStart extends javax.swing.JFrame {
                 model = (DefaultTableModel) materialJTable.getModel();
         }
 
-        model.setNumRows(0);
+        model.setRowCount(0);
 
         for (int i = 0; rowSet.next(); i++) {
             int N = model.getColumnCount();
@@ -820,7 +863,7 @@ public class GUIStart extends javax.swing.JFrame {
         printTable(rowSet);
         fillTable(rowSet, table_ID);
     }
-    
+
     /**
      * @param args the command line arguments
      */
@@ -829,7 +872,6 @@ public class GUIStart extends javax.swing.JFrame {
         GUIStart tela = new GUIStart(structBuilder.getObra());
         tela.setVisible(true);
     }
-    
     private final int MATERIAL = 0;
     private final int LOGISTIC = 1;
     private final int PROJECT = 2;

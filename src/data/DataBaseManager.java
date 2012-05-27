@@ -10,6 +10,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import javax.sql.rowset.CachedRowSet;
+import javax.sql.rowset.spi.SyncProviderException;
 
 /**
  *
@@ -110,9 +111,14 @@ public class DataBaseManager {
         materialRowSet.close();
     }
 
-    public void updateProject() throws SQLException {
-//        projectRowSet.acceptChanges(conn);
-        projectRowSet.close();
+    public void updateProject(int row, String name, String sponsor,
+            boolean defined, boolean aproved) throws SQLException {
+        projectRowSet.absolute(row);
+        projectRowSet.setString("name", name);
+        projectRowSet.setString("sponsor", sponsor);
+        projectRowSet.setBoolean("defined", defined);
+        projectRowSet.setBoolean("aproved", aproved);
+        projectRowSet.updateRow();
     }
 
     public void updateLogistic() throws SQLException {
@@ -162,6 +168,17 @@ public class DataBaseManager {
 
     public CachedRowSet getWorkmanRowSet() {
         return workmanRowSet;
+    }
+
+    public void acceptChanges() throws SyncProviderException, SQLException {
+        materialRowSet.acceptChanges(conn);
+        materialRowSet.close();
+        logisticRowSet.acceptChanges(conn);
+        logisticRowSet.close();
+        projectRowSet.acceptChanges(conn);
+        projectRowSet.close();
+        workmanRowSet.acceptChanges(conn);
+        workmanRowSet.close();
     }
 
     public void closeConnection() throws SQLException {

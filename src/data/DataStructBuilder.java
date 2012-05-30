@@ -32,7 +32,7 @@ public class DataStructBuilder {
     static final String PASSWORD = "vernacula";
 
     public DataStructBuilder() throws ClassNotFoundException, SQLException, IOException {
-        this("ASCII_input.csv");
+        this("utf8-AGO-sede-R04.csv");
     }
 
     public DataStructBuilder(String fileName) throws ClassNotFoundException, SQLException, IOException {

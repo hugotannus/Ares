@@ -111,6 +111,18 @@ public class DataBaseManager {
         materialRowSet.close();
     }
 
+    public void updateProject(int row, int col, String str) throws SQLException{
+        projectRowSet.absolute(row);
+        System.out.printf("Serviço ID: %d\t", projectRowSet.getInt("service_ID"));
+        System.out.printf("responsavel: %s\n", projectRowSet.getString(col));
+        projectRowSet.updateString(col, str);
+        projectRowSet.updateRow();
+        projectRowSet.acceptChanges(conn);
+        //projectRowSet.commit();
+        System.out.printf("Serviço ID: %d\t", projectRowSet.getInt("service_ID"));
+        System.out.printf("responsavel: %s\n", projectRowSet.getString(col));
+    }
+
     public void updateProject(int row, String name, String sponsor,
             boolean defined, boolean aproved) throws SQLException {
         projectRowSet.absolute(row);

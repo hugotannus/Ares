@@ -275,6 +275,7 @@
                                 <Column editable="true" title="Aprovado" type="java.lang.Boolean"/>
                               </Table>
                             </Property>
+                            <Property name="cellSelectionEnabled" type="boolean" value="true"/>
                             <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
                               <TableColumnModel selectionModel="0">
                                 <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
@@ -299,6 +300,9 @@
                                 </Column>
                               </TableColumnModel>
                             </Property>
+                            <Property name="cursor" type="java.awt.Cursor" editor="org.netbeans.modules.form.editors2.CursorEditor">
+                              <Color id="Default Cursor"/>
+                            </Property>
                             <Property name="tableHeader" type="javax.swing.table.JTableHeader" editor="org.netbeans.modules.form.editors2.JTableHeaderEditor">
                               <TableHeader reorderingAllowed="true" resizingAllowed="true"/>
                             </Property>
@@ -308,7 +312,7 @@
                           </Events>
                           <AuxValues>
                             <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new javax.swing.JTable(){&#xa;    public boolean isCellEditable(int row,int column){&#xa;        if (column &lt;= 2) return true;&#xa;        Object o = getValueAt(row,column-1);&#xa;        boolean b = (Boolean)o;&#xa;        //return &quot;true&quot;.equals(o.toString());&#xa;        return b;&#xa;    }&#xa;}&#xa;"/>
-                            <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="projectJTable.getSelectionModel().addListSelectionListener(new RowListener());&#xa;projectJTable.getColumnModel().getSelectionModel().addListSelectionListener(new ColumnListener());"/>
+                            <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="projectJTable.getSelectionModel().addListSelectionListener(new RowListener());&#xa;projectJTable.getColumnModel().getSelectionModel().addListSelectionListener(new ColumnListener());&#xa;projectJTable.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);"/>
                           </AuxValues>
                         </Component>
                       </SubComponents>

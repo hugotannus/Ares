@@ -192,13 +192,19 @@ public class DataBaseManager {
             default:
                 table = "service";
         }
+        System.out.println("Selecionou o tipo de dados...");
         addStmt = con.prepareStatement(
                 String.format("INSERT INTO %s (service_ID, name, sponsor)"
                 + "VALUES (?,?,?)", table));
+        System.out.println("Configurou o statement...");
         addStmt.setShort(1, serviceID);
+        System.out.println("service_ID\tOK!");
         addStmt.setString(2, name);
+        System.out.println("name\tOK!");
         addStmt.setString(3, sponsor);
+        System.out.println("sponsor\tOK!");
         addStmt.executeUpdate();
+        System.out.println("\nRealizou o Update com sucesso!");
     }
 
     public CachedRowSet getRowSet(int tableID) {

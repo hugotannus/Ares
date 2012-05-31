@@ -34,7 +34,6 @@
 package gui;
 
 import data.DataBaseManager;
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -51,9 +50,11 @@ public class AresTableModel extends DefaultTableModel {
     private CachedRowSet rowSet;
     private Class[] types;
     private int numberOfRows;
-    private PreparedStatement queryStmt;
-    private PreparedStatement addStmt;
     private final int TABLE_ID;
+    private final int SQL_ROW_CORRECTION = 1;
+    // Como não estamos pegando as colunas 'service_ID' e 'ID', então,
+    // é preciso deslocar a referência de colunas em mais duas unidades.
+    private final int SQL_COL_CORRECTION = 3;
 
     public AresTableModel(String[] columnNames, Class[] types, DataBaseManager dbManager, int tableID) {
         super(new Object[][]{}, columnNames);
@@ -65,13 +66,14 @@ public class AresTableModel extends DefaultTableModel {
 
     @Override
     public void addRow(Object obj[]) {
+        System.out.println("Tentou adicionar um projeto...");
         try {
             dbManager.addRow(TABLE_ID, (Short) obj[0], (String) obj[1], (String) obj[2]);
         } catch (SQLException ex) {
             Logger.getLogger(AresTableModel.class.getName()).log(Level.SEVERE, null, ex);
         }
-        fireTableRowsInserted(numberOfRows, numberOfRows);
         numberOfRows++;
+        fireTableRowsInserted(numberOfRows-1, numberOfRows-1);
     }
 
     @Override
@@ -92,10 +94,11 @@ public class AresTableModel extends DefaultTableModel {
     @Override
     public Object getValueAt(int row, int column) {
         try {
-            rowSet.absolute(row + 1);
-            return rowSet.getObject(column + 1);
-        }
-        catch (SQLException sqlException) {
+            // Deslocamento de índices requerido para obter corretamente os dados
+            // desejados.
+            rowSet.absolute(row + SQL_ROW_CORRECTION);
+            return rowSet.getObject(column + SQL_COL_CORRECTION);
+        } catch (SQLException sqlException) {
         }
 
         return "";
@@ -112,15 +115,24 @@ public class AresTableModel extends DefaultTableModel {
     @Override
     public void setValueAt(Object aValue, int row, int column) {
         try {
-            rowSet.absolute(row);
-            rowSet.updateObject(column, aValue);
+            // Aqui também precisamos realizar o deslocamento de índices;
+            /*
+            rowSet.absolute(row + SQL_ROW_CORRECTION);
+            rowSet.updateObject(column + SQL_COL_CORRECTION, aValue);
+            rowSet.updateRow();
+             *
+             */
+            dbManager.updateCellTable(TABLE_ID,
+                    row + SQL_ROW_CORRECTION,
+                    column + SQL_COL_CORRECTION,
+                    aValue);
         } catch (SQLException ex) {
             Logger.getLogger(AresTableModel.class.getName()).log(Level.SEVERE, null, ex);
         }
         fireTableCellUpdated(row, column);
     }
 
-    public void setQuery(short serviceID, int tableID) throws SQLException{
+    public void setQuery(short serviceID, int tableID) throws SQLException {
         rowSet = dbManager.executeQuery(serviceID, tableID);
         numberOfRows = rowSet.size();
         fireTableDataChanged();

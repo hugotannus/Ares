@@ -680,7 +680,7 @@ public class GUIStart extends javax.swing.JFrame {
     private void jButton_addProjectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_addProjectActionPerformed
         clearSelection(PROJECT);
         try {
-            dbManager.addProject((short) currentService.ID, "projeto", "responsavel");
+            dbManager.addRow(PROJECT, (short) currentService.ID, "projeto", "responsavel");
         } catch (SQLException ex) {
             Logger.getLogger(GUIStart.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -719,7 +719,7 @@ public class GUIStart extends javax.swing.JFrame {
         System.out.printf("Valor da célula: %s\n", model.getValueAt(tableRow,tableCol));
          try {
             // Atualiza o banco de dados aqui.
-            dbManager.updateProject(tableRow + 1, tableCol + 3, (String) model.getValueAt(tableRow, tableCol));
+            dbManager.updateProjectCell(tableRow + 1, tableCol + 3, model.getValueAt(tableRow, tableCol));
         } catch (SQLException ex) {
             Logger.getLogger(GUIStart.class.getName()).log(Level.SEVERE, null, ex);
              System.out.println("Não funfou a atualização, :-/");

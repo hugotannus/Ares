@@ -24,28 +24,105 @@
  * 2) Informações que seriam aproveitadas de cada consulta SQL:
  *  - quantidade de linhas existentes.
  *  - valor de cada célula
+ *
+ * (30/05/2012)
+ * A implementação de uma TableModel será, de fato, necessária, já que essa é a
+ * maneira mais fácil de se implementar a inserção e a atualização de dados de
+ * células na tabela. Para tanto, basta sobrescrever os métodos 'setValueAt' e
+ * 'addRow'.
  */
-
 package gui;
 
-import javax.swing.table.AbstractTableModel;
+import data.DataBaseManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.sql.rowset.CachedRowSet;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
  * @author hugo
  */
-public class AresTableModel extends AbstractTableModel {
+public class AresTableModel extends DefaultTableModel {
 
-    public int getRowCount() {
-        throw new UnsupportedOperationException("Not supported yet.");
+    private DataBaseManager dbManager;
+    private CachedRowSet rowSet;
+    private Class[] types;
+    private int numberOfRows;
+    private PreparedStatement queryStmt;
+    private PreparedStatement addStmt;
+    private final int TABLE_ID;
+
+    public AresTableModel(String[] columnNames, Class[] types, DataBaseManager dbManager, int tableID) {
+        super(new Object[][]{}, columnNames);
+        this.types = types;
+        this.TABLE_ID = tableID;
+        this.dbManager = dbManager;
+        this.rowSet = dbManager.getRowSet(tableID);
     }
 
+    @Override
+    public void addRow(Object obj[]) {
+        try {
+            dbManager.addRow(TABLE_ID, (Short) obj[0], (String) obj[1], (String) obj[2]);
+        } catch (SQLException ex) {
+            Logger.getLogger(AresTableModel.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        fireTableRowsInserted(numberOfRows, numberOfRows);
+        numberOfRows++;
+    }
+
+    @Override
+    public Class getColumnClass(int columnIndex) {
+        return types[columnIndex];
+    }
+
+    @Override
     public int getColumnCount() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return types.length;
     }
 
-    public Object getValueAt(int rowIndex, int columnIndex) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    @Override
+    public int getRowCount() {
+        return numberOfRows;
     }
 
+    @Override
+    public Object getValueAt(int row, int column) {
+        try {
+            rowSet.absolute(row + 1);
+            return rowSet.getObject(column + 1);
+        }
+        catch (SQLException sqlException) {
+        }
+
+        return "";
+    }
+
+    @Override
+    public boolean isCellEditable(int row, int column) {
+        if (column <= 2) {
+            return true;
+        }
+        return (Boolean) getValueAt(row, column - 1);
+    }
+
+    @Override
+    public void setValueAt(Object aValue, int row, int column) {
+        try {
+            rowSet.absolute(row);
+            rowSet.updateObject(column, aValue);
+        } catch (SQLException ex) {
+            Logger.getLogger(AresTableModel.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        fireTableCellUpdated(row, column);
+    }
+
+    public void setQuery(short serviceID, int tableID) throws SQLException{
+        rowSet = dbManager.executeQuery(serviceID, tableID);
+        numberOfRows = rowSet.size();
+        fireTableDataChanged();
+    }
 }

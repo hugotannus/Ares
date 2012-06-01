@@ -2,6 +2,7 @@
 import commons.Service;
 import data.DataBaseManager;
 import data.DataStructBuilder;
+import gui.AresTableModel;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.event.ItemEvent;
@@ -10,10 +11,14 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.io.IOException;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.sql.rowset.CachedRowSet;
+import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 
 /*
@@ -32,6 +37,13 @@ import javax.swing.table.DefaultTableModel;
  */
 public class GUIStart extends javax.swing.JFrame {
 
+    private int tableRow;
+    private int tableCol;
+
+    private void outputSelection() {
+        System.out.printf("Seleção: %d %d\n", tableRow, tableCol);
+    }
+
     /** Creates new form testeGui */
     public GUIStart(javax.swing.tree.TreeModel treeModel) {
         try {
@@ -47,15 +59,62 @@ public class GUIStart extends javax.swing.JFrame {
         for (int i = 0; i < looks.length; i++) {
             lookNames[i] = looks[i].getName();
         }
-        this.treeModel = treeModel;
-        projectTableModel = new javax.swing.table.DefaultTableModel();
-        projectTableModel.addColumn(new Object[]{"Descr","Resp", "Def", "Aprov"});
-        
+
+        this.treeModel = treeModel; // Faz referência ao objeto de modelagem da árvore de serviços.
+        currentService = (Service) treeModel.getRoot();
+
         handler = new ItemHandler(); // Handler da apar?ncia e do comportamento
         initComponents();
-        this.addWindowListener (exitListener);
-        changeTheLookAndFeel("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
+        this.addWindowListener(exitListener);
+        try {
+            changeTheLookAndFeel("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(GUIStart.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            Logger.getLogger(GUIStart.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            Logger.getLogger(GUIStart.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (UnsupportedLookAndFeelException ex) {
+            Logger.getLogger(GUIStart.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        setComponentsEnabled(servicePanel, false);
     }
+
+    private void changeTheLookAndFeel(int value)
+            throws ClassNotFoundException, InstantiationException,
+            IllegalAccessException, UnsupportedLookAndFeelException {
+        changeTheLookAndFeel(looks[value].getClassName());
+    }
+
+    private void changeTheLookAndFeel(String className)
+            throws ClassNotFoundException, InstantiationException,
+            IllegalAccessException, UnsupportedLookAndFeelException {
+        javax.swing.UIManager.setLookAndFeel(className);
+        System.out.println(className);
+        javax.swing.SwingUtilities.updateComponentTreeUI(this);
+    }
+
+    private class ItemHandler implements ItemListener {
+
+        public void itemStateChanged(ItemEvent event) {
+            System.out.println("Mudou o estado...");
+            for (int count = 0; count < lookSubMenus.length; count++) {
+                if (lookSubMenus[count].isSelected()) {
+                    try {
+                        changeTheLookAndFeel(count); // muda apar?ncia e comportamento
+                    } catch (ClassNotFoundException ex) {
+                        Logger.getLogger(GUIStart.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (InstantiationException ex) {
+                        Logger.getLogger(GUIStart.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (IllegalAccessException ex) {
+                        Logger.getLogger(GUIStart.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (UnsupportedLookAndFeelException ex) {
+                        Logger.getLogger(GUIStart.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                } // fim do if
+            } // fim do for
+        } // fim do m?todo itemStateChanged
+    } // fim da classe interna privada ItemHandler
 
     /** This method is called from within the constructor to
      * initialize the form.
@@ -71,7 +130,7 @@ public class GUIStart extends javax.swing.JFrame {
         servicePanel = new javax.swing.JPanel();
         subPanelProject = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable(){
+        projectJTable = new javax.swing.JTable(){
             public boolean isCellEditable(int row,int column){
                 if (column <= 2) return true;
                 Object o = getValueAt(row,column-1);
@@ -82,11 +141,11 @@ public class GUIStart extends javax.swing.JFrame {
         }
         ;
         jLabel3 = new javax.swing.JLabel();
-        jButton2 = new javax.swing.JButton();
+        jButton_addProject = new javax.swing.JButton();
         subPanelLabour = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jScrollPane3 = new javax.swing.JScrollPane();
-        jTable3 = new javax.swing.JTable(){
+        workmanJTable = new javax.swing.JTable(){
             public boolean isCellEditable(int row,int column){
                 if (column <= 2) return true;
                 Object o = getValueAt(row,column-1);
@@ -95,12 +154,12 @@ public class GUIStart extends javax.swing.JFrame {
                 return b;
             }
         };
-        jButton3 = new javax.swing.JButton();
+        jButton_addWorkman = new javax.swing.JButton();
         subPanelMaterial = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
+        jButton_addMaterial = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTable2 = new javax.swing.JTable(){
+        materialJTable = new javax.swing.JTable(){
             public boolean isCellEditable(int row,int column){
                 if (column <= 2) return true;
                 Object o = getValueAt(row,column-1);
@@ -111,9 +170,9 @@ public class GUIStart extends javax.swing.JFrame {
         };
         subPanelLogistics = new javax.swing.JPanel();
         jLabel5 = new javax.swing.JLabel();
-        jButton4 = new javax.swing.JButton();
+        jButton_addLogistic = new javax.swing.JButton();
         jScrollPane4 = new javax.swing.JScrollPane();
-        jTable4 = new javax.swing.JTable(){
+        logisticJTable = new javax.swing.JTable(){
             public boolean isCellEditable(int row,int column){
                 if (column <= 2) return true;
                 Object o = getValueAt(row,column-1);
@@ -125,8 +184,8 @@ public class GUIStart extends javax.swing.JFrame {
         serviceDescriptionLabel = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
-        jLabel7 = new javax.swing.JLabel();
-        jLabel8 = new javax.swing.JLabel();
+        startDateLabel = new javax.swing.JLabel();
+        endDateLabel = new javax.swing.JLabel();
         jButton5 = new javax.swing.JButton();
         jLabel9 = new javax.swing.JLabel();
         jTextField1 = new javax.swing.JTextField();
@@ -156,572 +215,703 @@ public class GUIStart extends javax.swing.JFrame {
         subPanelProject.setMaximumSize(new java.awt.Dimension(342, 32767));
         subPanelProject.setPreferredSize(new java.awt.Dimension(342, 85));
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-
-            },
+        projectJTable.getSelectionModel().addListSelectionListener(new RowListener());
+        projectJTable.getColumnModel().getSelectionModel().addListSelectionListener(new ColumnListener());
+        projectJTable.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        //AresTableModel(String[] columnNames, Class[] types, DataBaseManager dbManager, int tableID)
+        projectJTable.setModel(new AresTableModel(
             new String [] {
                 "Descricao", "Responsavel", "Definido", "Aprovado"
-            }
-        ) {
-            Class[] types = new Class [] {
+            },
+            new Class [] {
                 java.lang.String.class, java.lang.String.class, java.lang.Boolean.class, java.lang.Boolean.class
-            };
-
-            public Class getColumnClass(int columnIndex) {
-                return types [columnIndex];
-            }
-        });
-        jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jTable1MouseClicked(evt);
-            }
-        });
-        jScrollPane1.setViewportView(jTable1);
-
-        jLabel3.setText("Projetos");
-
-        jButton2.setText("Adicionar Projeto");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout subPanelProjectLayout = new javax.swing.GroupLayout(subPanelProject);
-        subPanelProject.setLayout(subPanelProjectLayout);
-        subPanelProjectLayout.setHorizontalGroup(
-            subPanelProjectLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(subPanelProjectLayout.createSequentialGroup()
-                .addGroup(subPanelProjectLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton2)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 361, Short.MAX_VALUE))
-                .addContainerGap())
-        );
-        subPanelProjectLayout.setVerticalGroup(
-            subPanelProjectLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(subPanelProjectLayout.createSequentialGroup()
-                .addComponent(jLabel3)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton2))
-        );
-
-        subPanelLabour.setBorder(javax.swing.BorderFactory.createTitledBorder("Mão de Obra"));
-        subPanelLabour.setMaximumSize(new java.awt.Dimension(342, 32767));
-
-        jLabel1.setText("Prestador do serviço:");
-
-        jTable3.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-
             },
-            new String [] {
-                "Descricao", "Responsavel", "Disponivel", "Contratada"
-            }
-        ) {
-            Class[] types = new Class [] {
-                java.lang.String.class, java.lang.Object.class, java.lang.Boolean.class, java.lang.Boolean.class
-            };
-
-            public Class getColumnClass(int columnIndex) {
-                return types [columnIndex];
-            }
-        });
-        jTable3.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jTable3MouseClicked(evt);
-            }
-        });
-        jScrollPane3.setViewportView(jTable3);
-
-        jButton3.setText("Adicionar Mao de Obra");
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout subPanelLabourLayout = new javax.swing.GroupLayout(subPanelLabour);
-        subPanelLabour.setLayout(subPanelLabourLayout);
-        subPanelLabourLayout.setHorizontalGroup(
-            subPanelLabourLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(subPanelLabourLayout.createSequentialGroup()
-                .addGroup(subPanelLabourLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(subPanelLabourLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jLabel1))
-                    .addComponent(jButton3)
-                    .addGroup(subPanelLabourLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 349, Short.MAX_VALUE)))
-                .addContainerGap())
-        );
-        subPanelLabourLayout.setVerticalGroup(
-            subPanelLabourLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(subPanelLabourLayout.createSequentialGroup()
-                .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton3))
-        );
-
-        subPanelMaterial.setBorder(javax.swing.BorderFactory.createTitledBorder("Material"));
-        subPanelMaterial.setMaximumSize(new java.awt.Dimension(366, 32767));
-
-        jLabel2.setText("Lista de Materiais:");
-
-        jButton1.setText("Adicionar Material");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
-            }
-        });
-
-        jTable2.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-
-            },
-            new String [] {
-                "Descricao", "Responsavel", "Solicitado", "in Loco", "Disponivel"
-            }
-        ) {
-            Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.Boolean.class, java.lang.Boolean.class, java.lang.Boolean.class
-            };
-
-            public Class getColumnClass(int columnIndex) {
-                return types [columnIndex];
-            }
-        });
-        jTable2.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jTable2MouseClicked(evt);
-            }
-        });
-        jScrollPane2.setViewportView(jTable2);
-
-        javax.swing.GroupLayout subPanelMaterialLayout = new javax.swing.GroupLayout(subPanelMaterial);
-        subPanelMaterial.setLayout(subPanelMaterialLayout);
-        subPanelMaterialLayout.setHorizontalGroup(
-            subPanelMaterialLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(subPanelMaterialLayout.createSequentialGroup()
-                .addGroup(subPanelMaterialLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(subPanelMaterialLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jLabel2))
-                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 174, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(169, 169, 169))
-            .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 370, Short.MAX_VALUE)
-        );
-        subPanelMaterialLayout.setVerticalGroup(
-            subPanelMaterialLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(subPanelMaterialLayout.createSequentialGroup()
-                .addComponent(jLabel2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton1))
-        );
-
-        subPanelLogistics.setBorder(javax.swing.BorderFactory.createTitledBorder("Logística"));
-
-        jLabel5.setText("Logística:");
-
-        jButton4.setText("Adicionar Logistica");
-        jButton4.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton4ActionPerformed(evt);
-            }
-        });
-
-        jTable4.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-
-            },
-            new String [] {
-                "Descricao", "Responsavel", "Definido", "Aprovado"
-            }
-        ) {
-            Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.Boolean.class, java.lang.Boolean.class
-            };
-
-            public Class getColumnClass(int columnIndex) {
-                return types [columnIndex];
-            }
-        });
-        jTable4.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jTable4MouseClicked(evt);
-            }
-        });
-        jScrollPane4.setViewportView(jTable4);
-
-        javax.swing.GroupLayout subPanelLogisticsLayout = new javax.swing.GroupLayout(subPanelLogistics);
-        subPanelLogistics.setLayout(subPanelLogisticsLayout);
-        subPanelLogisticsLayout.setHorizontalGroup(
-            subPanelLogisticsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(subPanelLogisticsLayout.createSequentialGroup()
-                .addGroup(subPanelLogisticsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(subPanelLogisticsLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jLabel5))
-                    .addComponent(jButton4))
-                .addContainerGap())
-            .addGroup(subPanelLogisticsLayout.createSequentialGroup()
-                .addGap(1, 1, 1)
-                .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 369, Short.MAX_VALUE))
-        );
-        subPanelLogisticsLayout.setVerticalGroup(
-            subPanelLogisticsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(subPanelLogisticsLayout.createSequentialGroup()
-                .addComponent(jLabel5)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton4))
-        );
-
-        serviceDescriptionLabel.setFont(new java.awt.Font("sansserif", 1, 18));
-        serviceDescriptionLabel.setText("OBRA");
-
-        jLabel4.setText("Data prevista para o Inicio:");
-
-        jLabel6.setText("Data prevista para Termino:");
-
-        jLabel7.setText("    /   /");
-
-        jLabel8.setText("    /   /");
-
-        jButton5.setText("Salvar");
-
-        jLabel9.setText("Orçamento:");
-
-        jTextField1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField1ActionPerformed(evt);
-            }
-        });
-
-        jTextArea1.setColumns(20);
-        jTextArea1.setLineWrap(true);
-        jTextArea1.setRows(5);
-        jScrollPane5.setViewportView(jTextArea1);
-
-        javax.swing.GroupLayout servicePanelLayout = new javax.swing.GroupLayout(servicePanel);
-        servicePanel.setLayout(servicePanelLayout);
-        servicePanelLayout.setHorizontalGroup(
-            servicePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(servicePanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(servicePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(serviceDescriptionLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 773, Short.MAX_VALUE)
-                    .addGroup(servicePanelLayout.createSequentialGroup()
-                        .addGap(6, 6, 6)
-                        .addGroup(servicePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(servicePanelLayout.createSequentialGroup()
-                                .addGroup(servicePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel4)
-                                    .addComponent(jLabel6))
-                                .addGap(63, 63, 63)
-                                .addGroup(servicePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, 138, Short.MAX_VALUE)))
-                            .addGroup(servicePanelLayout.createSequentialGroup()
-                                .addComponent(jLabel9)
-                                .addGap(18, 18, 18)
-                                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(18, 18, 18)
-                        .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 317, Short.MAX_VALUE)
-                        .addGap(12, 12, 12)
-                        .addComponent(jButton5))
-                    .addGroup(servicePanelLayout.createSequentialGroup()
-                        .addGroup(servicePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(subPanelLabour, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(subPanelProject, javax.swing.GroupLayout.DEFAULT_SIZE, 385, Short.MAX_VALUE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(servicePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(subPanelLogistics, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(subPanelMaterial, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-                .addContainerGap())
-        );
-        servicePanelLayout.setVerticalGroup(
-            servicePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(servicePanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(serviceDescriptionLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(servicePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(servicePanelLayout.createSequentialGroup()
-                        .addGroup(servicePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel4)
-                            .addComponent(jLabel7))
-                        .addGap(10, 10, 10)
-                        .addGroup(servicePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel6)
-                            .addComponent(jLabel8))
-                        .addGap(18, 18, 18)
-                        .addGroup(servicePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel9)
-                            .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(22, 22, 22))
-                    .addComponent(jButton5, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 117, Short.MAX_VALUE)
-                    .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(servicePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(subPanelProject, javax.swing.GroupLayout.DEFAULT_SIZE, 197, Short.MAX_VALUE)
-                    .addComponent(subPanelMaterial, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(servicePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(subPanelLabour, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(subPanelLogistics, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap())
-        );
-
-        jTabbedPane1.addTab("Serviço", servicePanel);
-
-        jSplitPane1.setRightComponent(jTabbedPane1);
-
-        scrlTree.setAutoscrolls(true);
-        scrlTree.setMaximumSize(new java.awt.Dimension(400, 600));
-        scrlTree.setMinimumSize(new java.awt.Dimension(120, 200));
-        scrlTree.setPreferredSize(new java.awt.Dimension(250, 363));
-
-        treeServicos.setAutoscrolls(true);
-        treeServicos.setShowsRootHandles(true);
-        treeServicos.setFocusCycleRoot(true);
-        treeServicos.setMaximumSize(new java.awt.Dimension(2000, 32000));
-        treeServicos.setMinimumSize(new java.awt.Dimension(200, 200));
-        treeServicos.setPreferredSize(new java.awt.Dimension(1000, 360));
-        treeServicos.addTreeSelectionListener(new javax.swing.event.TreeSelectionListener() {
-            public void valueChanged(javax.swing.event.TreeSelectionEvent evt) {
-                treeServicosValueChanged(evt);
-            }
-        });
-        scrlTree.setViewportView(treeServicos);
-
-        jSplitPane1.setLeftComponent(scrlTree);
-
-        fileMenu.setText("Arquivo");
-
-        jMenuItem2.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.CTRL_MASK));
-        jMenuItem2.setText("Salvar");
-        fileMenu.add(jMenuItem2);
-
-        jMenuBar1.add(fileMenu);
-
-        editMenu.setText("Editar");
-
-        lookMenu.setText("Aparencia");
-        group = new javax.swing.ButtonGroup(); // grupo de botões para aparência e comportamento
-
-        lookSubMenus = new javax.swing.JRadioButtonMenuItem[lookNames.length];
-        for(int count=0; count < lookSubMenus.length; count++)
-        {
-            lookSubMenus[count] = new javax.swing.JRadioButtonMenuItem(lookNames[count]);
-            lookSubMenus[count].addItemListener(handler); // adiciona handler
-            group.add(lookSubMenus[count]); // adiciona botões de opão ao grupo
-            lookMenu.add(lookSubMenus[count]);
+            dbManager, PROJECT)
+    );
+    projectJTable.setCellSelectionEnabled(true);
+    projectJTable.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+    projectJTable.addMouseListener(new java.awt.event.MouseAdapter() {
+        public void mouseClicked(java.awt.event.MouseEvent evt) {
+            projectJTableMouseClicked(evt);
         }
-        lookSubMenus[0].setSelected(true);
-        editMenu.add(lookMenu);
+    });
+    jScrollPane1.setViewportView(projectJTable);
 
-        jMenuBar1.add(editMenu);
+    jLabel3.setText("Projetos");
 
-        helpMenu.setText("Ajuda");
+    jButton_addProject.setText("Adicionar Projeto");
+    jButton_addProject.addActionListener(new java.awt.event.ActionListener() {
+        public void actionPerformed(java.awt.event.ActionEvent evt) {
+            jButton_addProjectActionPerformed(evt);
+        }
+    });
 
-        jMenuItem1.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F1, 0));
-        jMenuItem1.setText("Sobre");
-        helpMenu.add(jMenuItem1);
+    javax.swing.GroupLayout subPanelProjectLayout = new javax.swing.GroupLayout(subPanelProject);
+    subPanelProject.setLayout(subPanelProjectLayout);
+    subPanelProjectLayout.setHorizontalGroup(
+        subPanelProjectLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        .addGroup(subPanelProjectLayout.createSequentialGroup()
+            .addGroup(subPanelProjectLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jButton_addProject)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 365, Short.MAX_VALUE))
+            .addContainerGap())
+    );
+    subPanelProjectLayout.setVerticalGroup(
+        subPanelProjectLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        .addGroup(subPanelProjectLayout.createSequentialGroup()
+            .addComponent(jLabel3)
+            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+            .addComponent(jButton_addProject))
+    );
 
-        jMenuBar1.add(helpMenu);
+    subPanelLabour.setBorder(javax.swing.BorderFactory.createTitledBorder("Mão de Obra"));
+    subPanelLabour.setMaximumSize(new java.awt.Dimension(342, 32767));
 
-        setJMenuBar(jMenuBar1);
+    jLabel1.setText("Prestador do serviço:");
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jSplitPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 935, Short.MAX_VALUE)
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jSplitPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 595, Short.MAX_VALUE)
-        );
+    workmanJTable.setModel(new javax.swing.table.DefaultTableModel(
+        new Object [][] {
 
-        pack();
+        },
+        new String [] {
+            "Descricao", "Responsavel", "Disponivel", "Contratada"
+        }
+    ) {
+        Class[] types = new Class [] {
+            java.lang.String.class, java.lang.Object.class, java.lang.Boolean.class, java.lang.Boolean.class
+        };
+
+        public Class getColumnClass(int columnIndex) {
+            return types [columnIndex];
+        }
+    });
+    workmanJTable.addMouseListener(new java.awt.event.MouseAdapter() {
+        public void mouseClicked(java.awt.event.MouseEvent evt) {
+            workmanJTableMouseClicked(evt);
+        }
+    });
+    jScrollPane3.setViewportView(workmanJTable);
+
+    jButton_addWorkman.setText("Adicionar Mao de Obra");
+    jButton_addWorkman.addActionListener(new java.awt.event.ActionListener() {
+        public void actionPerformed(java.awt.event.ActionEvent evt) {
+            jButton_addWorkmanActionPerformed(evt);
+        }
+    });
+
+    javax.swing.GroupLayout subPanelLabourLayout = new javax.swing.GroupLayout(subPanelLabour);
+    subPanelLabour.setLayout(subPanelLabourLayout);
+    subPanelLabourLayout.setHorizontalGroup(
+        subPanelLabourLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        .addGroup(subPanelLabourLayout.createSequentialGroup()
+            .addGroup(subPanelLabourLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(subPanelLabourLayout.createSequentialGroup()
+                    .addContainerGap()
+                    .addComponent(jLabel1))
+                .addComponent(jButton_addWorkman)
+                .addGroup(subPanelLabourLayout.createSequentialGroup()
+                    .addContainerGap()
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 353, Short.MAX_VALUE)))
+            .addContainerGap())
+    );
+    subPanelLabourLayout.setVerticalGroup(
+        subPanelLabourLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        .addGroup(subPanelLabourLayout.createSequentialGroup()
+            .addComponent(jLabel1)
+            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+            .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jButton_addWorkman))
+    );
+
+    subPanelMaterial.setBorder(javax.swing.BorderFactory.createTitledBorder("Material"));
+    subPanelMaterial.setMaximumSize(new java.awt.Dimension(366, 32767));
+
+    jLabel2.setText("Lista de Materiais:");
+
+    jButton_addMaterial.setText("Adicionar Material");
+    jButton_addMaterial.addActionListener(new java.awt.event.ActionListener() {
+        public void actionPerformed(java.awt.event.ActionEvent evt) {
+            jButton_addMaterialActionPerformed(evt);
+        }
+    });
+
+    materialJTable.setModel(new javax.swing.table.DefaultTableModel(
+        new Object [][] {
+
+        },
+        new String [] {
+            "Descricao", "Responsavel", "Solicitado", "in Loco", "Disponivel"
+        }
+    ) {
+        Class[] types = new Class [] {
+            java.lang.String.class, java.lang.String.class, java.lang.Boolean.class, java.lang.Boolean.class, java.lang.Boolean.class
+        };
+
+        public Class getColumnClass(int columnIndex) {
+            return types [columnIndex];
+        }
+    });
+    materialJTable.addMouseListener(new java.awt.event.MouseAdapter() {
+        public void mouseClicked(java.awt.event.MouseEvent evt) {
+            materialJTableMouseClicked(evt);
+        }
+    });
+    jScrollPane2.setViewportView(materialJTable);
+
+    javax.swing.GroupLayout subPanelMaterialLayout = new javax.swing.GroupLayout(subPanelMaterial);
+    subPanelMaterial.setLayout(subPanelMaterialLayout);
+    subPanelMaterialLayout.setHorizontalGroup(
+        subPanelMaterialLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        .addGroup(subPanelMaterialLayout.createSequentialGroup()
+            .addGroup(subPanelMaterialLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(subPanelMaterialLayout.createSequentialGroup()
+                    .addContainerGap()
+                    .addComponent(jLabel2))
+                .addComponent(jButton_addMaterial, javax.swing.GroupLayout.PREFERRED_SIZE, 174, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGap(169, 169, 169))
+        .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 366, Short.MAX_VALUE)
+    );
+    subPanelMaterialLayout.setVerticalGroup(
+        subPanelMaterialLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        .addGroup(subPanelMaterialLayout.createSequentialGroup()
+            .addComponent(jLabel2)
+            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+            .addComponent(jButton_addMaterial))
+    );
+
+    subPanelLogistics.setBorder(javax.swing.BorderFactory.createTitledBorder("Logística"));
+
+    jLabel5.setText("Logística:");
+
+    jButton_addLogistic.setText("Adicionar Logistica");
+    jButton_addLogistic.addActionListener(new java.awt.event.ActionListener() {
+        public void actionPerformed(java.awt.event.ActionEvent evt) {
+            jButton_addLogisticActionPerformed(evt);
+        }
+    });
+
+    logisticJTable.setModel(new javax.swing.table.DefaultTableModel(
+        new Object [][] {
+
+        },
+        new String [] {
+            "Descricao", "Responsavel", "Definido", "Aprovado"
+        }
+    ) {
+        Class[] types = new Class [] {
+            java.lang.String.class, java.lang.String.class, java.lang.Boolean.class, java.lang.Boolean.class
+        };
+
+        public Class getColumnClass(int columnIndex) {
+            return types [columnIndex];
+        }
+    });
+    logisticJTable.addMouseListener(new java.awt.event.MouseAdapter() {
+        public void mouseClicked(java.awt.event.MouseEvent evt) {
+            logisticJTableMouseClicked(evt);
+        }
+    });
+    jScrollPane4.setViewportView(logisticJTable);
+
+    javax.swing.GroupLayout subPanelLogisticsLayout = new javax.swing.GroupLayout(subPanelLogistics);
+    subPanelLogistics.setLayout(subPanelLogisticsLayout);
+    subPanelLogisticsLayout.setHorizontalGroup(
+        subPanelLogisticsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        .addGroup(subPanelLogisticsLayout.createSequentialGroup()
+            .addGroup(subPanelLogisticsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(subPanelLogisticsLayout.createSequentialGroup()
+                    .addContainerGap()
+                    .addComponent(jLabel5))
+                .addComponent(jButton_addLogistic))
+            .addContainerGap())
+        .addGroup(subPanelLogisticsLayout.createSequentialGroup()
+            .addGap(1, 1, 1)
+            .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 365, Short.MAX_VALUE))
+    );
+    subPanelLogisticsLayout.setVerticalGroup(
+        subPanelLogisticsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        .addGroup(subPanelLogisticsLayout.createSequentialGroup()
+            .addComponent(jLabel5)
+            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+            .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jButton_addLogistic))
+    );
+
+    serviceDescriptionLabel.setFont(new java.awt.Font("sansserif", 1, 18));
+    serviceDescriptionLabel.setText("OBRA");
+
+    jLabel4.setText("Data prevista para o Inicio:");
+
+    jLabel6.setText("Data prevista para Termino:");
+
+    startDateLabel.setText("    /   /");
+
+    endDateLabel.setText("    /   /");
+
+    jButton5.setText("Salvar");
+
+    jLabel9.setText("Orçamento:");
+
+    jTextField1.addActionListener(new java.awt.event.ActionListener() {
+        public void actionPerformed(java.awt.event.ActionEvent evt) {
+            jTextField1ActionPerformed(evt);
+        }
+    });
+
+    jTextArea1.setColumns(20);
+    jTextArea1.setLineWrap(true);
+    jTextArea1.setRows(5);
+    jScrollPane5.setViewportView(jTextArea1);
+
+    javax.swing.GroupLayout servicePanelLayout = new javax.swing.GroupLayout(servicePanel);
+    servicePanel.setLayout(servicePanelLayout);
+    servicePanelLayout.setHorizontalGroup(
+        servicePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        .addGroup(servicePanelLayout.createSequentialGroup()
+            .addContainerGap()
+            .addGroup(servicePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addComponent(serviceDescriptionLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 773, Short.MAX_VALUE)
+                .addGroup(servicePanelLayout.createSequentialGroup()
+                    .addGap(6, 6, 6)
+                    .addGroup(servicePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(servicePanelLayout.createSequentialGroup()
+                            .addGroup(servicePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(jLabel4)
+                                .addComponent(jLabel6))
+                            .addGap(63, 63, 63)
+                            .addGroup(servicePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(endDateLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(startDateLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 138, Short.MAX_VALUE)))
+                        .addGroup(servicePanelLayout.createSequentialGroup()
+                            .addComponent(jLabel9)
+                            .addGap(18, 18, 18)
+                            .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGap(18, 18, 18)
+                    .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 317, Short.MAX_VALUE)
+                    .addGap(12, 12, 12)
+                    .addComponent(jButton5))
+                .addGroup(servicePanelLayout.createSequentialGroup()
+                    .addGroup(servicePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(subPanelLabour, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(subPanelProject, javax.swing.GroupLayout.DEFAULT_SIZE, 389, Short.MAX_VALUE))
+                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addGroup(servicePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addComponent(subPanelLogistics, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(subPanelMaterial, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+            .addContainerGap())
+    );
+    servicePanelLayout.setVerticalGroup(
+        servicePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        .addGroup(servicePanelLayout.createSequentialGroup()
+            .addContainerGap()
+            .addComponent(serviceDescriptionLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+            .addGroup(servicePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(servicePanelLayout.createSequentialGroup()
+                    .addGroup(servicePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel4)
+                        .addComponent(startDateLabel))
+                    .addGap(10, 10, 10)
+                    .addGroup(servicePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel6)
+                        .addComponent(endDateLabel))
+                    .addGap(18, 18, 18)
+                    .addGroup(servicePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel9)
+                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGap(22, 22, 22))
+                .addComponent(jButton5, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 117, Short.MAX_VALUE)
+                .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+            .addGroup(servicePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addComponent(subPanelProject, javax.swing.GroupLayout.DEFAULT_SIZE, 197, Short.MAX_VALUE)
+                .addComponent(subPanelMaterial, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+            .addGroup(servicePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addComponent(subPanelLabour, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(subPanelLogistics, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addContainerGap())
+    );
+
+    jTabbedPane1.addTab("Serviço", servicePanel);
+
+    jSplitPane1.setRightComponent(jTabbedPane1);
+
+    scrlTree.setAutoscrolls(true);
+    scrlTree.setMaximumSize(new java.awt.Dimension(400, 600));
+    scrlTree.setMinimumSize(new java.awt.Dimension(120, 200));
+    scrlTree.setPreferredSize(new java.awt.Dimension(250, 363));
+
+    treeServicos.setAutoscrolls(true);
+    treeServicos.setShowsRootHandles(true);
+    treeServicos.setFocusCycleRoot(true);
+    treeServicos.setMaximumSize(new java.awt.Dimension(2000, 32000));
+    treeServicos.setMinimumSize(new java.awt.Dimension(200, 200));
+    treeServicos.setPreferredSize(new java.awt.Dimension(1000, 360));
+    treeServicos.addTreeSelectionListener(new javax.swing.event.TreeSelectionListener() {
+        public void valueChanged(javax.swing.event.TreeSelectionEvent evt) {
+            treeServicosValueChanged(evt);
+        }
+    });
+    scrlTree.setViewportView(treeServicos);
+
+    jSplitPane1.setLeftComponent(scrlTree);
+
+    fileMenu.setText("Arquivo");
+
+    jMenuItem2.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.CTRL_MASK));
+    jMenuItem2.setText("Salvar");
+    fileMenu.add(jMenuItem2);
+
+    jMenuBar1.add(fileMenu);
+
+    editMenu.setText("Editar");
+
+    lookMenu.setText("Aparencia");
+    group = new javax.swing.ButtonGroup(); // grupo de botões para aparência e comportamento
+
+    lookSubMenus = new javax.swing.JRadioButtonMenuItem[lookNames.length];
+    for(int count=0; count < lookSubMenus.length; count++)
+    {
+        lookSubMenus[count] = new javax.swing.JRadioButtonMenuItem(lookNames[count]);
+        lookSubMenus[count].addItemListener(handler); // adiciona handler
+        group.add(lookSubMenus[count]); // adiciona botões de opão ao grupo
+        lookMenu.add(lookSubMenus[count]);
+    }
+    lookSubMenus[0].setSelected(true);
+    editMenu.add(lookMenu);
+
+    jMenuBar1.add(editMenu);
+
+    helpMenu.setText("Ajuda");
+
+    jMenuItem1.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F1, 0));
+    jMenuItem1.setText("Sobre");
+    helpMenu.add(jMenuItem1);
+
+    jMenuBar1.add(helpMenu);
+
+    setJMenuBar(jMenuBar1);
+
+    javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+    getContentPane().setLayout(layout);
+    layout.setHorizontalGroup(
+        layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        .addComponent(jSplitPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 935, Short.MAX_VALUE)
+    );
+    layout.setVerticalGroup(
+        layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        .addComponent(jSplitPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 595, Short.MAX_VALUE)
+    );
+
+    pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void treeServicosValueChanged(javax.swing.event.TreeSelectionEvent evt) {//GEN-FIRST:event_treeServicosValueChanged
-        if(currentService != null) {
-            if(currentService.isLeaf())
+        if (currentService != null && currentService.isLeaf()) {
             try {
+                dbManager.acceptChanges();
                 dbManager.updateService(jTextArea1.getText(), jTextField1.getText());
             } catch (SQLException ex) {
                 Logger.getLogger(GUIStart.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-
+        tableRow = tableCol = 0;
+        System.out.printf("Zerou os tables, mano! %d %d\n", tableRow, tableCol);
         currentService = (Service) treeServicos.getLastSelectedPathComponent();
-        
-        serviceDescriptionLabel.setText(currentService.getDescricao());
         System.out.printf("Noh selecionado: %s\n", currentService);
-        System.out.printf("Data de inicio: %s\n", currentService.dataInicio);
-        System.out.printf("Data de termino: %s\n", currentService.dataTermino);
-        jLabel7.setText(currentService.dataInicio.toString());
-        jLabel8.setText(currentService.dataTermino.toString());
 
-        //service = (Service) treeServicos.getLastSelectedPathComponent();
+        serviceDescriptionLabel.setText(currentService.getDescricao());
+        startDateLabel.setText(currentService.dataInicio.toString());
+        endDateLabel.setText(currentService.dataTermino.toString());
 
         if (currentService == null) {
             return;
         } else {
             serviceDescriptionLabel.setText(currentService.getDescricao());
             if (currentService.isLeaf()) {
-                setComponentsEnabled(servicePanel, true);
                 try {
+                    setComponentsEnabled(servicePanel, true);
+
                     loadServiceData(currentService);
+                    loadData(currentService.ID, MATERIAL);
+                    loadData(currentService.ID, LOGISTIC);
+                    //loadData(currentService.ID, PROJECT);
+                    loadData(currentService.ID, WORKMAN);
+
+                    AresTableModel projectModel = (AresTableModel)projectJTable.getModel();
+                    projectModel.setQuery(currentService.ID, PROJECT);
+
                     jTextArea1.setText(currentService.comments);
-                    //jTextArea1.setText(currentService.comments.toString());
                     jTextField1.setText(currentService.budget);
                 } catch (SQLException ex) {
                     Logger.getLogger(GUIStart.class.getName()).log(Level.SEVERE, null, ex);
                 }
             } else {
                 System.out.printf("%s é apenas um nó, e não um serviço!\n", currentService);
+                jTextArea1.setText("");
+                jTextField1.setText("");
+                clearTables();
                 setComponentsEnabled(servicePanel, false);
             }
         }
         System.out.println("-----------------------------");
+
     }//GEN-LAST:event_treeServicosValueChanged
 
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        DefaultTableModel model = (DefaultTableModel) jTable3.getModel();
-        model.addRow(new Object[]{"prestador","responsavel",false,false});
-        jScrollPane3.setViewportView(jTable3);
-        int line = jTable3.getRowCount() - 1;
-        clearSelection(3);
-        jTable3.changeSelection(line, 0, false, false);
-    }//GEN-LAST:event_jButton3ActionPerformed
+    private void jButton_addWorkmanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_addWorkmanActionPerformed
+        clearSelection(WORKMAN);
+        DefaultTableModel model = (DefaultTableModel) workmanJTable.getModel();
+        model.addRow(new Object[]{"prestador", "responsavel", false, false});
+        jScrollPane3.setViewportView(workmanJTable);
+        int line = workmanJTable.getRowCount() - 1;
+        workmanJTable.changeSelection(line, 0, false, false);
+    }//GEN-LAST:event_jButton_addWorkmanActionPerformed
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
-        model.addRow(new Object[]{"material","responsavel",false,false});
-        jScrollPane1.setViewportView(jTable1);
-        int line = jTable1.getRowCount() - 1;
-        System.out.println("lineNumber: " + line);
-        clearSelection(1);
-        jTable1.changeSelection(line, 0, false, false);
-    }//GEN-LAST:event_jButton2ActionPerformed
+    private void jButton_addProjectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_addProjectActionPerformed
+        clearSelection(PROJECT);
+        /*
+        try {
+            dbManager.addRow(PROJECT, (short) currentService.ID, "projeto", "responsavel");
+        } catch (SQLException ex) {
+            Logger.getLogger(GUIStart.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
-    private void jTable3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable3MouseClicked
-        clearSelection(3);
-    }//GEN-LAST:event_jTable3MouseClicked
+        DefaultTableModel model = (DefaultTableModel) projectJTable.getModel();
+        model.addRow(new Object[]{"projeto", "responsavel", false, false});
+        jScrollPane1.setViewportView(projectJTable);
+        int line = projectJTable.getRowCount() - 1;
+        projectJTable.changeSelection(line, 0, false, false);
+         *
+         */
+        DefaultTableModel model = (AresTableModel) projectJTable.getModel();
+        model.addRow(new Object[]{currentService.ID, "projeto", "responsavel"});
 
-    private void jTable2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable2MouseClicked
-        clearSelection(2);
-    }//GEN-LAST:event_jTable2MouseClicked
+    }//GEN-LAST:event_jButton_addProjectActionPerformed
 
-    private void jTable4MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable4MouseClicked
-        clearSelection(4);
-    }//GEN-LAST:event_jTable4MouseClicked
+    private void workmanJTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_workmanJTableMouseClicked
+        clearSelection(WORKMAN);
+    }//GEN-LAST:event_workmanJTableMouseClicked
 
-    private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
-        clearSelection(1);
-    }//GEN-LAST:event_jTable1MouseClicked
+    private void materialJTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_materialJTableMouseClicked
+        clearSelection(MATERIAL);
+    }//GEN-LAST:event_materialJTableMouseClicked
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        DefaultTableModel model = (DefaultTableModel) jTable2.getModel();
-        model.addRow(new Object[]{"projeto","responsavel",false,false,false});
-        jScrollPane2.setViewportView(jTable2);
-        int line = jTable2.getRowCount() - 1;
-        clearSelection(2);
-        jTable2.changeSelection(line, 0, false, false);
-    }//GEN-LAST:event_jButton1ActionPerformed
+    private void logisticJTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_logisticJTableMouseClicked
+        clearSelection(LOGISTIC);
+    }//GEN-LAST:event_logisticJTableMouseClicked
 
-    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        DefaultTableModel model = (DefaultTableModel) jTable4.getModel();
-        model.addRow(new Object[]{"logistica","responsavel",false,false});
-        jScrollPane4.setViewportView(jTable4);
-        int line = jTable4.getRowCount() - 1;
-        clearSelection(4);
-        jTable4.changeSelection(line, 0, false, false);
-    }//GEN-LAST:event_jButton4ActionPerformed
+    private void projectJTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_projectJTableMouseClicked
+        clearSelection(PROJECT);
+        /*
+        System.out.println("-------------");
+        System.out.printf("tableRow: %d \ttableCol: %d\n", tableRow, tableCol);
+
+        System.out.printf("Row: %d \tColumn: %d\n",
+                projectJTable.getSelectedRow(), projectJTable.getSelectedColumn());
+        System.out.printf("tableRow: %d \ttableCol: %d\n", tableRow, tableCol);
+
+        DefaultTableModel model = (DefaultTableModel) projectJTable.getModel();
+        model.setValueAt(model.getValueAt(tableRow, tableCol), tableRow, tableCol);
+
+        System.out.printf("Valor da célula: %s\n", model.getValueAt(tableRow, tableCol));
+        */
+        //DefaultTableModel model = (AresTableModel) projectJTable.getModel();
+         
+            // Atualiza o banco de dados aqui.
+            //dbManager.updateProjectCell(tableRow + 1, tableCol + 3, model.getValueAt(tableRow, tableCol));
+        //model.setValueAt(model.getValueAt(tableRow, tableCol), tableRow, tableCol);
+        
+
+        //tableRow = projectJTable.getSelectedRow();
+        //tableCol = projectJTable.getSelectedColumn();
+    }//GEN-LAST:event_projectJTableMouseClicked
+
+    private void jButton_addMaterialActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_addMaterialActionPerformed
+        clearSelection(MATERIAL);
+        DefaultTableModel model = (DefaultTableModel) materialJTable.getModel();
+        model.addRow(new Object[]{"material", "responsavel", false, false, false});
+        jScrollPane2.setViewportView(materialJTable);
+        int line = materialJTable.getRowCount() - 1;
+        materialJTable.changeSelection(line, 0, false, false);
+    }//GEN-LAST:event_jButton_addMaterialActionPerformed
+
+    private void jButton_addLogisticActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_addLogisticActionPerformed
+        clearSelection(LOGISTIC);
+        DefaultTableModel model = (DefaultTableModel) logisticJTable.getModel();
+        model.addRow(new Object[]{"logistica", "responsavel", false, false});
+        jScrollPane4.setViewportView(logisticJTable);
+        int line = logisticJTable.getRowCount() - 1;
+        logisticJTable.changeSelection(line, 0, false, false);
+    }//GEN-LAST:event_jButton_addLogisticActionPerformed
 
     private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextField1ActionPerformed
-    
-    private void clearSelection(int panel) {
-        if(panel != 1) jTable1.clearSelection();
-        if(panel != 2) jTable2.clearSelection();
-        if(panel != 3) jTable3.clearSelection();
-        if(panel != 4) jTable4.clearSelection();
+
+    private void clearSelection(int tableId) {
+        if (tableId != PROJECT) {
+            projectJTable.clearSelection();
+        }
+        if (tableId != MATERIAL) {
+            materialJTable.clearSelection();
+        }
+        if (tableId != WORKMAN) {
+            workmanJTable.clearSelection();
+        }
+        if (tableId != LOGISTIC) {
+            logisticJTable.clearSelection();
+        }
     }
-    
-    public void setComponentsEnabled(Container component, boolean b) {
+
+    private void setComponentsEnabled(Container component, boolean enabled) {
         Component[] com = component.getComponents();
         for (int a = 0; a < com.length; a++) {
-            com[a].setEnabled(b);
+            com[a].setEnabled(enabled);
             if (com[a] instanceof Container) {
-                setComponentsEnabled((Container) com[a], b);
+                setComponentsEnabled((Container) com[a], enabled);
             }
         }
     }
 
-    public void loadServiceData(Service service) throws SQLException {
-        String query = String.format("SELECT * FROM service WHERE service_ID = %d", service.ID);
-        dbManager.executeQuery(query);
-        CachedRowSet rowSet = dbManager.getRowSet();
-        if(rowSet.next()) {
+    private void loadServiceData(Service service) throws SQLException {
+        CachedRowSet rowSet = dbManager.executeServiceQuery(service.ID);
+        if (rowSet.next()) {
             currentService.budget = rowSet.getString(6);
             currentService.comments = rowSet.getString(7);
-            //currentService.comments = rowSet.getBlob(7);
         }
     }
 
-    private void changeTheLookAndFeel(int value) {
-        changeTheLookAndFeel(looks[value].getClassName());
+    private void printTable(CachedRowSet rowSet) throws SQLException {
+        ResultSetMetaData meta = rowSet.getMetaData();
+        for (int i = 1; i <= meta.getColumnCount(); i++) {
+            System.out.printf(" %s\t", meta.getColumnLabel(i));
+        }
+        System.out.println("");
+        while (rowSet.next()) {
+            for (int i = 1; i <= meta.getColumnCount(); i++) {
+                System.out.printf(" %s\t", rowSet.getObject(i));
+            }
+            System.out.println("");
+        }
+        System.out.println("");
     }
 
-    private void changeTheLookAndFeel(String className) {
-        try // muda apar?ncia e comportamento
-        {
-            // configura apar?ncia e comportamento para esse aplicativo
-            javax.swing.UIManager.setLookAndFeel(className);
-            System.out.println(className);
-            // atualiza os componetnes nesse aplicativo
-            javax.swing.SwingUtilities.updateComponentTreeUI(this);
-        } // fim do try
-        catch (Exception exception) {
-        } // fim do catch
-    } // fim do m?todo changeTheLookAndFeel
+    private void fillTable(CachedRowSet rowSet, int table_id) throws SQLException {
+        rowSet.beforeFirst();
+        javax.swing.table.DefaultTableModel model;
+        switch (table_id) {
+            case MATERIAL:
+                model = (DefaultTableModel) materialJTable.getModel();
+                break;
+            case LOGISTIC:
+                model = (DefaultTableModel) logisticJTable.getModel();
+                break;
+            case PROJECT:
+                model = (DefaultTableModel) projectJTable.getModel();
+                break;
+            case WORKMAN:
+                model = (DefaultTableModel) workmanJTable.getModel();
+                break;
+            default:
+                model = (DefaultTableModel) materialJTable.getModel();
+        }
 
-    private class ItemHandler implements ItemListener {
+        model.setRowCount(0);
 
-        public void itemStateChanged(ItemEvent event) {
-            System.out.println("Mudou o estado...");
-            for (int count = 0; count < lookSubMenus.length; count++) {
-                if (lookSubMenus[count].isSelected()) {
-                    changeTheLookAndFeel(count); // muda apar?ncia e comportamento
-                } // fim do if
-            } // fim do for
-        } // fim do m?todo itemStateChanged
-    } // fim da classe interna privada ItemHandler
+        for (int i = 0; rowSet.next(); i++) {
+            int N = model.getColumnCount();
+            Object obj[] = new Object[N];
+            obj[0] = rowSet.getString(3);
+            obj[1] = rowSet.getString(4);
+            for (int k = 2; k < N; k++) {
+                obj[k] = rowSet.getBoolean(k + 3);
+            }
+            model.addRow(obj);
+        }
+    }
+
+    private void clearTables() {
+        DefaultTableModel model;
+        model = (DefaultTableModel) projectJTable.getModel();
+        model.setRowCount(0);
+        model = (DefaultTableModel) logisticJTable.getModel();
+        model.setRowCount(0);
+        model = (DefaultTableModel) materialJTable.getModel();
+        model.setRowCount(0);
+        model = (DefaultTableModel) workmanJTable.getModel();
+        model.setRowCount(0);
+    }
+
+    private class RowListener implements ListSelectionListener {
+
+        public void valueChanged(ListSelectionEvent lse) {
+            if (lse.getValueIsAdjusting()) {
+                return;
+            }
+            //tableRow = projectJTable.getSelectionModel().getLeadSelectionIndex();
+        }
+    }
+
+    private class ColumnListener implements ListSelectionListener {
+
+        public void valueChanged(ListSelectionEvent event) {
+            if (event.getValueIsAdjusting()) {
+                return;
+            }
+            //tableCol = projectJTable.getColumnModel().getSelectionModel().getLeadSelectionIndex();
+        }
+    }
+
+    private void loadData(short service_ID, int table_ID) throws SQLException {
+        CachedRowSet rowSet;
+        switch (table_ID) {
+            case MATERIAL:
+                rowSet = dbManager.executeMaterialQuery(service_ID);
+                break;
+            case LOGISTIC:
+                rowSet = dbManager.executeLogisticQuery(service_ID);
+                break;
+            case PROJECT:
+                rowSet = dbManager.executeProjectQuery(service_ID);
+                break;
+            case WORKMAN:
+                rowSet = dbManager.executeWorkmanQuery(service_ID);
+                break;
+            default:
+                rowSet = dbManager.executeMaterialQuery(service_ID);
+        }
+        printTable(rowSet);
+        fillTable(rowSet, table_ID);
+    }
 
     /**
      * @param args the command line arguments
      */
     public static void main(String args[]) throws SQLException, ClassNotFoundException, IOException {
-
-        DataStructBuilder structBuilder = new DataStructBuilder("utf8-AGO-sede-R04.csv");
+        DataStructBuilder structBuilder;
+        if (args.length == 2) {
+            structBuilder = new DataStructBuilder(args[1]);
+            System.out.printf("Lendo o arquivo %s ...\n", args[1]);
+        } else {
+            structBuilder = new DataStructBuilder();
+            System.out.println("Leu arquivo padrão.");
+        }
         GUIStart tela = new GUIStart(structBuilder.getObra());
+
         tela.setVisible(true);
     }
+    private final int MATERIAL = 0;
+    private final int LOGISTIC = 1;
+    private final int PROJECT = 2;
+    private final int WORKMAN = 3;
     private String lookNames[];
     private ItemHandler handler;
     private DataBaseManager dbManager;
@@ -734,7 +924,6 @@ public class GUIStart extends javax.swing.JFrame {
     private javax.swing.table.DefaultTableModel logisticTableModel;
     private javax.swing.table.DefaultTableModel materialTableModel;
     private javax.swing.table.DefaultTableModel manpowerTableModel;
-
     private WindowListener exitListener = new WindowAdapter() {
 
         @Override
@@ -745,36 +934,36 @@ public class GUIStart extends javax.swing.JFrame {
                     javax.swing.JOptionPane.QUESTION_MESSAGE,
                     null, null, null);
             if (confirm == 0) {
-                try {
-                    dbManager.updateService(jTextArea1.getText(), jTextField1.getText());
-                    dbManager.closeConnection();
-                } catch (SQLException ex) {
-                    Logger.getLogger(GUIStart.class.getName()).log(Level.SEVERE, null, ex);
+                if (currentService.isLeaf()) {
+                    try {
+                        dbManager.updateService(jTextArea1.getText(), jTextField1.getText());
+                        dbManager.acceptChanges();
+                        dbManager.closeConnection();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(GUIStart.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                 }
-                System.out.println("Programa finalizado com sucesso! (by Hugo)");
+                System.out.println("Programa finalizado com sucesso! (by Hugo)\n");
                 System.exit(0);
             }
         }
     };
-
-    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenu editMenu;
+    private javax.swing.JLabel endDateLabel;
     private javax.swing.JMenu fileMenu;
     private javax.swing.JMenu helpMenu;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
+    private javax.swing.JButton jButton_addLogistic;
+    private javax.swing.JButton jButton_addMaterial;
+    private javax.swing.JButton jButton_addProject;
+    private javax.swing.JButton jButton_addWorkman;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
-    private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
@@ -786,20 +975,21 @@ public class GUIStart extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JTabbedPane jTabbedPane1;
-    private javax.swing.JTable jTable1;
-    private javax.swing.JTable jTable2;
-    private javax.swing.JTable jTable3;
-    private javax.swing.JTable jTable4;
     private javax.swing.JTextArea jTextArea1;
     private javax.swing.JTextField jTextField1;
+    private javax.swing.JTable logisticJTable;
     private javax.swing.JMenu lookMenu;
+    private javax.swing.JTable materialJTable;
+    private javax.swing.JTable projectJTable;
     private javax.swing.JScrollPane scrlTree;
     private javax.swing.JLabel serviceDescriptionLabel;
     private javax.swing.JPanel servicePanel;
+    private javax.swing.JLabel startDateLabel;
     private javax.swing.JPanel subPanelLabour;
     private javax.swing.JPanel subPanelLogistics;
     private javax.swing.JPanel subPanelMaterial;
     private javax.swing.JPanel subPanelProject;
     private javax.swing.JTree treeServicos;
+    private javax.swing.JTable workmanJTable;
     // End of variables declaration//GEN-END:variables
 }

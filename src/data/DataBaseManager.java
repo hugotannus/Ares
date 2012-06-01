@@ -4,9 +4,10 @@
  */
 package data;
 
-
 import com.sun.rowset.CachedRowSetImpl;
-import commons.Material;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import javax.sql.rowset.CachedRowSet;
 import javax.sql.rowset.spi.SyncProviderException;
@@ -25,57 +26,241 @@ public class DataBaseManager {
      */
     private CachedRowSet serviceRowSet;
     private CachedRowSet materialRowSet;
+    private CachedRowSet logisticRowSet;
+    private CachedRowSet projectRowSet;
+    private CachedRowSet workmanRowSet;
+    private PreparedStatement serviceStmt;
+    private final PreparedStatement materialStmt;
+    private final PreparedStatement logisticStmt;
+    private final PreparedStatement projectStmt;
+    private final PreparedStatement workmanStmt;
+    private PreparedStatement addStmt;
     static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
     static final String DATABASE_URL = "jdbc:mysql://localhost/ares";
     static final String USERNAME = "ares";
     static final String PASSWORD = "vernacula";
+    private final int MATERIAL = 0;
+    private final int LOGISTIC = 1;
+    private final int PROJECT = 2;
+    private final int WORKMAN = 3;
+    private Connection con;
 
-    public DataBaseManager() throws ClassNotFoundException, SQLException {
-        Class.forName(JDBC_DRIVER);
+    public DataBaseManager(String userName, String password) throws ClassNotFoundException, SQLException {
+        con = getConnection(userName, password);
+
+        serviceStmt = con.prepareStatement("SELECT * FROM service WHERE ID=?");
+        projectStmt = con.prepareStatement("SELECT * FROM project WHERE service_id=?");
+        materialStmt = con.prepareStatement("SELECT * FROM material WHERE service_id=?");
+        logisticStmt = con.prepareStatement("SELECT * FROM logistic WHERE service_id=?");
+        workmanStmt = con.prepareStatement("SELECT * FROM workman WHERE service_id=?");
 
         serviceRowSet = new CachedRowSetImpl();
-        serviceRowSet.setUrl(DATABASE_URL);
-        serviceRowSet.setUsername(USERNAME);
-        serviceRowSet.setPassword(PASSWORD);
-        //serviceRowSet.a
+        projectRowSet = new CachedRowSetImpl();
+        materialRowSet = new CachedRowSetImpl();
+        logisticRowSet = new CachedRowSetImpl();
+        workmanRowSet = new CachedRowSetImpl();
     }
 
-    public void executeQuery(String query) throws SQLException {
-        serviceRowSet.setCommand(query);
-        serviceRowSet.execute();
+    public DataBaseManager() throws ClassNotFoundException, SQLException {
+        this(USERNAME, PASSWORD);
     }
 
-    public CachedRowSet getRowSet() {
+    public CachedRowSet executeQuery(short ID, int tableID) throws SQLException {
+        switch (tableID) {
+            case MATERIAL:
+                return executeMaterialQuery(ID);
+            case LOGISTIC:
+                return executeLogisticQuery(ID);
+            case PROJECT:
+                return executeProjectQuery(ID);
+            case WORKMAN:
+                return executeWorkmanQuery(ID);
+            default:
+                return executeServiceQuery(ID);
+        }
+    }
+
+    public CachedRowSet executeServiceQuery(int ID) throws SQLException {
+        serviceStmt.setInt(1, ID);
+        serviceRowSet.populate(serviceStmt.executeQuery());
         return serviceRowSet;
+    }
+
+    public CachedRowSet executeMaterialQuery(short ID) throws SQLException {
+        materialStmt.setInt(1, ID);
+        materialRowSet.populate(materialStmt.executeQuery());
+        return materialRowSet;
+    }
+
+    public CachedRowSet executeProjectQuery(short ID) throws SQLException {
+        projectStmt.setInt(1, ID);
+        projectRowSet.populate(projectStmt.executeQuery());
+        return projectRowSet;
+    }
+
+    public CachedRowSet executeLogisticQuery(short ID) throws SQLException {
+        logisticStmt.setInt(1, ID);
+        logisticRowSet.populate(logisticStmt.executeQuery());
+        return logisticRowSet;
+    }
+
+    public CachedRowSet executeWorkmanQuery(short ID) throws SQLException {
+        workmanStmt.setInt(1, ID);
+        workmanRowSet.populate(workmanStmt.executeQuery());
+        return workmanRowSet;
     }
 
     public void updateService(String comment, String budget) throws SQLException {
         //System.out.printf("budget: %s.\tService: %s.\n", budget, service);
-        if(budget.length() == 0) budget = null;
+        if (budget.length() == 0) {
+            budget = null;
+        }
         //System.out.printf("budget: %s.\tService: %s.\n", budget, service);
         serviceRowSet.moveToCurrentRow();
- /*       rowSet.updateString("topic_struct", service.estTopicos);
-        rowSet.updateShort("service_ID", service.ID);
-        rowSet.updateString("service_name", service.getDescricao());
-        rowSet.updateDate("begin_date", (Date) service.dataInicio);
-        rowSet.updateDate("end_date", (Date) service.dataTermino);
-  */    serviceRowSet.updateString("comments", comment);
-        //rowSet.updateBlob("comments", new SerialBlob(comment.getBytes()));
+        serviceRowSet.updateString("comments", comment);
         serviceRowSet.updateString("budget", budget);
         serviceRowSet.updateRow();
-        //serviceRowSet.acceptChanges();
-    }
-
-    public void acceptChanges() throws SyncProviderException{
-        serviceRowSet.acceptChanges();
-    }
-
-    public void updateMaterial(Material material) {
-        throw new UnsupportedOperationException("Not supported yet.");
-
-    }
-
-    public void closeConnection() throws SQLException{
+        serviceRowSet.acceptChanges(con);
         serviceRowSet.close();
+    }
+
+    public void updateCellTable(int tableID, int row, int col, Object obj) throws SQLException {
+        switch (tableID) {
+            case MATERIAL:
+                updateMaterialCell(row, col, obj);
+                break;
+            case LOGISTIC:
+                updateLogisticCell(row, col, obj);
+                break;
+            case PROJECT:
+                updateProjectCell(row, col, obj);
+                break;
+            case WORKMAN:
+                updateWorkmanCell(row, col, obj);
+                break;
+            default:
+        }
+    }
+
+    private void updateMaterialCell(int row, int col, Object obj) {
+        throw new UnsupportedOperationException("Not yet implemented");
+    }
+
+    private void updateLogisticCell(int row, int col, Object obj) {
+        throw new UnsupportedOperationException("Not yet implemented");
+    }
+
+    private void updateWorkmanCell(int row, int col, Object obj) {
+        throw new UnsupportedOperationException("Not yet implemented");
+    }
+
+    public void updateProjectCell(int row, int col, Object obj) throws SQLException {
+        projectRowSet.absolute(row);
+        System.out.printf("Serviço ID: %d\t", projectRowSet.getInt("service_ID"));
+        System.out.printf("responsavel: %s\n", projectRowSet.getString(col));
+        projectRowSet.updateObject(col, obj);
+        projectRowSet.updateRow();
+        System.out.printf("Serviço ID: %d\t", projectRowSet.getInt("service_ID"));
+        System.out.printf("responsavel: %s\n", projectRowSet.getString(col));
+    }
+
+    public void updateProject(int row, String name, String sponsor,
+            boolean defined, boolean aproved) throws SQLException {
+        projectRowSet.absolute(row);
+        projectRowSet.setString("name", name);
+        projectRowSet.setString("sponsor", sponsor);
+        projectRowSet.setBoolean("defined", defined);
+        projectRowSet.setBoolean("aproved", aproved);
+        projectRowSet.updateRow();
+    }
+
+    public void addRow(int tableID, short serviceID, String name, String sponsor) throws SQLException {
+        String table;
+        switch (tableID) {
+            case MATERIAL:
+                table = "material";
+                break;
+            case LOGISTIC:
+                table = "logistic";
+                break;
+            case PROJECT:
+                table = "project";
+                break;
+            case WORKMAN:
+                table = "workman";
+                break;
+            default:
+                table = "service";
+        }
+        System.out.println("Selecionou o tipo de dados...");
+        addStmt = con.prepareStatement(
+                String.format("INSERT INTO %s (service_ID, name, sponsor)"
+                + "VALUES (?,?,?)", table));
+        System.out.println("Configurou o statement...");
+        addStmt.setShort(1, serviceID);
+        System.out.println("service_ID\tOK!");
+        addStmt.setString(2, name);
+        System.out.println("name\tOK!");
+        addStmt.setString(3, sponsor);
+        System.out.println("sponsor\tOK!");
+        addStmt.executeUpdate();
+        System.out.println("\nRealizou o Update com sucesso!");
+    }
+
+    public CachedRowSet getRowSet(int tableID) {
+        switch (tableID) {
+            case MATERIAL:
+                return getMaterialRowSet();
+            case LOGISTIC:
+                return getLogisticRowSet();
+            case PROJECT:
+                return getProjectRowSet();
+            case WORKMAN:
+                return getWorkmanRowSet();
+            default:
+                return getServiceRowSet();
+        }
+    }
+
+    public CachedRowSet getServiceRowSet() {
+        return serviceRowSet;
+    }
+
+    public CachedRowSet getLogisticRowSet() {
+        return logisticRowSet;
+    }
+
+    public CachedRowSet getMaterialRowSet() {
+        return materialRowSet;
+    }
+
+    public CachedRowSet getProjectRowSet() {
+        return projectRowSet;
+    }
+
+    public CachedRowSet getWorkmanRowSet() {
+        return workmanRowSet;
+    }
+
+    public Connection getConnection(String userName, String password) throws ClassNotFoundException, SQLException {
+        Class.forName(JDBC_DRIVER);
+        Connection conn = DriverManager.getConnection(DATABASE_URL, USERNAME, PASSWORD);
+        conn.setAutoCommit(false);
+        return conn;
+    }
+
+    public void acceptChanges() throws SyncProviderException, SQLException {
+        materialRowSet.acceptChanges(con);
+        materialRowSet.close();
+        logisticRowSet.acceptChanges(con);
+        logisticRowSet.close();
+        projectRowSet.acceptChanges(con);
+        projectRowSet.close();
+        workmanRowSet.acceptChanges(con);
+        workmanRowSet.close();
+    }
+
+    public void closeConnection() throws SQLException {
+        con.close();
     }
 }

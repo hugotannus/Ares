@@ -31,20 +31,19 @@ public class DataStructBuilder {
     static final String USERNAME = "ares";
     static final String PASSWORD = "vernacula";
 
-    public DataStructBuilder() throws ClassNotFoundException, SQLException, IOException {
-        this("ASCII_input.csv");
+     public DataStructBuilder() throws ClassNotFoundException, SQLException, IOException {
+        this("utf8-AGO-sede-R04.csv");
     }
 
     public DataStructBuilder(String fileName) throws ClassNotFoundException, SQLException, IOException {
-     
-            Class.forName(JDBC_DRIVER);
+        Class.forName(JDBC_DRIVER);
 
-            startingRowSet = new JdbcRowSetImpl();
-            startingRowSet.setUrl(DATABASE_URL);
-            startingRowSet.setUsername(USERNAME);
-            startingRowSet.setPassword(PASSWORD);
-            startingRowSet.setCommand("SELECT * FROM service");
-            startingRowSet.execute();
+        startingRowSet = new JdbcRowSetImpl();
+        startingRowSet.setUrl(DATABASE_URL);
+        startingRowSet.setUsername(USERNAME);
+        startingRowSet.setPassword(PASSWORD);
+        startingRowSet.setCommand("SELECT * FROM service");
+        startingRowSet.execute();
 
             if (startingRowSet.next()) {
                 readFromDataBase();
@@ -53,22 +52,24 @@ public class DataStructBuilder {
             }
             startingRowSet.close();
        // setRequirementData((Service) obra.getRoot());
+
+        if (startingRowSet.next()) {
+            readFromDataBase();
+        } else {
+            readFromCSV(fileName);
+        }
+        startingRowSet.close();
+
+        //setRequirementData((Service) obra.getRoot());
+
     }
 
     private void readFromDataBase() throws SQLException {
+        boolean flag = true;
         Service service;
         String[] topics;
-        service = new Service(
-                startingRowSet.getString(1),
-                startingRowSet.getShort(2),
-                startingRowSet.getString(3),
-                startingRowSet.getDate(4),
-                startingRowSet.getDate(5),
-                startingRowSet.getString(6),
-                startingRowSet.getString(7));
-        this.obra = new ObraTreeModel(service);
 
-        while (startingRowSet.next()) {
+        do {
             service = new Service(
                     startingRowSet.getString(1),
                     startingRowSet.getShort(2),
@@ -77,9 +78,15 @@ public class DataStructBuilder {
                     startingRowSet.getDate(5),
                     startingRowSet.getString(6),
                     startingRowSet.getString(7));
-            topics = service.estTopicos.split(":", 2);
-            this.obra.addNode(topics, (Node) obra.getRoot(), service);
-        }
+            if (flag) {
+                this.obra = new ObraTreeModel(service);
+                flag = false;
+            } else {
+                topics = service.estTopicos.split(":", 2);
+                this.obra.addNode(topics, (Node) obra.getRoot(), service);
+            }
+        } while (startingRowSet.next());
+
         System.out.println("DADOS CARREGADOS COM SUCESSO!!!!!");
     }
 
@@ -87,7 +94,6 @@ public class DataStructBuilder {
         List<String> lines = new ArrayList<String>(); // variável que receberá as linhas lidas do arquivo CSV
         CSVFileReader csvReader = new CSVFileReader(fileName);
         lines = csvReader.readCSVFile();
-        
         // Eliminando o cabeçalho CSV da lista:
         String header = lines.remove(0);
         Iterator<String> it = lines.iterator();
@@ -115,8 +121,8 @@ public class DataStructBuilder {
         Service service = (Service) lastNode;
         startingRowSet.moveToInsertRow();
         startingRowSet.updateString("topic_struct", service.estTopicos);
-        startingRowSet.updateShort("service_ID", service.ID);
-        startingRowSet.updateString("service_name", service.getDescricao());
+        startingRowSet.updateShort("ID", service.ID);
+        startingRowSet.updateString("name", service.getDescricao());
         startingRowSet.updateDate("begin_date", (Date) service.dataInicio);
         startingRowSet.updateDate("end_date", (Date) service.dataTermino);
         startingRowSet.insertRow();

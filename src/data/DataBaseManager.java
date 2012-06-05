@@ -9,6 +9,8 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.sql.rowset.CachedRowSet;
 import javax.sql.rowset.spi.SyncProviderException;
 
@@ -192,19 +194,16 @@ public class DataBaseManager {
             default:
                 table = "service";
         }
-        System.out.println("Selecionou o tipo de dados...");
         addStmt = con.prepareStatement(
                 String.format("INSERT INTO %s (service_ID, name, sponsor)"
                 + "VALUES (?,?,?)", table));
-        System.out.println("Configurou o statement...");
         addStmt.setShort(1, serviceID);
-        System.out.println("service_ID\tOK!");
         addStmt.setString(2, name);
-        System.out.println("name\tOK!");
         addStmt.setString(3, sponsor);
-        System.out.println("sponsor\tOK!");
         addStmt.executeUpdate();
-        System.out.println("\nRealizou o Update com sucesso!");
+        this.acceptChanges(tableID);
+
+        System.out.printf("ServiceID: %d", serviceID);
     }
 
     public CachedRowSet getRowSet(int tableID) {
@@ -258,6 +257,25 @@ public class DataBaseManager {
         projectRowSet.close();
         workmanRowSet.acceptChanges(con);
         workmanRowSet.close();
+    }
+
+    public void acceptChanges(int tableID) throws SyncProviderException, SQLException {
+        switch (tableID) {
+            case MATERIAL:
+                materialRowSet.acceptChanges(con);
+                break;
+            case LOGISTIC:
+                logisticRowSet.acceptChanges(con);
+                break;
+            case PROJECT:
+                projectRowSet.acceptChanges(con);
+                break;
+            case WORKMAN:
+                workmanRowSet.acceptChanges(con);
+                break;
+            default:
+                this.acceptChanges();
+        }
     }
 
     public void closeConnection() throws SQLException {

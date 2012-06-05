@@ -35,9 +35,11 @@ package gui;
 
 import data.DataBaseManager;
 import java.sql.SQLException;
+import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.sql.rowset.CachedRowSet;
+import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -46,6 +48,7 @@ import javax.swing.table.DefaultTableModel;
  */
 public class AresTableModel extends DefaultTableModel {
 
+    private final String[] columnNames;
     private DataBaseManager dbManager;
     private CachedRowSet rowSet;
     private Class[] types;
@@ -57,23 +60,40 @@ public class AresTableModel extends DefaultTableModel {
     private final int SQL_COL_CORRECTION = 3;
 
     public AresTableModel(String[] columnNames, Class[] types, DataBaseManager dbManager, int tableID) {
-        super(new Object[][]{}, columnNames);
+        //super(new Object[][]{}, columnNames);
+        this.columnNames = columnNames;
         this.types = types;
         this.TABLE_ID = tableID;
         this.dbManager = dbManager;
         this.rowSet = dbManager.getRowSet(tableID);
     }
 
-    @Override
-    public void addRow(Object obj[]) {
-        System.out.println("Tentou adicionar um projeto...");
+ 
+    public void addRow(short service_ID) {
+        /*
+        numberOfRows++;
+        Vector vector = new Vector();
+        vector.add("nome");
+        vector.add("responsavel");
+        vector.add(false);
+        vector.add(false);
+        if(TABLE_ID == 0) vector.add(false);
+        this.addRow(vector);
+        */
+         System.out.println("Tentou adicionar um projeto...");
+        System.out.printf("Tamanho do rowSet antes: %d...\n", rowSet.size());
         try {
-            dbManager.addRow(TABLE_ID, (Short) obj[0], (String) obj[1], (String) obj[2]);
+            dbManager.addRow(TABLE_ID, service_ID, "nome", "responsavel");
+            rowSet = dbManager.getRowSet(TABLE_ID);
         } catch (SQLException ex) {
             Logger.getLogger(AresTableModel.class.getName()).log(Level.SEVERE, null, ex);
         }
-        numberOfRows++;
-        fireTableRowsInserted(numberOfRows-1, numberOfRows-1);
+        System.out.printf("... e depois: %d.\n", rowSet.size());
+        
+        int line = numberOfRows++;
+        this.setRowCount(line+1);
+        this.fireTableRowsInserted(line, line);
+        //this.fireTableDataChanged();
     }
 
     @Override
@@ -84,6 +104,11 @@ public class AresTableModel extends DefaultTableModel {
     @Override
     public int getColumnCount() {
         return types.length;
+    }
+
+    @Override
+    public String getColumnName(int column) {
+        return columnNames[column];
     }
 
     @Override
@@ -100,7 +125,6 @@ public class AresTableModel extends DefaultTableModel {
             return rowSet.getObject(column + SQL_COL_CORRECTION);
         } catch (SQLException sqlException) {
         }
-
         return "";
     }
 
@@ -135,6 +159,7 @@ public class AresTableModel extends DefaultTableModel {
     public void setQuery(short serviceID, int tableID) throws SQLException {
         rowSet = dbManager.executeQuery(serviceID, tableID);
         numberOfRows = rowSet.size();
+        System.out.printf("numberOfRows: %d\n", numberOfRows);
         fireTableDataChanged();
     }
 }

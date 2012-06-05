@@ -20,6 +20,7 @@ import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
 
 /*
  * To change this template, choose Tools | Templates
@@ -691,8 +692,9 @@ public class GUIStart extends javax.swing.JFrame {
         projectJTable.changeSelection(line, 0, false, false);
          *
          */
-        DefaultTableModel model = (AresTableModel) projectJTable.getModel();
-        model.addRow(new Object[]{currentService.ID, "projeto", "responsavel"});
+        AresTableModel model = (AresTableModel) projectJTable.getModel();
+        
+            model.addRow(currentService.ID);
 
     }//GEN-LAST:event_jButton_addProjectActionPerformed
 
@@ -839,15 +841,19 @@ public class GUIStart extends javax.swing.JFrame {
     }
 
     private void clearTables() {
+        AresTableModel amodel;
+        amodel = (AresTableModel) projectJTable.getModel();
+        amodel.setRowCount(0);
+
         DefaultTableModel model;
-        model = (DefaultTableModel) projectJTable.getModel();
-        model.setRowCount(0);
         model = (DefaultTableModel) logisticJTable.getModel();
         model.setRowCount(0);
         model = (DefaultTableModel) materialJTable.getModel();
         model.setRowCount(0);
         model = (DefaultTableModel) workmanJTable.getModel();
         model.setRowCount(0);
+
+        //
     }
 
     private class RowListener implements ListSelectionListener {

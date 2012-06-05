@@ -31,7 +31,7 @@ public class DataStructBuilder {
     static final String USERNAME = "ares";
     static final String PASSWORD = "vernacula";
 
-     public DataStructBuilder() throws ClassNotFoundException, SQLException, IOException {
+    public DataStructBuilder() throws ClassNotFoundException, SQLException, IOException {
         this("utf8-AGO-sede-R04.csv");
     }
 
@@ -45,14 +45,6 @@ public class DataStructBuilder {
         startingRowSet.setCommand("SELECT * FROM service");
         startingRowSet.execute();
 
-            if (startingRowSet.next()) {
-                readFromDataBase();
-            } else {
-                readFromCSV(fileName);
-            }
-            startingRowSet.close();
-       // setRequirementData((Service) obra.getRoot());
-
         if (startingRowSet.next()) {
             readFromDataBase();
         } else {
@@ -61,7 +53,6 @@ public class DataStructBuilder {
         startingRowSet.close();
 
         //setRequirementData((Service) obra.getRoot());
-
     }
 
     private void readFromDataBase() throws SQLException {

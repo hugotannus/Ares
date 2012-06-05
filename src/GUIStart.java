@@ -910,6 +910,7 @@ public class GUIStart extends javax.swing.JFrame {
             structBuilder = new DataStructBuilder();
             System.out.println("Leu arquivo padrão.");
         }
+
         GUIStart tela = new GUIStart(structBuilder.getObra());
 
         tela.setVisible(true);

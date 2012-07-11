@@ -9,8 +9,6 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.sql.rowset.CachedRowSet;
 import javax.sql.rowset.spi.SyncProviderException;
 
@@ -38,17 +36,19 @@ public class DataBaseManager {
     private final PreparedStatement workmanStmt;
     private PreparedStatement addStmt;
     static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
-    static final String DATABASE_URL = "jdbc:mysql://localhost/ares";
+    static final String DATABASE_URL = "jdbc:mysql://mysql02-farm26.kinghost.net/";
     static final String USERNAME = "ares";
-    static final String PASSWORD = "vernacula";
+    static final char[] PASSWORD = {'v','e','r','n','a','c','u','l','a'};
     private final int MATERIAL = 0;
     private final int LOGISTIC = 1;
     private final int PROJECT = 2;
     private final int WORKMAN = 3;
     private Connection con;
+    private boolean connected = false;
 
-    public DataBaseManager(String userName, String password) throws ClassNotFoundException, SQLException {
+    public DataBaseManager(String userName, char[] password) throws ClassNotFoundException, SQLException {
         con = getConnection(userName, password);
+        connected = true;
 
         serviceStmt = con.prepareStatement("SELECT * FROM service WHERE ID=?");
         projectStmt = con.prepareStatement("SELECT * FROM project WHERE service_id=?");
@@ -67,6 +67,10 @@ public class DataBaseManager {
         this(USERNAME, PASSWORD);
     }
 
+    public boolean isConnected() {
+        return connected;
+    }
+    
     public CachedRowSet executeQuery(short ID, int tableID) throws SQLException {
         switch (tableID) {
             case MATERIAL:
@@ -241,9 +245,9 @@ public class DataBaseManager {
         return workmanRowSet;
     }
 
-    public Connection getConnection(String userName, String password) throws ClassNotFoundException, SQLException {
+    public Connection getConnection(String userName, char[] password) throws ClassNotFoundException, SQLException {
         Class.forName(JDBC_DRIVER);
-        Connection conn = DriverManager.getConnection(DATABASE_URL, USERNAME, PASSWORD);
+        Connection conn = DriverManager.getConnection(DATABASE_URL+userName, userName, new String(password));
         conn.setAutoCommit(false);
         return conn;
     }
@@ -279,6 +283,7 @@ public class DataBaseManager {
     }
 
     public void closeConnection() throws SQLException {
+        connected = false;
         con.close();
     }
 }

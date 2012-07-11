@@ -27,21 +27,30 @@ public class DataStructBuilder {
     private JdbcRowSet startingRowSet;
     // JDBC driver, database URL, username and password
     static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
-    static final String DATABASE_URL = "jdbc:mysql://localhost/ares";
+    static final String DATABASE_URL = "jdbc:mysql://mysql02-farm26.kinghost.net/";
     static final String USERNAME = "ares";
     static final String PASSWORD = "vernacula";
+    private String user;
+    private char[] password;
 
     public DataStructBuilder() throws ClassNotFoundException, SQLException, IOException {
-        this("utf8-AGO-sede-R04.csv");
+        this(USERNAME,PASSWORD.toCharArray());
+    }
+    
+
+    public DataStructBuilder(String user, char[] password)
+            throws ClassNotFoundException, SQLException, IOException {
+        this("utf8-AGO-sede-R04.csv", user, password);
     }
 
-    public DataStructBuilder(String fileName) throws ClassNotFoundException, SQLException, IOException {
+    public DataStructBuilder(String fileName, String user, char[] password)
+            throws ClassNotFoundException, SQLException, IOException {
         Class.forName(JDBC_DRIVER);
 
         startingRowSet = new JdbcRowSetImpl();
-        startingRowSet.setUrl(DATABASE_URL);
-        startingRowSet.setUsername(USERNAME);
-        startingRowSet.setPassword(PASSWORD);
+        startingRowSet.setUrl(DATABASE_URL+user);
+        startingRowSet.setUsername(user);
+        startingRowSet.setPassword(new String(password));
         startingRowSet.setCommand("SELECT * FROM service");
         startingRowSet.execute();
 

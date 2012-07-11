@@ -3,6 +3,7 @@ import commons.Service;
 import data.DataBaseManager;
 import data.DataStructBuilder;
 import gui.AresTableModel;
+import gui.LoginForm;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.event.ItemEvent;
@@ -46,14 +47,16 @@ public class GUIStart extends javax.swing.JFrame {
     }
 
     /** Creates new form testeGui */
-    public GUIStart(javax.swing.tree.TreeModel treeModel) {
-        try {
-            dbManager = new DataBaseManager();
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(GUIStart.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (SQLException ex) {
-            Logger.getLogger(GUIStart.class.getName()).log(Level.SEVERE, null, ex);
-        }
+    public GUIStart() throws ClassNotFoundException, SQLException, IOException {
+        LoginForm loginForm;
+        do {
+            loginForm = new LoginForm(this);
+            loginForm.setVisible(true);
+            dbManager = new DataBaseManager(loginForm.getUser(), loginForm.getPassword());
+        } while(!dbManager.isConnected());
+
+        DataStructBuilder structBuilder =
+                new DataStructBuilder(loginForm.getUser(), loginForm.getPassword());
 
         looks = javax.swing.UIManager.getInstalledLookAndFeels();
         lookNames = new String[looks.length];
@@ -61,23 +64,12 @@ public class GUIStart extends javax.swing.JFrame {
             lookNames[i] = looks[i].getName();
         }
 
-        this.treeModel = treeModel; // Faz referência ao objeto de modelagem da árvore de serviços.
+        this.treeModel = structBuilder.getObra(); // Faz referência ao objeto de modelagem da árvore de serviços.
         currentService = (Service) treeModel.getRoot();
 
         handler = new ItemHandler(); // Handler da apar?ncia e do comportamento
         initComponents();
         this.addWindowListener(exitListener);
-        try {
-            changeTheLookAndFeel("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(GUIStart.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            Logger.getLogger(GUIStart.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            Logger.getLogger(GUIStart.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (UnsupportedLookAndFeelException ex) {
-            Logger.getLogger(GUIStart.class.getName()).log(Level.SEVERE, null, ex);
-        }
         setComponentsEnabled(servicePanel, false);
     }
 
@@ -902,17 +894,7 @@ public class GUIStart extends javax.swing.JFrame {
      * @param args the command line arguments
      */
     public static void main(String args[]) throws SQLException, ClassNotFoundException, IOException {
-        DataStructBuilder structBuilder;
-        if (args.length == 2) {
-            structBuilder = new DataStructBuilder(args[1]);
-            System.out.printf("Lendo o arquivo %s ...\n", args[1]);
-        } else {
-            structBuilder = new DataStructBuilder();
-            System.out.println("Leu arquivo padrão.");
-        }
-
-        GUIStart tela = new GUIStart(structBuilder.getObra());
-
+        GUIStart tela = new GUIStart();
         tela.setVisible(true);
     }
     private final int MATERIAL = 0;

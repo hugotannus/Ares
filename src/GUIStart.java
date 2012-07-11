@@ -49,6 +49,7 @@ public class GUIStart extends javax.swing.JFrame {
     /** Creates new form testeGui */
     public GUIStart() throws ClassNotFoundException, SQLException, IOException {
         LoginForm loginForm;
+        int mark = 0;
         do {
             loginForm = new LoginForm(this);
             loginForm.setVisible(true);
@@ -62,6 +63,9 @@ public class GUIStart extends javax.swing.JFrame {
         lookNames = new String[looks.length];
         for (int i = 0; i < looks.length; i++) {
             lookNames[i] = looks[i].getName();
+            if(lookNames[i].equalsIgnoreCase("nimbus")) {
+                mark = i;
+            }
         }
 
         this.treeModel = structBuilder.getObra(); // Faz referência ao objeto de modelagem da árvore de serviços.
@@ -69,6 +73,7 @@ public class GUIStart extends javax.swing.JFrame {
 
         handler = new ItemHandler(); // Handler da apar?ncia e do comportamento
         initComponents();
+        lookSubMenus[mark].setSelected(true);
         this.addWindowListener(exitListener);
         setComponentsEnabled(servicePanel, false);
     }
@@ -79,9 +84,7 @@ public class GUIStart extends javax.swing.JFrame {
         changeTheLookAndFeel(looks[value].getClassName());
     }
 
-    private void changeTheLookAndFeel(String className)
-            throws ClassNotFoundException, InstantiationException,
-            IllegalAccessException, UnsupportedLookAndFeelException {
+    private void changeTheLookAndFeel(String className) throws ClassNotFoundException, InstantiationException, IllegalAccessException, UnsupportedLookAndFeelException {
         javax.swing.UIManager.setLookAndFeel(className);
         System.out.println(className);
         javax.swing.SwingUtilities.updateComponentTreeUI(this);

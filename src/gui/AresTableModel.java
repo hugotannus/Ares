@@ -70,26 +70,12 @@ public class AresTableModel extends DefaultTableModel {
 
  
     public void addRow(short service_ID) {
-        /*
-        numberOfRows++;
-        Vector vector = new Vector();
-        vector.add("nome");
-        vector.add("responsavel");
-        vector.add(false);
-        vector.add(false);
-        if(TABLE_ID == 0) vector.add(false);
-        this.addRow(vector);
-        */
-         System.out.println("Tentou adicionar um projeto...");
-        System.out.printf("Tamanho do rowSet antes: %d...\n", rowSet.size());
         try {
             dbManager.addRow(TABLE_ID, service_ID, "nome", "responsavel");
             rowSet = dbManager.getRowSet(TABLE_ID);
         } catch (SQLException ex) {
             Logger.getLogger(AresTableModel.class.getName()).log(Level.SEVERE, null, ex);
         }
-        System.out.printf("... e depois: %d.\n", rowSet.size());
-        
         int line = numberOfRows++;
         this.setRowCount(line+1);
         this.fireTableRowsInserted(line, line);

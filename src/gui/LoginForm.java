@@ -21,9 +21,14 @@ import javax.swing.JFrame;
 public class LoginForm extends JDialog {
     private String user;
     private char[] password;
-    /** Creates new form LoginForm */
+    private boolean canceled;
+    
+    /** Creates new form LoginForm
+     * @param parent 
+     */
     public LoginForm(JFrame parent) {
         super(parent,true);
+        canceled = true;
         initComponents();
     }
 
@@ -35,6 +40,10 @@ public class LoginForm extends JDialog {
         return user;
     }
 
+    public boolean isCanceled() {
+        return canceled;
+    }
+    
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -131,6 +140,7 @@ public class LoginForm extends JDialog {
     private void accessButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_accessButtonActionPerformed
         user = jTextField1.getText();
         password = jPasswordField1.getPassword();
+        canceled = false;
         setVisible(false);
     }//GEN-LAST:event_accessButtonActionPerformed
 

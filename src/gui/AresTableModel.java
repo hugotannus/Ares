@@ -52,6 +52,7 @@ public class AresTableModel extends DefaultTableModel {
     private DataBaseManager dbManager;
     private CachedRowSet rowSet;
     private Class[] types;
+    private Vector<Object[]> values;
     private int numberOfRows;
     private final int TABLE_ID;
     private final int SQL_ROW_CORRECTION = 1;
@@ -80,19 +81,20 @@ public class AresTableModel extends DefaultTableModel {
         if(TABLE_ID == 0) vector.add(false);
         this.addRow(vector);
         */
-         System.out.println("Tentou adicionar um projeto...");
+        values.addElement(new Object[]{"nome", "responsável", false, false, false});
+        System.out.println("Tentou adicionar um projeto...");
         System.out.printf("Tamanho do rowSet antes: %d...\n", rowSet.size());
         try {
             dbManager.addRow(TABLE_ID, service_ID, "nome", "responsavel");
             rowSet = dbManager.getRowSet(TABLE_ID);
+            rowSet.updateRow();
         } catch (SQLException ex) {
             Logger.getLogger(AresTableModel.class.getName()).log(Level.SEVERE, null, ex);
         }
         System.out.printf("... e depois: %d.\n", rowSet.size());
         
-        int line = numberOfRows++;
-        this.setRowCount(line+1);
-        this.fireTableRowsInserted(line, line);
+        numberOfRows++;
+        this.fireTableRowsInserted(numberOfRows, numberOfRows);
         //this.fireTableDataChanged();
     }
 
@@ -115,7 +117,7 @@ public class AresTableModel extends DefaultTableModel {
     public int getRowCount() {
         return numberOfRows;
     }
-
+    /*
     @Override
     public Object getValueAt(int row, int column) {
         try {
@@ -125,6 +127,13 @@ public class AresTableModel extends DefaultTableModel {
             return rowSet.getObject(column + SQL_COL_CORRECTION);
         } catch (SQLException sqlException) {
         }
+        return "";
+    }
+    */
+
+    public Object getValueAt(int row, int column) {
+        Object obj[] = values.elementAt(row);
+        if(obj[column] != null) return obj[column];
         return "";
     }
 
@@ -138,6 +147,9 @@ public class AresTableModel extends DefaultTableModel {
 
     @Override
     public void setValueAt(Object aValue, int row, int column) {
+        Object obj[] = values.elementAt(row);
+        obj[column] = aValue;
+        fireTableCellUpdated(row, column);
         try {
             // Aqui também precisamos realizar o deslocamento de índices;
             /*
@@ -153,12 +165,21 @@ public class AresTableModel extends DefaultTableModel {
         } catch (SQLException ex) {
             Logger.getLogger(AresTableModel.class.getName()).log(Level.SEVERE, null, ex);
         }
-        fireTableCellUpdated(row, column);
+        //fireTableCellUpdated(row, column);
     }
 
-    public void setQuery(short serviceID, int tableID) throws SQLException {
+    public void executeQuery(short serviceID, int tableID) throws SQLException {
         rowSet = dbManager.executeQuery(serviceID, tableID);
         numberOfRows = rowSet.size();
+        values = new Vector<Object[]>(numberOfRows);
+        for(int row=0; row<numberOfRows; row++) {
+            rowSet.absolute(row + SQL_ROW_CORRECTION);
+            Object obj[] = new Object[getColumnCount()];
+            for(int col=0; col<getColumnCount(); col++) {
+                 obj[col] = rowSet.getObject(col + SQL_COL_CORRECTION);
+            }
+            values.addElement(obj);
+        }
         System.out.printf("numberOfRows: %d\n", numberOfRows);
         fireTableDataChanged();
     }

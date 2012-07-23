@@ -148,26 +148,28 @@ public class DataBaseManager {
         }
     }
 
-    private void updateMaterialCell(int row, int col, Object obj) {
-        throw new UnsupportedOperationException("Not yet implemented");
+    private void updateMaterialCell(int row, int col, Object obj) throws SQLException {
+        materialRowSet.absolute(row);
+        materialRowSet.updateObject(col, obj);
+        materialRowSet.updateRow();
     }
 
-    private void updateLogisticCell(int row, int col, Object obj) {
-        throw new UnsupportedOperationException("Not yet implemented");
+    private void updateLogisticCell(int row, int col, Object obj) throws SQLException {
+        logisticRowSet.absolute(row);
+        logisticRowSet.updateObject(col, obj);
+        logisticRowSet.updateRow();
     }
 
-    private void updateWorkmanCell(int row, int col, Object obj) {
-        throw new UnsupportedOperationException("Not yet implemented");
+    private void updateWorkmanCell(int row, int col, Object obj) throws SQLException {
+        workmanRowSet.absolute(row);
+        workmanRowSet.updateObject(col, obj);
+        workmanRowSet.updateRow();
     }
 
     public void updateProjectCell(int row, int col, Object obj) throws SQLException {
         projectRowSet.absolute(row);
-        System.out.printf("Serviço ID: %d\t", projectRowSet.getInt("service_ID"));
-        System.out.printf("responsavel: %s\n", projectRowSet.getString(col));
         projectRowSet.updateObject(col, obj);
         projectRowSet.updateRow();
-        System.out.printf("Serviço ID: %d\t", projectRowSet.getInt("service_ID"));
-        System.out.printf("responsavel: %s\n", projectRowSet.getString(col));
     }
 
     public void updateProject(int row, String name, String sponsor,
@@ -191,6 +193,7 @@ public class DataBaseManager {
                 break;
             case PROJECT:
                 table = "project";
+                addProjectRow(serviceID, name, sponsor);
                 break;
             case WORKMAN:
                 table = "workman";
@@ -198,6 +201,7 @@ public class DataBaseManager {
             default:
                 table = "service";
         }
+        /*
         addStmt = con.prepareStatement(
                 String.format("INSERT INTO %s (service_ID, name, sponsor)"
                 + "VALUES (?,?,?)", table));
@@ -206,8 +210,24 @@ public class DataBaseManager {
         addStmt.setString(3, sponsor);
         addStmt.executeUpdate();
         this.acceptChanges(tableID);
-
+        */
         System.out.printf("ServiceID: %d", serviceID);
+    }
+
+    public void addProjectRow(short serviceID, String name, String sponsor) throws SQLException {
+        projectRowSet.moveToInsertRow();
+        //projectRowSet.insertRow();
+        //projectRowSet.updateInt("ID", 99);
+        
+        projectRowSet.updateShort("service_ID", serviceID);
+        projectRowSet.updateString("name", name);
+        projectRowSet.updateString("sponsor", sponsor);
+        projectRowSet.updateBoolean("defined", false);
+        projectRowSet.updateBoolean("approved", false);
+        projectRowSet.updateBoolean("visible", true);
+        projectRowSet.insertRow();
+        projectRowSet.moveToCurrentRow();
+        projectRowSet.last();
     }
 
     public CachedRowSet getRowSet(int tableID) {
@@ -258,6 +278,7 @@ public class DataBaseManager {
         logisticRowSet.acceptChanges(con);
         logisticRowSet.close();
         projectRowSet.acceptChanges(con);
+        //projectRowSet.acceptChanges();
         projectRowSet.close();
         workmanRowSet.acceptChanges(con);
         workmanRowSet.close();

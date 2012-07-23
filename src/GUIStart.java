@@ -650,9 +650,8 @@ public class GUIStart extends javax.swing.JFrame {
                     setComponentsEnabled(servicePanel, true);
                     loadServiceData(currentService);
 
-                    AresTableModel projectModel = (AresTableModel) projectJTable.getModel();
-                    projectModel.setQuery(currentService.ID, PROJECT);
-                    projectModel.setQuery(currentService.ID, MATERIAL);
+                    AresTableModel projectModel = (AresTableModel)projectJTable.getModel();
+                    projectModel.executeQuery(currentService.ID, PROJECT);
 
                     jTextArea1.setText(currentService.comments);
                     jTextField1.setText(currentService.budget);

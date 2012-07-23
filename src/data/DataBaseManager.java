@@ -213,6 +213,7 @@ public class DataBaseManager {
     public void addProjectRow(short serviceID, String name, String sponsor) throws SQLException {
         projectRowSet.moveToInsertRow();
         //projectRowSet.insertRow();
+        //projectRowSet.updateInt("ID", 99);
         
         projectRowSet.updateShort("service_ID", serviceID);
         projectRowSet.updateString("name", name);
@@ -221,6 +222,7 @@ public class DataBaseManager {
         projectRowSet.updateBoolean("approved", false);
         projectRowSet.updateBoolean("visible", true);
         projectRowSet.insertRow();
+        projectRowSet.moveToCurrentRow();
         projectRowSet.last();
     }
 
@@ -272,6 +274,7 @@ public class DataBaseManager {
         logisticRowSet.acceptChanges(con);
         logisticRowSet.close();
         projectRowSet.acceptChanges(con);
+        //projectRowSet.acceptChanges();
         projectRowSet.close();
         workmanRowSet.acceptChanges(con);
         workmanRowSet.close();

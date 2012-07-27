@@ -16,7 +16,7 @@ import javax.sql.rowset.spi.SyncProviderException;
  *
  * @author hugo
  */
-public class DataBaseManager {
+public final class DataBaseManager {
 
     /*
      * (05/03/2012) Serão necessários, no mínimo, dois objetos "RowSet" para o
@@ -36,7 +36,8 @@ public class DataBaseManager {
     private final PreparedStatement workmanStmt;
     private PreparedStatement addStmt;
     static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
-    static final String DATABASE_URL = "jdbc:mysql://mysql02-farm26.kinghost.net/";
+    static final String DATABASE_URL = "jdbc:mysql://localhost/";
+//    static final String DATABASE_URL = "jdbc:mysql://mysql02-farm26.kinghost.net/";
     static final String USERNAME = "ares";
     static final char[] PASSWORD = {'v','e','r','n','a','c','u','l','a'};
     private final int MATERIAL = 0;
@@ -172,59 +173,77 @@ public class DataBaseManager {
         projectRowSet.updateRow();
     }
 
-    public void updateProject(int row, String name, String sponsor,
-            boolean defined, boolean aproved) throws SQLException {
-        projectRowSet.absolute(row);
-        projectRowSet.setString("name", name);
-        projectRowSet.setString("sponsor", sponsor);
-        projectRowSet.setBoolean("defined", defined);
-        projectRowSet.setBoolean("aproved", aproved);
-        projectRowSet.updateRow();
-    }
-
     public void addRow(int tableID, short serviceID, String name, String sponsor) throws SQLException {
-        String table;
         switch (tableID) {
             case MATERIAL:
-                table = "material";
+                addMaterialRow(serviceID, name, sponsor);
                 break;
             case LOGISTIC:
-                table = "logistic";
+                addLogisticRow(serviceID, name, sponsor);
                 break;
             case PROJECT:
-                table = "project";
                 addProjectRow(serviceID, name, sponsor);
                 break;
             case WORKMAN:
-                table = "workman";
+                addWorkmanRow(serviceID, name, sponsor);
                 break;
-            default:
-                table = "service";
+            default:;
         }
-        /*
-        addStmt = con.prepareStatement(
-                String.format("INSERT INTO %s (service_ID, name, sponsor)"
-                + "VALUES (?,?,?)", table));
-        addStmt.setShort(1, serviceID);
-        addStmt.setString(2, name);
-        addStmt.setString(3, sponsor);
-        addStmt.executeUpdate();
-        this.acceptChanges(tableID);
-        */
         System.out.printf("ServiceID: %d", serviceID);
     }
 
+    private void addMaterialRow(short serviceID, String name, String sponsor) throws SQLException {
+        materialRowSet.moveToInsertRow();
+        materialRowSet.updateNull(1);
+        materialRowSet.updateShort(2, serviceID);
+        materialRowSet.updateString(3, name);
+        materialRowSet.updateString(4, sponsor);
+        materialRowSet.updateBoolean(5, false);
+        materialRowSet.updateBoolean(6, false);
+        materialRowSet.updateBoolean(7, false);
+        materialRowSet.updateBoolean(8, true);
+        materialRowSet.insertRow();
+        materialRowSet.moveToCurrentRow();
+        materialRowSet.last();
+    }
+
+    private void addLogisticRow(short serviceID, String name, String sponsor) throws SQLException {
+        logisticRowSet.moveToInsertRow();
+        logisticRowSet.updateNull(1);
+        logisticRowSet.updateShort(2, serviceID);
+        logisticRowSet.updateString(3, name);
+        logisticRowSet.updateString(4, sponsor);
+        logisticRowSet.updateBoolean(5, false);
+        logisticRowSet.updateBoolean(6, false);
+        logisticRowSet.updateBoolean(7, true);
+        logisticRowSet.insertRow();
+        logisticRowSet.moveToCurrentRow();
+        logisticRowSet.last();
+    }
+
+    private void addWorkmanRow(short serviceID, String name, String sponsor) throws SQLException {
+        workmanRowSet.moveToInsertRow();
+        workmanRowSet.updateNull(1);
+        workmanRowSet.updateShort(2, serviceID);
+        workmanRowSet.updateString(3, name);
+        workmanRowSet.updateString(4, sponsor);
+        workmanRowSet.updateBoolean(5, false);
+        workmanRowSet.updateBoolean(6, false);
+        workmanRowSet.updateBoolean(7, true);
+        workmanRowSet.insertRow();
+        workmanRowSet.moveToCurrentRow();
+        workmanRowSet.last();
+    }
+    
     public void addProjectRow(short serviceID, String name, String sponsor) throws SQLException {
         projectRowSet.moveToInsertRow();
-        //projectRowSet.insertRow();
-        //projectRowSet.updateInt("ID", 99);
-        
-        projectRowSet.updateShort("service_ID", serviceID);
-        projectRowSet.updateString("name", name);
-        projectRowSet.updateString("sponsor", sponsor);
-        projectRowSet.updateBoolean("defined", false);
-        projectRowSet.updateBoolean("approved", false);
-        projectRowSet.updateBoolean("visible", true);
+        projectRowSet.updateNull(1);
+        projectRowSet.updateShort(2, serviceID);
+        projectRowSet.updateString(3, name);
+        projectRowSet.updateString(4, sponsor);
+        projectRowSet.updateBoolean(5, false);
+        projectRowSet.updateBoolean(6, false);
+        projectRowSet.updateBoolean(7, true);
         projectRowSet.insertRow();
         projectRowSet.moveToCurrentRow();
         projectRowSet.last();
@@ -273,15 +292,15 @@ public class DataBaseManager {
     }
 
     public void acceptChanges() throws SyncProviderException, SQLException {
-        materialRowSet.acceptChanges(con);
-        materialRowSet.close();
-        logisticRowSet.acceptChanges(con);
-        logisticRowSet.close();
         projectRowSet.acceptChanges(con);
         //projectRowSet.acceptChanges();
         projectRowSet.close();
+        logisticRowSet.acceptChanges(con);
+        logisticRowSet.close();
         workmanRowSet.acceptChanges(con);
         workmanRowSet.close();
+        materialRowSet.acceptChanges(con);
+        materialRowSet.close();
     }
 
     public void acceptChanges(int tableID) throws SyncProviderException, SQLException {

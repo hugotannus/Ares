@@ -40,13 +40,12 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.sql.rowset.CachedRowSet;
 import javax.swing.table.AbstractTableModel;
-import javax.swing.table.DefaultTableModel;
 
 /**
  *
  * @author hugo
  */
-public class AresTableModel extends DefaultTableModel {
+public class AresTableModel extends AbstractTableModel {
 
     private final String[] columnNames;
     private DataBaseManager dbManager;
@@ -71,24 +70,11 @@ public class AresTableModel extends DefaultTableModel {
 
  
     public void addRow(short service_ID) {
-
-        /*
-        numberOfRows++;
-        Vector vector = new Vector();
-        vector.add("nome");
-        vector.add("responsavel");
-        vector.add(false);
-        vector.add(false);
-        if(TABLE_ID == 0) vector.add(false);
-        this.addRow(vector);
-        */
         values.addElement(new Object[]{"nome", "responsável", false, false, false});
         System.out.println("Tentou adicionar um projeto...");
         System.out.printf("Tamanho do rowSet antes: %d...\n", rowSet.size());
         try {
             dbManager.addRow(TABLE_ID, service_ID, "nome", "responsavel");
-            rowSet = dbManager.getRowSet(TABLE_ID);
-            rowSet.updateRow();
         } catch (SQLException ex) {
             Logger.getLogger(AresTableModel.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -96,7 +82,6 @@ public class AresTableModel extends DefaultTableModel {
         
         numberOfRows++;
         this.fireTableRowsInserted(numberOfRows, numberOfRows);
-        //this.fireTableDataChanged();
     }
 
     @Override
@@ -104,7 +89,6 @@ public class AresTableModel extends DefaultTableModel {
         return types[columnIndex];
     }
 
-    @Override
     public int getColumnCount() {
         return types.length;
     }
@@ -114,30 +98,17 @@ public class AresTableModel extends DefaultTableModel {
         return columnNames[column];
     }
 
-    @Override
     public int getRowCount() {
         return numberOfRows;
     }
-    /*
-    @Override
-    public Object getValueAt(int row, int column) {
-        try {
-            // Deslocamento de índices requerido para obter corretamente os dados
-            // desejados.
-            rowSet.absolute(row + SQL_ROW_CORRECTION);
-            return rowSet.getObject(column + SQL_COL_CORRECTION);
-        } catch (SQLException sqlException) {
-        }
-        return "";
-    }
-    */
-
+    
     public Object getValueAt(int row, int column) {
         Object obj[] = values.elementAt(row);
         if(obj[column] != null) return obj[column];
         return "";
     }
 
+   
     @Override
     public boolean isCellEditable(int row, int column) {
         if (column <= 2) {
@@ -150,15 +121,7 @@ public class AresTableModel extends DefaultTableModel {
     public void setValueAt(Object aValue, int row, int column) {
         Object obj[] = values.elementAt(row);
         obj[column] = aValue;
-        fireTableCellUpdated(row, column);
         try {
-            // Aqui também precisamos realizar o deslocamento de índices;
-            /*
-            rowSet.absolute(row + SQL_ROW_CORRECTION);
-            rowSet.updateObject(column + SQL_COL_CORRECTION, aValue);
-            rowSet.updateRow();
-             *
-             */
             dbManager.updateCellTable(TABLE_ID,
                     row + SQL_ROW_CORRECTION,
                     column + SQL_COL_CORRECTION,
@@ -166,7 +129,7 @@ public class AresTableModel extends DefaultTableModel {
         } catch (SQLException ex) {
             Logger.getLogger(AresTableModel.class.getName()).log(Level.SEVERE, null, ex);
         }
-        //fireTableCellUpdated(row, column);
+        fireTableCellUpdated(row, column);
     }
 
     public void executeQuery(short serviceID, int tableID) throws SQLException {
@@ -182,6 +145,11 @@ public class AresTableModel extends DefaultTableModel {
             values.addElement(obj);
         }
         System.out.printf("numberOfRows: %d\n", numberOfRows);
+        fireTableDataChanged();
+    }
+
+    public void setRowCount(int i) {
+        numberOfRows = i;
         fireTableDataChanged();
     }
 }

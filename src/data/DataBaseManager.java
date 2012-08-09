@@ -41,6 +41,7 @@ public final class DataBaseManager {
     private boolean connected = false;
 
     public DataBaseManager(String userName, char[] password) throws ClassNotFoundException, SQLException {
+        System.out.printf("userName: %s\tpswd: %s\n", userName, password);
         conn = getConnection(userName, password);
         connected = true;
 
@@ -317,11 +318,12 @@ public final class DataBaseManager {
     }
 
     public Connection getConnection(String userName, char[] password) throws ClassNotFoundException, SQLException {
+        System.out.printf("url: %s, password: %s\n", DATABASE_URL+userName,new String(password));
         Class.forName(JDBC_DRIVER);
-        Connection conn = DriverManager.getConnection(DATABASE_URL + userName, userName, new String(password));
-        conn.setAutoCommit(false);
+        Connection con = DriverManager.getConnection(DATABASE_URL + userName, userName, new String(password));
+        con.setAutoCommit(false);
         connected = true;
-        return conn;
+        return con;
     }
 
     public void closeConnection() throws SQLException {

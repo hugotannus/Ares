@@ -1,0 +1,16 @@
+# built application directory
+.built
+.dist
+store
+nbproject
+
+# test directory
+test
+
+# file types
+*.csv
+*.xml
+*.mf
+*.txt
+*.doc
+*.xls

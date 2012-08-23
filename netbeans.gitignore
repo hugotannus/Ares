@@ -2,7 +2,6 @@
 .built
 .dist
 store
-nbproject
 
 # test directory
 test

@@ -1,10 +1,10 @@
 # built application directory
-.built
-.dist
-store
+.build/
+.dist/
+store/
 
 # test directory
-test
+test/
 
 # file types
 *.txt

@@ -132,7 +132,7 @@
                       <Group type="102" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="serviceDescriptionLabel" alignment="0" pref="773" max="32767" attributes="0"/>
+                              <Component id="serviceDescriptionLabel" alignment="0" pref="791" max="32767" attributes="0"/>
                               <Group type="102" alignment="0" attributes="0">
                                   <EmptySpace min="6" pref="6" max="6" attributes="0"/>
                                   <Group type="103" groupAlignment="0" attributes="0">
@@ -154,14 +154,14 @@
                                       </Group>
                                   </Group>
                                   <EmptySpace type="separate" max="-2" attributes="0"/>
-                                  <Component id="jScrollPane5" pref="317" max="32767" attributes="0"/>
+                                  <Component id="jScrollPane5" pref="340" max="32767" attributes="0"/>
                                   <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
                                   <Component id="jButton5" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <Group type="102" alignment="0" attributes="0">
                                   <Group type="103" groupAlignment="0" max="-2" attributes="0">
                                       <Component id="subPanelLabour" max="32767" attributes="1"/>
-                                      <Component id="subPanelProject" alignment="0" pref="393" max="32767" attributes="1"/>
+                                      <Component id="subPanelProject" alignment="0" pref="397" max="32767" attributes="1"/>
                                   </Group>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="1" attributes="0">
@@ -198,12 +198,12 @@
                                   </Group>
                                   <EmptySpace min="-2" pref="22" max="-2" attributes="0"/>
                               </Group>
-                              <Component id="jButton5" alignment="1" pref="117" max="32767" attributes="1"/>
+                              <Component id="jButton5" alignment="1" pref="110" max="32767" attributes="1"/>
                               <Component id="jScrollPane5" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="1" attributes="0">
-                              <Component id="subPanelProject" pref="197" max="32767" attributes="1"/>
+                              <Component id="subPanelProject" pref="210" max="32767" attributes="1"/>
                               <Component id="subPanelMaterial" min="-2" max="-2" attributes="1"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
@@ -239,7 +239,7 @@
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Component id="jLabel3" min="-2" pref="126" max="-2" attributes="0"/>
                                   <Component id="jButton_addProject" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Component id="jScrollPane1" alignment="0" pref="369" max="32767" attributes="0"/>
+                                  <Component id="jScrollPane1" alignment="0" pref="363" max="32767" attributes="0"/>
                               </Group>
                               <EmptySpace max="-2" attributes="0"/>
                           </Group>
@@ -296,7 +296,7 @@
                               </TableColumnModel>
                             </Property>
                             <Property name="cursor" type="java.awt.Cursor" editor="org.netbeans.modules.form.editors2.CursorEditor">
-                              <Color id="Default Cursor"/>
+                              <Color id="Cursor padr&#xe3;o"/>
                             </Property>
                             <Property name="tableHeader" type="javax.swing.table.JTableHeader" editor="org.netbeans.modules.form.editors2.JTableHeaderEditor">
                               <TableHeader reorderingAllowed="true" resizingAllowed="true"/>
@@ -456,7 +456,7 @@
                               </Group>
                               <EmptySpace min="-2" pref="169" max="-2" attributes="0"/>
                           </Group>
-                          <Component id="jScrollPane2" alignment="1" pref="362" max="32767" attributes="0"/>
+                          <Component id="jScrollPane2" alignment="1" pref="360" max="32767" attributes="0"/>
                       </Group>
                     </DimensionLayout>
                     <DimensionLayout dim="1">
@@ -565,7 +565,7 @@
                           </Group>
                           <Group type="102" alignment="0" attributes="0">
                               <EmptySpace min="-2" pref="1" max="-2" attributes="0"/>
-                              <Component id="jScrollPane4" pref="361" max="32767" attributes="0"/>
+                              <Component id="jScrollPane4" pref="359" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
@@ -675,6 +675,9 @@
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Salvar"/>
                   </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton5ActionPerformed"/>
+                  </Events>
                 </Component>
                 <Component class="javax.swing.JLabel" name="jLabel9">
                   <Properties>

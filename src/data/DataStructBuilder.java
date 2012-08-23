@@ -27,7 +27,7 @@ public class DataStructBuilder {
     private JdbcRowSet startingRowSet;
     // JDBC driver, database URL, username and password
     static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
-    static final String DATABASE_URL = "jdbc:mysql://localhost/";
+    static final String DATABASE_URL = "jdbc:mysql://192.168.25.5:3306/";
     //static final String DATABASE_URL = "jdbc:mysql://mysql02-farm26.kinghost.net/";
     static final String USERNAME = "ares";
     static final String PASSWORD = "vernacula";

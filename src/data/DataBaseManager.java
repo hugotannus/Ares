@@ -29,7 +29,7 @@ public final class DataBaseManager {
     private CachedRowSet projectRowSet;
     private CachedRowSet workmanRowSet;
     static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
-    static final String DATABASE_URL = "jdbc:mysql://localhost/";
+    static final String DATABASE_URL = "jdbc:mysql://192.168.25.5:3306/";
 //    static final String DATABASE_URL = "jdbc:mysql://mysql02-farm26.kinghost.net/";
     static final String USERNAME = "ares";
     static final char[] PASSWORD = {'v', 'e', 'r', 'n', 'a', 'c', 'u', 'l', 'a'};
@@ -320,7 +320,7 @@ public final class DataBaseManager {
     public Connection getConnection(String userName, char[] password) throws ClassNotFoundException, SQLException {
         System.out.printf("url: %s, password: %s\n", DATABASE_URL+userName,new String(password));
         Class.forName(JDBC_DRIVER);
-        Connection con = DriverManager.getConnection(DATABASE_URL + userName, userName, new String(password));
+        Connection con = DriverManager.getConnection(DATABASE_URL + userName, userName, new String(PASSWORD));
         con.setAutoCommit(false);
         connected = true;
         return con;

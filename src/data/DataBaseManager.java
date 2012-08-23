@@ -17,22 +17,11 @@ import javax.sql.rowset.spi.SyncProviderException;
  */
 public final class DataBaseManager {
 
-    /*
-     * (05/03/2012) Serão necessários, no mínimo, dois objetos "RowSet" para o
-     * ares, um para realizar a pesquisa para cada entrada da tabela "service",
-     * e outro para manipular as quatro tabelas contidos dentro de cada tela de
-     * serviço.
-     */
     private CachedRowSet serviceRowSet;
     private CachedRowSet materialRowSet;
     private CachedRowSet logisticRowSet;
     private CachedRowSet projectRowSet;
     private CachedRowSet workmanRowSet;
-    static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
-    static final String DATABASE_URL = "jdbc:mysql://192.168.25.5:3306/";
-//    static final String DATABASE_URL = "jdbc:mysql://mysql02-farm26.kinghost.net/";
-    static final String USERNAME = "ares";
-    static final char[] PASSWORD = {'v', 'e', 'r', 'n', 'a', 'c', 'u', 'l', 'a'};
     private final int MATERIAL = 0;
     private final int LOGISTIC = 1;
     private final int PROJECT = 2;
@@ -42,7 +31,7 @@ public final class DataBaseManager {
 
     public DataBaseManager(String userName, char[] password) throws ClassNotFoundException, SQLException {
         System.out.printf("userName: %s\tpswd: %s\n", userName, password);
-        conn = getConnection(userName, password);
+        conn = getConnection();
         connected = true;
 
         serviceRowSet = new CachedRowSetImpl();
@@ -50,10 +39,6 @@ public final class DataBaseManager {
         materialRowSet = new CachedRowSetImpl();
         logisticRowSet = new CachedRowSetImpl();
         workmanRowSet = new CachedRowSetImpl();
-    }
-
-    public DataBaseManager() throws ClassNotFoundException, SQLException {
-        this(USERNAME, PASSWORD);
     }
 
     public boolean isConnected() {
@@ -317,10 +302,11 @@ public final class DataBaseManager {
         }
     }
 
-    public Connection getConnection(String userName, char[] password) throws ClassNotFoundException, SQLException {
-        System.out.printf("url: %s, password: %s\n", DATABASE_URL+userName,new String(password));
-        Class.forName(JDBC_DRIVER);
-        Connection con = DriverManager.getConnection(DATABASE_URL + userName, userName, new String(PASSWORD));
+    public Connection getConnection()
+            throws ClassNotFoundException, SQLException {
+        Class.forName(DataBaseInput.JDBC_DRIVER);
+        Connection con = DriverManager.getConnection(DataBaseInput.DATABASE_URL,
+                DataBaseInput.USERNAME, DataBaseInput.PASSWORD);
         con.setAutoCommit(false);
         connected = true;
         return con;

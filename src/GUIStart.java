@@ -38,11 +38,6 @@ import javax.swing.table.DefaultTableModel;
  */
 public class GUIStart extends javax.swing.JFrame {
 
-    /** Creates new form testeGui
-     * @throws ClassNotFoundException
-     * @throws SQLException
-     * @throws IOException  
-     */
     public GUIStart() {
         LoginForm loginForm;
         int mark = 0;
@@ -66,7 +61,7 @@ public class GUIStart extends javax.swing.JFrame {
 
         DataStructBuilder structBuilder;
         try {
-            structBuilder = new DataStructBuilder(loginForm.getUser(), loginForm.getPassword());
+            structBuilder = new DataStructBuilder();
             this.treeModel = structBuilder.getObra(); // Faz referência ao objeto de modelagem da árvore de serviços.
             currentService = (Service) treeModel.getRoot();
         } catch (ClassNotFoundException ex) {
@@ -110,6 +105,7 @@ public class GUIStart extends javax.swing.JFrame {
 
     private class ItemHandler implements ItemListener {
 
+        @Override
         public void itemStateChanged(ItemEvent event) {
             System.out.println("Mudou o estado...");
             for (int count = 0; count < lookSubMenus.length; count++) {
@@ -608,16 +604,16 @@ public class GUIStart extends javax.swing.JFrame {
                     loadServiceData(currentService);
 
                     AresTableModel model;
-                    model = (AresTableModel)projectJTable.getModel();
+                    model = (AresTableModel) projectJTable.getModel();
                     model.executeQuery(currentService.ID, PROJECT);
-                    
-                    model = (AresTableModel)materialJTable.getModel();
+
+                    model = (AresTableModel) materialJTable.getModel();
                     model.executeQuery(currentService.ID, MATERIAL);
-                    model = (AresTableModel)logisticJTable.getModel();
+                    model = (AresTableModel) logisticJTable.getModel();
                     model.executeQuery(currentService.ID, LOGISTIC);
-                    model = (AresTableModel)workmanJTable.getModel();
+                    model = (AresTableModel) workmanJTable.getModel();
                     model.executeQuery(currentService.ID, WORKMAN);
-                    
+
                     jTextArea1.setText(currentService.comments);
                     jTextField1.setText(currentService.budget);
                 } catch (SQLException ex) {
@@ -736,6 +732,7 @@ public class GUIStart extends javax.swing.JFrame {
 
     private class RowListener implements ListSelectionListener {
 
+        @Override
         public void valueChanged(ListSelectionEvent lse) {
             if (lse.getValueIsAdjusting()) {
                 return;
@@ -746,6 +743,7 @@ public class GUIStart extends javax.swing.JFrame {
 
     private class ColumnListener implements ListSelectionListener {
 
+        @Override
         public void valueChanged(ListSelectionEvent event) {
             if (event.getValueIsAdjusting()) {
                 return;
@@ -756,6 +754,9 @@ public class GUIStart extends javax.swing.JFrame {
 
     /**
      * @param args the command line arguments
+     * @throws SQLException
+     * @throws ClassNotFoundException
+     * @throws IOException  
      */
     public static void main(String args[]) throws SQLException, ClassNotFoundException, IOException {
         GUIStart tela = new GUIStart();

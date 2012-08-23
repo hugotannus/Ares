@@ -23,34 +23,20 @@ import javax.sql.rowset.JdbcRowSet;
 public class DataStructBuilder {
 
     private ObraTreeModel obra;
-    // rowSet utilizado somente para a primeira leitura do programa.
     private JdbcRowSet startingRowSet;
-    // JDBC driver, database URL, username and password
-    static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
-    static final String DATABASE_URL = "jdbc:mysql://192.168.25.5:3306/";
-    //static final String DATABASE_URL = "jdbc:mysql://mysql02-farm26.kinghost.net/";
-    static final String USERNAME = "ares";
-    static final String PASSWORD = "vernacula";
-    private DataBaseInput dbinput;
-
+    
     public DataStructBuilder() throws ClassNotFoundException, SQLException, IOException {
-        this(USERNAME,PASSWORD.toCharArray());
+        this("utf8-AGO-sede-R04.csv");
     }
     
-
-    public DataStructBuilder(String user, char[] password)
+    public DataStructBuilder(String fileName)
             throws ClassNotFoundException, SQLException, IOException {
-        this("utf8-AGO-sede-R04.csv", user, password);
-    }
-
-    public DataStructBuilder(String fileName, String user, char[] password)
-            throws ClassNotFoundException, SQLException, IOException {
-        Class.forName(JDBC_DRIVER);
+        Class.forName(DataBaseInput.JDBC_DRIVER);
         
         startingRowSet = new JdbcRowSetImpl();
-        startingRowSet.setUrl(DATABASE_URL+user);
-        startingRowSet.setUsername(user);
-        startingRowSet.setPassword(new String(password));
+        startingRowSet.setUrl(DataBaseInput.DATABASE_URL);
+        startingRowSet.setUsername(DataBaseInput.USERNAME);
+        startingRowSet.setPassword(DataBaseInput.PASSWORD);
         startingRowSet.setCommand("SELECT * FROM service");
         startingRowSet.execute();
 
@@ -117,7 +103,6 @@ public class DataStructBuilder {
     }
 
     private void insertDatabaseRow(Node lastNode) throws SQLException {
-        //@TODO;
         Service service = (Service) lastNode;
         startingRowSet.moveToInsertRow();
         startingRowSet.updateString("topic_struct", service.estTopicos);

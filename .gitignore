@@ -10,3 +10,6 @@ test/
 *.txt
 *.doc
 *.xls
+
+# especific files
+src/data/DataBaseInput.java

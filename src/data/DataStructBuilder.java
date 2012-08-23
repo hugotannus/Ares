@@ -31,8 +31,7 @@ public class DataStructBuilder {
     //static final String DATABASE_URL = "jdbc:mysql://mysql02-farm26.kinghost.net/";
     static final String USERNAME = "ares";
     static final String PASSWORD = "vernacula";
-    private String user;
-    private char[] password;
+    private DataBaseInput dbinput;
 
     public DataStructBuilder() throws ClassNotFoundException, SQLException, IOException {
         this(USERNAME,PASSWORD.toCharArray());
@@ -47,7 +46,7 @@ public class DataStructBuilder {
     public DataStructBuilder(String fileName, String user, char[] password)
             throws ClassNotFoundException, SQLException, IOException {
         Class.forName(JDBC_DRIVER);
-
+        
         startingRowSet = new JdbcRowSetImpl();
         startingRowSet.setUrl(DATABASE_URL+user);
         startingRowSet.setUsername(user);

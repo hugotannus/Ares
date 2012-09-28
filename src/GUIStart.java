@@ -143,6 +143,7 @@ public class GUIStart extends javax.swing.JFrame {
         projectJTable = new javax.swing.JTable();
         jLabel3 = new javax.swing.JLabel();
         jButton_addProject = new javax.swing.JButton();
+        jButton_removeProject = new javax.swing.JButton();
         subPanelLabour = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jScrollPane3 = new javax.swing.JScrollPane();
@@ -223,6 +224,13 @@ public class GUIStart extends javax.swing.JFrame {
         }
     });
 
+    jButton_removeProject.setText("Remover Projeto(s)");
+    jButton_removeProject.addActionListener(new java.awt.event.ActionListener() {
+        public void actionPerformed(java.awt.event.ActionEvent evt) {
+            jButton_removeProjectActionPerformed(evt);
+        }
+    });
+
     javax.swing.GroupLayout subPanelProjectLayout = new javax.swing.GroupLayout(subPanelProject);
     subPanelProject.setLayout(subPanelProjectLayout);
     subPanelProjectLayout.setHorizontalGroup(
@@ -230,7 +238,10 @@ public class GUIStart extends javax.swing.JFrame {
         .addGroup(subPanelProjectLayout.createSequentialGroup()
             .addGroup(subPanelProjectLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addComponent(jButton_addProject)
+                .addGroup(subPanelProjectLayout.createSequentialGroup()
+                    .addComponent(jButton_addProject)
+                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addComponent(jButton_removeProject))
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 363, Short.MAX_VALUE))
             .addContainerGap())
     );
@@ -241,7 +252,9 @@ public class GUIStart extends javax.swing.JFrame {
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
             .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-            .addComponent(jButton_addProject))
+            .addGroup(subPanelProjectLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addComponent(jButton_addProject)
+                .addComponent(jButton_removeProject)))
     );
 
     subPanelLabour.setBorder(javax.swing.BorderFactory.createTitledBorder("Mão de Obra"));
@@ -605,14 +618,13 @@ public class GUIStart extends javax.swing.JFrame {
 
                     AresTableModel model;
                     model = (AresTableModel) projectJTable.getModel();
-                    model.executeQuery(currentService.ID, PROJECT);
-
+                    model.executeQuery(currentService.ID);
                     model = (AresTableModel) materialJTable.getModel();
-                    model.executeQuery(currentService.ID, MATERIAL);
+                    model.executeQuery(currentService.ID);
                     model = (AresTableModel) logisticJTable.getModel();
-                    model.executeQuery(currentService.ID, LOGISTIC);
+                    model.executeQuery(currentService.ID);
                     model = (AresTableModel) workmanJTable.getModel();
-                    model.executeQuery(currentService.ID, WORKMAN);
+                    model.executeQuery(currentService.ID);
 
                     jTextArea1.setText(currentService.comments);
                     jTextField1.setText(currentService.budget);
@@ -655,6 +667,7 @@ public class GUIStart extends javax.swing.JFrame {
     }//GEN-LAST:event_logisticJTableMouseClicked
 
     private void projectJTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_projectJTableMouseClicked
+        jButton_removeProject.setEnabled(true);
         clearSelection(PROJECT);
     }//GEN-LAST:event_projectJTableMouseClicked
 
@@ -684,9 +697,17 @@ public class GUIStart extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jButton5ActionPerformed
 
+    private void jButton_removeProjectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_removeProjectActionPerformed
+        int row = projectJTable.getSelectedRow();
+        System.out.printf("Linha selecionada: %d\n", row);
+        AresTableModel model = (AresTableModel) projectJTable.getModel();
+        model.removeRow(row);
+    }//GEN-LAST:event_jButton_removeProjectActionPerformed
+
     private void clearSelection(int tableId) {
         if (tableId != PROJECT) {
             projectJTable.clearSelection();
+            jButton_removeProject.setEnabled(false);
         }
         if (tableId != MATERIAL) {
             materialJTable.clearSelection();
@@ -808,6 +829,7 @@ public class GUIStart extends javax.swing.JFrame {
     private javax.swing.JButton jButton_addMaterial;
     private javax.swing.JButton jButton_addProject;
     private javax.swing.JButton jButton_addWorkman;
+    private javax.swing.JButton jButton_removeProject;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

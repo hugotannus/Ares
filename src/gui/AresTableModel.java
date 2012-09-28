@@ -68,7 +68,6 @@ public class AresTableModel extends AbstractTableModel {
         this.rowSet = dbManager.getRowSet(tableID);
     }
 
- 
     public void addRow(short service_ID) {
         values.addElement(new Object[]{"nome", "responsável", false, false, false});
         System.out.println("Tentou adicionar um projeto...");
@@ -79,9 +78,25 @@ public class AresTableModel extends AbstractTableModel {
             Logger.getLogger(AresTableModel.class.getName()).log(Level.SEVERE, null, ex);
         }
         System.out.printf("... e depois: %d.\n", rowSet.size());
-        
+
         numberOfRows++;
         this.fireTableRowsInserted(numberOfRows, numberOfRows);
+    }
+
+    public void executeQuery(short serviceID) throws SQLException {
+        rowSet = dbManager.executeQuery(serviceID, TABLE_ID);
+        numberOfRows = rowSet.size();
+        values = new Vector<Object[]>(numberOfRows);
+        for (int row = 0; row < numberOfRows; row++) {
+            rowSet.absolute(row + SQL_ROW_CORRECTION);
+            Object obj[] = new Object[getColumnCount()];
+            for (int col = 0; col < getColumnCount(); col++) {
+                obj[col] = rowSet.getObject(col + SQL_COL_CORRECTION);
+            }
+            values.addElement(obj);
+        }
+        System.out.printf("numberOfRows: %d\n", numberOfRows);
+        fireTableDataChanged();
     }
 
     @Override
@@ -89,6 +104,7 @@ public class AresTableModel extends AbstractTableModel {
         return types[columnIndex];
     }
 
+    @Override
     public int getColumnCount() {
         return types.length;
     }
@@ -98,23 +114,39 @@ public class AresTableModel extends AbstractTableModel {
         return columnNames[column];
     }
 
+    @Override
     public int getRowCount() {
         return numberOfRows;
     }
-    
+
+    @Override
     public Object getValueAt(int row, int column) {
         Object obj[] = values.elementAt(row);
-        if(obj[column] != null) return obj[column];
+        if (obj[column] != null) {
+            return obj[column];
+        }
         return "";
     }
 
-   
     @Override
     public boolean isCellEditable(int row, int column) {
         if (column <= 2) {
             return true;
         }
         return (Boolean) getValueAt(row, column - 1);
+    }
+
+    public void removeRow(int row) {
+        try {
+            dbManager.updateCellTable(TABLE_ID,
+                    row + SQL_ROW_CORRECTION, 7, false);
+            dbManager.acceptChanges(TABLE_ID);
+        } catch (SQLException ex) {
+            Logger.getLogger(AresTableModel.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        numberOfRows--;
+        this.fireTableRowsDeleted(row, row);
     }
 
     @Override
@@ -130,22 +162,6 @@ public class AresTableModel extends AbstractTableModel {
             Logger.getLogger(AresTableModel.class.getName()).log(Level.SEVERE, null, ex);
         }
         fireTableCellUpdated(row, column);
-    }
-
-    public void executeQuery(short serviceID, int tableID) throws SQLException {
-        rowSet = dbManager.executeQuery(serviceID, tableID);
-        numberOfRows = rowSet.size();
-        values = new Vector<Object[]>(numberOfRows);
-        for(int row=0; row<numberOfRows; row++) {
-            rowSet.absolute(row + SQL_ROW_CORRECTION);
-            Object obj[] = new Object[getColumnCount()];
-            for(int col=0; col<getColumnCount(); col++) {
-                 obj[col] = rowSet.getObject(col + SQL_COL_CORRECTION);
-            }
-            values.addElement(obj);
-        }
-        System.out.printf("numberOfRows: %d\n", numberOfRows);
-        fireTableDataChanged();
     }
 
     public void setRowCount(int i) {

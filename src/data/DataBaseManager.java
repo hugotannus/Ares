@@ -68,28 +68,28 @@ public final class DataBaseManager {
     }
 
     public CachedRowSet executeMaterialQuery(short ID) throws SQLException {
-        String cmd = String.format("SELECT * FROM material WHERE service_id=%d", ID);
+        String cmd = String.format("SELECT * FROM material WHERE service_id=%d AND visible=1", ID);
         materialRowSet.setCommand(cmd);
         materialRowSet.execute(conn);
         return materialRowSet;
     }
 
     public CachedRowSet executeProjectQuery(short ID) throws SQLException {
-        String cmd = String.format("SELECT * FROM project WHERE service_id=%d", ID);
+        String cmd = String.format("SELECT * FROM project WHERE service_id=%d AND visible=1", ID);
         projectRowSet.setCommand(cmd);
         projectRowSet.execute(conn);
         return projectRowSet;
     }
 
     public CachedRowSet executeLogisticQuery(short ID) throws SQLException {
-        String cmd = String.format("SELECT * FROM logistic WHERE service_id=%d", ID);
+        String cmd = String.format("SELECT * FROM logistic WHERE service_id=%d AND visible=1", ID);
         logisticRowSet.setCommand(cmd);
         logisticRowSet.execute(conn);
         return logisticRowSet;
     }
 
     public CachedRowSet executeWorkmanQuery(short ID) throws SQLException {
-        String cmd = String.format("SELECT * FROM workman WHERE service_id=%d", ID);
+        String cmd = String.format("SELECT * FROM workman WHERE service_id=%d AND visible=1", ID);
         workmanRowSet.setCommand(cmd);
         workmanRowSet.execute(conn);
         return workmanRowSet;
@@ -214,13 +214,6 @@ public final class DataBaseManager {
     }
 
     public void addProjectRow(short serviceID, String name, String sponsor) throws SQLException {
-        System.out.println("------- Atual tabela de PROJETOS ---------");
-        projectRowSet.beforeFirst();
-        while (projectRowSet.next()) {
-            System.out.print("ID : " + projectRowSet.getString(1) + "\t");
-            System.out.println("Name : " + projectRowSet.getString("name"));
-        }
-        System.out.println("------ Fim da tabela de PROJETOS! --------");
         projectRowSet.moveToInsertRow();
         projectRowSet.updateNull(1);
         projectRowSet.updateShort(2, serviceID);
@@ -231,8 +224,6 @@ public final class DataBaseManager {
         projectRowSet.updateBoolean(7, true);
         projectRowSet.insertRow();
         projectRowSet.moveToCurrentRow();
-        //projectRowSet.commit();
-        //projectRowSet.acceptChanges(con);
     }
 
     public CachedRowSet getRowSet(int tableID) {
@@ -284,6 +275,7 @@ public final class DataBaseManager {
     }
 
     public void acceptChanges(int tableID) throws SyncProviderException, SQLException {
+        if(isConnected()){ 
         switch (tableID) {
             case MATERIAL:
                 materialRowSet.acceptChanges(conn);
@@ -299,6 +291,7 @@ public final class DataBaseManager {
                 break;
             default:
                 this.acceptChanges();
+        }
         }
     }
 

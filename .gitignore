@@ -13,3 +13,5 @@ test/
 
 # especific files
 src/data/DataBaseInput.java
+src/gui/FrameTest.form
+src/gui/FrameTest.java

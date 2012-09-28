@@ -137,10 +137,10 @@ public class AresTableModel extends AbstractTableModel {
     }
 
     public void removeRow(int row) {
+        values.remove(row);
         try {
             dbManager.updateCellTable(TABLE_ID,
-                    row + SQL_ROW_CORRECTION, 7, false);
-            dbManager.acceptChanges(TABLE_ID);
+                    (row + SQL_ROW_CORRECTION), 7, Boolean.FALSE);
         } catch (SQLException ex) {
             Logger.getLogger(AresTableModel.class.getName()).log(Level.SEVERE, null, ex);
         }

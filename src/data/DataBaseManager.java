@@ -110,6 +110,7 @@ public final class DataBaseManager {
     }
 
     public void updateCellTable(int tableID, int row, int col, Object obj) throws SQLException {
+        System.out.printf("Número da Linha: %d\n", row);
         switch (tableID) {
             case MATERIAL:
                 updateMaterialCell(row, col, obj);

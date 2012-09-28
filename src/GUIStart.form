@@ -132,7 +132,7 @@
                       <Group type="102" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="serviceDescriptionLabel" alignment="0" pref="791" max="32767" attributes="0"/>
+                              <Component id="serviceDescriptionLabel" alignment="0" pref="864" max="32767" attributes="0"/>
                               <Group type="102" alignment="0" attributes="0">
                                   <EmptySpace min="6" pref="6" max="6" attributes="0"/>
                                   <Group type="103" groupAlignment="0" attributes="0">
@@ -154,7 +154,7 @@
                                       </Group>
                                   </Group>
                                   <EmptySpace type="separate" max="-2" attributes="0"/>
-                                  <Component id="jScrollPane5" pref="340" max="32767" attributes="0"/>
+                                  <Component id="jScrollPane5" pref="413" max="32767" attributes="0"/>
                                   <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
                                   <Component id="jButton5" min="-2" max="-2" attributes="0"/>
                               </Group>
@@ -362,7 +362,11 @@
                                       <EmptySpace max="-2" attributes="0"/>
                                       <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
                                   </Group>
-                                  <Component id="jButton_addWorkman" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Group type="102" alignment="0" attributes="0">
+                                      <Component id="jButton_addWorkman" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Component id="jButton_removeWorkman" min="-2" max="-2" attributes="0"/>
+                                  </Group>
                                   <Group type="102" alignment="0" attributes="0">
                                       <EmptySpace max="-2" attributes="0"/>
                                       <Component id="jScrollPane3" pref="357" max="32767" attributes="0"/>
@@ -379,7 +383,10 @@
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="jScrollPane3" min="-2" pref="108" max="-2" attributes="0"/>
                               <EmptySpace max="32767" attributes="0"/>
-                              <Component id="jButton_addWorkman" min="-2" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="3" attributes="0">
+                                  <Component id="jButton_addWorkman" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jButton_removeWorkman" alignment="3" min="-2" max="-2" attributes="0"/>
+                              </Group>
                           </Group>
                       </Group>
                     </DimensionLayout>
@@ -438,10 +445,18 @@
                     </Container>
                     <Component class="javax.swing.JButton" name="jButton_addWorkman">
                       <Properties>
-                        <Property name="text" type="java.lang.String" value="Adicionar Mao de Obra"/>
+                        <Property name="text" type="java.lang.String" value="Adicionar Equipe"/>
                       </Properties>
                       <Events>
                         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton_addWorkmanActionPerformed"/>
+                      </Events>
+                    </Component>
+                    <Component class="javax.swing.JButton" name="jButton_removeWorkman">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" value="Remover Equipe(s)"/>
+                      </Properties>
+                      <Events>
+                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton_removeWorkmanActionPerformed"/>
                       </Events>
                     </Component>
                   </SubComponents>
@@ -467,11 +482,15 @@
                                       <EmptySpace max="-2" attributes="0"/>
                                       <Component id="jLabel2" min="-2" max="-2" attributes="0"/>
                                   </Group>
-                                  <Component id="jButton_addMaterial" alignment="0" min="-2" pref="174" max="-2" attributes="0"/>
+                                  <Group type="102" alignment="0" attributes="0">
+                                      <Component id="jButton_addMaterial" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Component id="jButton_removeMaterial" min="-2" max="-2" attributes="0"/>
+                                  </Group>
                               </Group>
-                              <EmptySpace min="-2" pref="169" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="156" max="-2" attributes="0"/>
                           </Group>
-                          <Component id="jScrollPane2" alignment="1" pref="360" max="32767" attributes="0"/>
+                          <Component id="jScrollPane2" alignment="1" pref="433" max="32767" attributes="0"/>
                       </Group>
                     </DimensionLayout>
                     <DimensionLayout dim="1">
@@ -481,7 +500,10 @@
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="jScrollPane2" min="-2" pref="108" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Component id="jButton_addMaterial" min="-2" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="3" attributes="0">
+                                  <Component id="jButton_addMaterial" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jButton_removeMaterial" alignment="3" min="-2" max="-2" attributes="0"/>
+                              </Group>
                           </Group>
                       </Group>
                     </DimensionLayout>
@@ -554,6 +576,14 @@
                         </Component>
                       </SubComponents>
                     </Container>
+                    <Component class="javax.swing.JButton" name="jButton_removeMaterial">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" value="Remover Material"/>
+                      </Properties>
+                      <Events>
+                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton_removeMaterialActionPerformed"/>
+                      </Events>
+                    </Component>
                   </SubComponents>
                 </Container>
                 <Container class="javax.swing.JPanel" name="subPanelLogistics">
@@ -574,13 +604,17 @@
                                       <EmptySpace max="-2" attributes="0"/>
                                       <Component id="jLabel5" min="-2" max="-2" attributes="0"/>
                                   </Group>
-                                  <Component id="jButton_addLogistic" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Group type="102" alignment="0" attributes="0">
+                                      <Component id="jButton_addLogistic" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Component id="jButton_removeLogistic" min="-2" max="-2" attributes="0"/>
+                                  </Group>
                               </Group>
-                              <EmptySpace max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="149" max="-2" attributes="0"/>
                           </Group>
                           <Group type="102" alignment="0" attributes="0">
                               <EmptySpace min="-2" pref="1" max="-2" attributes="0"/>
-                              <Component id="jScrollPane4" pref="359" max="32767" attributes="0"/>
+                              <Component id="jScrollPane4" pref="432" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
@@ -591,7 +625,10 @@
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="jScrollPane4" min="-2" pref="108" max="-2" attributes="0"/>
                               <EmptySpace max="32767" attributes="0"/>
-                              <Component id="jButton_addLogistic" min="-2" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="3" attributes="0">
+                                  <Component id="jButton_addLogistic" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jButton_removeLogistic" alignment="3" min="-2" max="-2" attributes="0"/>
+                              </Group>
                           </Group>
                       </Group>
                     </DimensionLayout>
@@ -656,6 +693,14 @@
                         </Component>
                       </SubComponents>
                     </Container>
+                    <Component class="javax.swing.JButton" name="jButton_removeLogistic">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" value="Remover Log&#xed;stica(s)"/>
+                      </Properties>
+                      <Events>
+                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton_removeLogisticActionPerformed"/>
+                      </Events>
+                    </Component>
                   </SubComponents>
                 </Container>
                 <Component class="javax.swing.JLabel" name="serviceDescriptionLabel">
@@ -702,6 +747,7 @@
                 <Component class="javax.swing.JTextField" name="jTextField1">
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jTextField1ActionPerformed"/>
+                    <EventHandler event="focusGained" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="jTextField1FocusGained"/>
                   </Events>
                 </Component>
                 <Container class="javax.swing.JScrollPane" name="jScrollPane5">
@@ -717,6 +763,9 @@
                         <Property name="lineWrap" type="boolean" value="true"/>
                         <Property name="rows" type="int" value="5"/>
                       </Properties>
+                      <Events>
+                        <EventHandler event="focusGained" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="jTextArea1FocusGained"/>
+                      </Events>
                     </Component>
                   </SubComponents>
                 </Container>

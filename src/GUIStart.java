@@ -149,16 +149,19 @@ public class GUIStart extends javax.swing.JFrame {
         jScrollPane3 = new javax.swing.JScrollPane();
         workmanJTable = new javax.swing.JTable();
         jButton_addWorkman = new javax.swing.JButton();
+        jButton_removeWorkman = new javax.swing.JButton();
         subPanelMaterial = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
         jButton_addMaterial = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         materialJTable = new javax.swing.JTable();
+        jButton_removeMaterial = new javax.swing.JButton();
         subPanelLogistics = new javax.swing.JPanel();
         jLabel5 = new javax.swing.JLabel();
         jButton_addLogistic = new javax.swing.JButton();
         jScrollPane4 = new javax.swing.JScrollPane();
         logisticJTable = new javax.swing.JTable();
+        jButton_removeLogistic = new javax.swing.JButton();
         serviceDescriptionLabel = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
@@ -278,10 +281,17 @@ public class GUIStart extends javax.swing.JFrame {
     });
     jScrollPane3.setViewportView(workmanJTable);
 
-    jButton_addWorkman.setText("Adicionar Mao de Obra");
+    jButton_addWorkman.setText("Adicionar Equipe");
     jButton_addWorkman.addActionListener(new java.awt.event.ActionListener() {
         public void actionPerformed(java.awt.event.ActionEvent evt) {
             jButton_addWorkmanActionPerformed(evt);
+        }
+    });
+
+    jButton_removeWorkman.setText("Remover Equipe(s)");
+    jButton_removeWorkman.addActionListener(new java.awt.event.ActionListener() {
+        public void actionPerformed(java.awt.event.ActionEvent evt) {
+            jButton_removeWorkmanActionPerformed(evt);
         }
     });
 
@@ -294,7 +304,10 @@ public class GUIStart extends javax.swing.JFrame {
                 .addGroup(subPanelLabourLayout.createSequentialGroup()
                     .addContainerGap()
                     .addComponent(jLabel1))
-                .addComponent(jButton_addWorkman)
+                .addGroup(subPanelLabourLayout.createSequentialGroup()
+                    .addComponent(jButton_addWorkman)
+                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addComponent(jButton_removeWorkman))
                 .addGroup(subPanelLabourLayout.createSequentialGroup()
                     .addContainerGap()
                     .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 357, Short.MAX_VALUE)))
@@ -307,7 +320,9 @@ public class GUIStart extends javax.swing.JFrame {
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
             .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(jButton_addWorkman))
+            .addGroup(subPanelLabourLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addComponent(jButton_addWorkman)
+                .addComponent(jButton_removeWorkman)))
     );
 
     subPanelMaterial.setBorder(javax.swing.BorderFactory.createTitledBorder("Material"));
@@ -341,6 +356,13 @@ public class GUIStart extends javax.swing.JFrame {
     });
     jScrollPane2.setViewportView(materialJTable);
 
+    jButton_removeMaterial.setText("Remover Material");
+    jButton_removeMaterial.addActionListener(new java.awt.event.ActionListener() {
+        public void actionPerformed(java.awt.event.ActionEvent evt) {
+            jButton_removeMaterialActionPerformed(evt);
+        }
+    });
+
     javax.swing.GroupLayout subPanelMaterialLayout = new javax.swing.GroupLayout(subPanelMaterial);
     subPanelMaterial.setLayout(subPanelMaterialLayout);
     subPanelMaterialLayout.setHorizontalGroup(
@@ -350,9 +372,12 @@ public class GUIStart extends javax.swing.JFrame {
                 .addGroup(subPanelMaterialLayout.createSequentialGroup()
                     .addContainerGap()
                     .addComponent(jLabel2))
-                .addComponent(jButton_addMaterial, javax.swing.GroupLayout.PREFERRED_SIZE, 174, javax.swing.GroupLayout.PREFERRED_SIZE))
-            .addGap(169, 169, 169))
-        .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 360, Short.MAX_VALUE)
+                .addGroup(subPanelMaterialLayout.createSequentialGroup()
+                    .addComponent(jButton_addMaterial)
+                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addComponent(jButton_removeMaterial)))
+            .addGap(156, 156, 156))
+        .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 433, Short.MAX_VALUE)
     );
     subPanelMaterialLayout.setVerticalGroup(
         subPanelMaterialLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -361,7 +386,9 @@ public class GUIStart extends javax.swing.JFrame {
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
             .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-            .addComponent(jButton_addMaterial))
+            .addGroup(subPanelMaterialLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addComponent(jButton_addMaterial)
+                .addComponent(jButton_removeMaterial)))
     );
 
     subPanelLogistics.setBorder(javax.swing.BorderFactory.createTitledBorder("Logística"));
@@ -391,6 +418,13 @@ public class GUIStart extends javax.swing.JFrame {
     });
     jScrollPane4.setViewportView(logisticJTable);
 
+    jButton_removeLogistic.setText("Remover Logística(s)");
+    jButton_removeLogistic.addActionListener(new java.awt.event.ActionListener() {
+        public void actionPerformed(java.awt.event.ActionEvent evt) {
+            jButton_removeLogisticActionPerformed(evt);
+        }
+    });
+
     javax.swing.GroupLayout subPanelLogisticsLayout = new javax.swing.GroupLayout(subPanelLogistics);
     subPanelLogistics.setLayout(subPanelLogisticsLayout);
     subPanelLogisticsLayout.setHorizontalGroup(
@@ -400,11 +434,14 @@ public class GUIStart extends javax.swing.JFrame {
                 .addGroup(subPanelLogisticsLayout.createSequentialGroup()
                     .addContainerGap()
                     .addComponent(jLabel5))
-                .addComponent(jButton_addLogistic))
-            .addContainerGap())
+                .addGroup(subPanelLogisticsLayout.createSequentialGroup()
+                    .addComponent(jButton_addLogistic)
+                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addComponent(jButton_removeLogistic)))
+            .addGap(149, 149, 149))
         .addGroup(subPanelLogisticsLayout.createSequentialGroup()
             .addGap(1, 1, 1)
-            .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 359, Short.MAX_VALUE))
+            .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 432, Short.MAX_VALUE))
     );
     subPanelLogisticsLayout.setVerticalGroup(
         subPanelLogisticsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -413,7 +450,9 @@ public class GUIStart extends javax.swing.JFrame {
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
             .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(jButton_addLogistic))
+            .addGroup(subPanelLogisticsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addComponent(jButton_addLogistic)
+                .addComponent(jButton_removeLogistic)))
     );
 
     serviceDescriptionLabel.setFont(new java.awt.Font("sansserif", 1, 18));
@@ -441,10 +480,20 @@ public class GUIStart extends javax.swing.JFrame {
             jTextField1ActionPerformed(evt);
         }
     });
+    jTextField1.addFocusListener(new java.awt.event.FocusAdapter() {
+        public void focusGained(java.awt.event.FocusEvent evt) {
+            jTextField1FocusGained(evt);
+        }
+    });
 
     jTextArea1.setColumns(20);
     jTextArea1.setLineWrap(true);
     jTextArea1.setRows(5);
+    jTextArea1.addFocusListener(new java.awt.event.FocusAdapter() {
+        public void focusGained(java.awt.event.FocusEvent evt) {
+            jTextArea1FocusGained(evt);
+        }
+    });
     jScrollPane5.setViewportView(jTextArea1);
 
     javax.swing.GroupLayout servicePanelLayout = new javax.swing.GroupLayout(servicePanel);
@@ -454,7 +503,7 @@ public class GUIStart extends javax.swing.JFrame {
         .addGroup(servicePanelLayout.createSequentialGroup()
             .addContainerGap()
             .addGroup(servicePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addComponent(serviceDescriptionLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 791, Short.MAX_VALUE)
+                .addComponent(serviceDescriptionLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 864, Short.MAX_VALUE)
                 .addGroup(servicePanelLayout.createSequentialGroup()
                     .addGap(6, 6, 6)
                     .addGroup(servicePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -471,7 +520,7 @@ public class GUIStart extends javax.swing.JFrame {
                             .addGap(18, 18, 18)
                             .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGap(18, 18, 18)
-                    .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 340, Short.MAX_VALUE)
+                    .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 413, Short.MAX_VALUE)
                     .addGap(12, 12, 12)
                     .addComponent(jButton5))
                 .addGroup(servicePanelLayout.createSequentialGroup()
@@ -655,14 +704,17 @@ public class GUIStart extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton_addProjectActionPerformed
 
     private void workmanJTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_workmanJTableMouseClicked
+        jButton_removeWorkman.setEnabled(true);
         clearSelection(WORKMAN);
     }//GEN-LAST:event_workmanJTableMouseClicked
 
     private void materialJTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_materialJTableMouseClicked
+        jButton_removeMaterial.setEnabled(true);
         clearSelection(MATERIAL);
     }//GEN-LAST:event_materialJTableMouseClicked
 
     private void logisticJTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_logisticJTableMouseClicked
+        jButton_removeLogistic.setEnabled(true);
         clearSelection(LOGISTIC);
     }//GEN-LAST:event_logisticJTableMouseClicked
 
@@ -684,7 +736,7 @@ public class GUIStart extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton_addLogisticActionPerformed
 
     private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
-        // TODO add your handling code here:
+        
     }//GEN-LAST:event_jTextField1ActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
@@ -699,10 +751,35 @@ public class GUIStart extends javax.swing.JFrame {
 
     private void jButton_removeProjectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_removeProjectActionPerformed
         int row = projectJTable.getSelectedRow();
-        System.out.printf("Linha selecionada: %d\n", row);
         AresTableModel model = (AresTableModel) projectJTable.getModel();
         model.removeRow(row);
     }//GEN-LAST:event_jButton_removeProjectActionPerformed
+
+    private void jButton_removeLogisticActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_removeLogisticActionPerformed
+        int row = logisticJTable.getSelectedRow();
+        AresTableModel model = (AresTableModel) logisticJTable.getModel();
+        model.removeRow(row);
+    }//GEN-LAST:event_jButton_removeLogisticActionPerformed
+
+    private void jButton_removeMaterialActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_removeMaterialActionPerformed
+        int row = materialJTable.getSelectedRow();
+        AresTableModel model = (AresTableModel) materialJTable.getModel();
+        model.removeRow(row);
+    }//GEN-LAST:event_jButton_removeMaterialActionPerformed
+
+    private void jButton_removeWorkmanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_removeWorkmanActionPerformed
+        int row = workmanJTable.getSelectedRow();
+        AresTableModel model = (AresTableModel) workmanJTable.getModel();
+        model.removeRow(row);
+    }//GEN-LAST:event_jButton_removeWorkmanActionPerformed
+
+    private void jTextField1FocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTextField1FocusGained
+        clearSelection(ALL);
+    }//GEN-LAST:event_jTextField1FocusGained
+
+    private void jTextArea1FocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTextArea1FocusGained
+        clearSelection(ALL);
+    }//GEN-LAST:event_jTextArea1FocusGained
 
     private void clearSelection(int tableId) {
         if (tableId != PROJECT) {
@@ -711,15 +788,19 @@ public class GUIStart extends javax.swing.JFrame {
         }
         if (tableId != MATERIAL) {
             materialJTable.clearSelection();
+            jButton_removeMaterial.setEnabled(false);
         }
         if (tableId != WORKMAN) {
             workmanJTable.clearSelection();
+            jButton_removeWorkman.setEnabled(false);
         }
         if (tableId != LOGISTIC) {
             logisticJTable.clearSelection();
+            jButton_removeLogistic.setEnabled(false);
         }
     }
-
+    
+    
     private void setComponentsEnabled(Container component, boolean enabled) {
         Component[] com = component.getComponents();
         for (int a = 0; a < com.length; a++) {
@@ -787,6 +868,7 @@ public class GUIStart extends javax.swing.JFrame {
     private final int LOGISTIC = 1;
     private final int PROJECT = 2;
     private final int WORKMAN = 3;
+    private final int ALL = 100;
     private String lookNames[];
     private ItemHandler handler;
     private DataBaseManager dbManager;
@@ -829,7 +911,10 @@ public class GUIStart extends javax.swing.JFrame {
     private javax.swing.JButton jButton_addMaterial;
     private javax.swing.JButton jButton_addProject;
     private javax.swing.JButton jButton_addWorkman;
+    private javax.swing.JButton jButton_removeLogistic;
+    private javax.swing.JButton jButton_removeMaterial;
     private javax.swing.JButton jButton_removeProject;
+    private javax.swing.JButton jButton_removeWorkman;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

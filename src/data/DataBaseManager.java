@@ -22,6 +22,7 @@ public final class DataBaseManager {
     private CachedRowSet logisticRowSet;
     private CachedRowSet projectRowSet;
     private CachedRowSet workmanRowSet;
+    private CachedRowSet reportRowSet;
     private final int MATERIAL = 0;
     private final int LOGISTIC = 1;
     private final int PROJECT = 2;
@@ -44,7 +45,13 @@ public final class DataBaseManager {
     public boolean isConnected() {
         return connected;
     }
-
+    
+    public CachedRowSet executeQuery(String query) throws SQLException {
+        reportRowSet.setCommand(query);
+        reportRowSet.execute(conn);
+        return reportRowSet;
+    }
+    
     public CachedRowSet executeQuery(short ID, int tableID) throws SQLException {
         switch (tableID) {
             case MATERIAL:
@@ -276,23 +283,23 @@ public final class DataBaseManager {
     }
 
     public void acceptChanges(int tableID) throws SyncProviderException, SQLException {
-        if(isConnected()){ 
-        switch (tableID) {
-            case MATERIAL:
-                materialRowSet.acceptChanges(conn);
-                break;
-            case LOGISTIC:
-                logisticRowSet.acceptChanges(conn);
-                break;
-            case PROJECT:
-                projectRowSet.acceptChanges(conn);
-                break;
-            case WORKMAN:
-                workmanRowSet.acceptChanges(conn);
-                break;
-            default:
-                this.acceptChanges();
-        }
+        if (isConnected()) {
+            switch (tableID) {
+                case MATERIAL:
+                    materialRowSet.acceptChanges(conn);
+                    break;
+                case LOGISTIC:
+                    logisticRowSet.acceptChanges(conn);
+                    break;
+                case PROJECT:
+                    projectRowSet.acceptChanges(conn);
+                    break;
+                case WORKMAN:
+                    workmanRowSet.acceptChanges(conn);
+                    break;
+                default:
+                    this.acceptChanges();
+            }
         }
     }
 

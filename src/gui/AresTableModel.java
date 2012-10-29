@@ -53,7 +53,7 @@ public class AresTableModel extends AbstractTableModel {
     private Class[] types;
     private Vector<Object[]> values;
     private int numberOfRows;
-    private final int TABLE_ID;
+    private int TABLE_ID;
     private final int SQL_ROW_CORRECTION = 1;
     // Como não estamos pegando as colunas 'service_ID' e 'ID', então,
     // é preciso deslocar a referência de colunas em mais duas unidades.
@@ -85,6 +85,22 @@ public class AresTableModel extends AbstractTableModel {
 
     public void executeQuery(short serviceID) throws SQLException {
         rowSet = dbManager.executeQuery(serviceID, TABLE_ID);
+        numberOfRows = rowSet.size();
+        values = new Vector<Object[]>(numberOfRows);
+        for (int row = 0; row < numberOfRows; row++) {
+            rowSet.absolute(row + SQL_ROW_CORRECTION);
+            Object obj[] = new Object[getColumnCount()];
+            for (int col = 0; col < getColumnCount(); col++) {
+                obj[col] = rowSet.getObject(col + SQL_COL_CORRECTION);
+            }
+            values.addElement(obj);
+        }
+        System.out.printf("numberOfRows: %d\n", numberOfRows);
+        fireTableDataChanged();
+    }
+    
+    public void executeQuery(String query) throws SQLException {
+        rowSet = dbManager.executeQuery(query);
         numberOfRows = rowSet.size();
         values = new Vector<Object[]>(numberOfRows);
         for (int row = 0; row < numberOfRows; row++) {

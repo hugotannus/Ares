@@ -13,6 +13,7 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -75,13 +76,14 @@ public class GUIStart extends javax.swing.JFrame {
             Logger.getLogger(GUIStart.class.getName()).log(Level.SEVERE, null, ex);
             System.exit(1);
         }
-
-        map.put("definido","defined");
-        map.put("aprovado","approved");
-        map.put("solicitado", "requested");
-        map.put("in loco", "inloco");
-        map.put("disponível", "available");
-        map.put("contratdo", "engaged");
+        
+        nameMap = new HashMap <String,String>();
+        nameMap.put("definido","defined");
+        nameMap.put("aprovado","approved");
+        nameMap.put("solicitado", "requested");
+        nameMap.put("in loco", "inloco");
+        nameMap.put("disponível", "available");
+        nameMap.put("contratdo", "engaged");
         
         looks = javax.swing.UIManager.getInstalledLookAndFeels();
         lookNames = new String[looks.length];
@@ -202,7 +204,7 @@ public class GUIStart extends javax.swing.JFrame {
         generateReportButton = new javax.swing.JButton();
         clearSearchButton = new javax.swing.JButton();
         jScrollPane7 = new javax.swing.JScrollPane();
-        jTable2 = new javax.swing.JTable();
+        reportTable = new javax.swing.JTable();
         saveReportButton = new javax.swing.JButton();
         scrlTree = new javax.swing.JScrollPane();
         treeServicos = new javax.swing.JTree(treeModel);
@@ -693,6 +695,11 @@ public class GUIStart extends javax.swing.JFrame {
     endDateField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.DateFormatter(java.text.DateFormat.getDateInstance(java.text.DateFormat.SHORT))));
 
     generateReportButton.setText("Gerar Relatório");
+    generateReportButton.addActionListener(new java.awt.event.ActionListener() {
+        public void actionPerformed(java.awt.event.ActionEvent evt) {
+            generateReportButtonActionPerformed(evt);
+        }
+    });
 
     clearSearchButton.setText("Limpar Busca");
     clearSearchButton.addActionListener(new java.awt.event.ActionListener() {
@@ -701,7 +708,7 @@ public class GUIStart extends javax.swing.JFrame {
         }
     });
 
-    jTable2.setModel(new javax.swing.table.DefaultTableModel(
+    reportTable.setModel(new javax.swing.table.DefaultTableModel(
         new Object [][] {
 
         },
@@ -709,7 +716,7 @@ public class GUIStart extends javax.swing.JFrame {
             "Title 1", "Title 2", "Title 3", "Title 4"
         }
     ));
-    jScrollPane7.setViewportView(jTable2);
+    jScrollPane7.setViewportView(reportTable);
 
     saveReportButton.setText("Salvar Relatório");
 
@@ -1008,6 +1015,10 @@ public class GUIStart extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_statusComboBoxActionPerformed
 
+    private void generateReportButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_generateReportButtonActionPerformed
+        
+    }//GEN-LAST:event_generateReportButtonActionPerformed
+
     private void clearSelection(int tableId) {
         if (tableId != PROJECT) {
             projectJTable.clearSelection();
@@ -1097,7 +1108,7 @@ public class GUIStart extends javax.swing.JFrame {
     private final int WORKMAN = 3;
     private final int ALL = 100;
     private String lookNames[];
-    private Map< String, String > map;
+    private Map< String, String > nameMap;
     private ItemHandler handler;
     private DataBaseManager dbManager;
     private Service currentService;
@@ -1176,7 +1187,6 @@ public class GUIStart extends javax.swing.JFrame {
     private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTable jTable1;
-    private javax.swing.JTable jTable2;
     private javax.swing.JTextArea jTextArea1;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
@@ -1186,6 +1196,7 @@ public class GUIStart extends javax.swing.JFrame {
     private javax.swing.JTable materialJTable;
     private javax.swing.JTable projectJTable;
     private javax.swing.JPanel reportPanel;
+    private javax.swing.JTable reportTable;
     private javax.swing.JButton saveReportButton;
     private javax.swing.JScrollPane scrlTree;
     private javax.swing.JLabel serviceDescriptionLabel;

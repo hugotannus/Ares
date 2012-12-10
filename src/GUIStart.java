@@ -215,13 +215,13 @@ public class GUIStart extends javax.swing.JFrame {
         jRadioButton3 = new javax.swing.JRadioButton();
         jRadioButton4 = new javax.swing.JRadioButton();
         jPanel6 = new javax.swing.JPanel();
-        jCheckBox4 = new javax.swing.JCheckBox();
-        jCheckBox5 = new javax.swing.JCheckBox();
-        jCheckBox6 = new javax.swing.JCheckBox();
-        jCheckBox7 = new javax.swing.JCheckBox();
-        jCheckBox8 = new javax.swing.JCheckBox();
-        jCheckBox9 = new javax.swing.JCheckBox();
-        jCheckBox10 = new javax.swing.JCheckBox();
+        reportDefined = new javax.swing.JCheckBox();
+        reportApproved = new javax.swing.JCheckBox();
+        reportRequested = new javax.swing.JCheckBox();
+        reportInLoco = new javax.swing.JCheckBox();
+        reportAvailable = new javax.swing.JCheckBox();
+        reportEngaged = new javax.swing.JCheckBox();
+        reportNotStarted = new javax.swing.JCheckBox();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
@@ -305,7 +305,7 @@ public class GUIStart extends javax.swing.JFrame {
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
             .addComponent(jButton_removeProject)
             .addContainerGap())
-        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 367, Short.MAX_VALUE)
+        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 359, Short.MAX_VALUE)
     );
     subPanelProjectLayout.setVerticalGroup(
         subPanelProjectLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -360,7 +360,7 @@ public class GUIStart extends javax.swing.JFrame {
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
             .addComponent(jButton_removeLogistic)
             .addContainerGap())
-        .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 367, Short.MAX_VALUE)
+        .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 359, Short.MAX_VALUE)
     );
     subPanelLogisticsLayout.setVerticalGroup(
         subPanelLogisticsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -419,7 +419,7 @@ public class GUIStart extends javax.swing.JFrame {
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
             .addComponent(jButton_removeMaterial)
             .addContainerGap())
-        .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 367, Short.MAX_VALUE)
+        .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 359, Short.MAX_VALUE)
     );
     subPanelMaterialLayout.setVerticalGroup(
         subPanelMaterialLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -475,7 +475,7 @@ public class GUIStart extends javax.swing.JFrame {
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
             .addComponent(jButton_removeWorkman)
             .addContainerGap())
-        .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 367, Short.MAX_VALUE)
+        .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 359, Short.MAX_VALUE)
     );
     subPanelLabourLayout.setVerticalGroup(
         subPanelLabourLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -645,8 +645,8 @@ public class GUIStart extends javax.swing.JFrame {
                     .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGap(184, 184, 184))
                 .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 418, Short.MAX_VALUE))
-            .addGap(54, 54, 54))
+                .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 402, Short.MAX_VALUE))
+            .addContainerGap())
     );
     jPanel5Layout.setVerticalGroup(
         jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -677,9 +677,9 @@ public class GUIStart extends javax.swing.JFrame {
         .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, servicePanelLayout.createSequentialGroup()
             .addContainerGap()
             .addGroup(servicePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                .addComponent(jPanel3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 795, Short.MAX_VALUE)
+                .addComponent(jPanel3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 779, Short.MAX_VALUE)
                 .addComponent(jPanel5, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(serviceDescriptionLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 795, Short.MAX_VALUE))
+                .addComponent(serviceDescriptionLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 779, Short.MAX_VALUE))
             .addContainerGap())
     );
     servicePanelLayout.setVerticalGroup(
@@ -831,6 +831,11 @@ public class GUIStart extends javax.swing.JFrame {
 
     buttonGroup1.add(jRadioButton1);
     jRadioButton1.setText("Logística");
+    jRadioButton1.addChangeListener(new javax.swing.event.ChangeListener() {
+        public void stateChanged(javax.swing.event.ChangeEvent evt) {
+            jRadioButton1StateChanged(evt);
+        }
+    });
     jRadioButton1.addActionListener(new java.awt.event.ActionListener() {
         public void actionPerformed(java.awt.event.ActionEvent evt) {
             jRadioButton1ActionPerformed(evt);
@@ -839,12 +844,27 @@ public class GUIStart extends javax.swing.JFrame {
 
     buttonGroup1.add(jRadioButton2);
     jRadioButton2.setText("Mão-de-obra");
+    jRadioButton2.addChangeListener(new javax.swing.event.ChangeListener() {
+        public void stateChanged(javax.swing.event.ChangeEvent evt) {
+            jRadioButton2StateChanged(evt);
+        }
+    });
 
     buttonGroup1.add(jRadioButton3);
     jRadioButton3.setText("Material");
+    jRadioButton3.addChangeListener(new javax.swing.event.ChangeListener() {
+        public void stateChanged(javax.swing.event.ChangeEvent evt) {
+            jRadioButton3StateChanged(evt);
+        }
+    });
 
     buttonGroup1.add(jRadioButton4);
     jRadioButton4.setText("Projeto");
+    jRadioButton4.addChangeListener(new javax.swing.event.ChangeListener() {
+        public void stateChanged(javax.swing.event.ChangeEvent evt) {
+            jRadioButton4StateChanged(evt);
+        }
+    });
 
     javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
     jPanel2.setLayout(jPanel2Layout);
@@ -873,19 +893,19 @@ public class GUIStart extends javax.swing.JFrame {
 
     jPanel6.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Status", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION));
 
-    jCheckBox4.setText("Definido");
+    reportDefined.setText("Definido");
 
-    jCheckBox5.setText("Aprovado");
+    reportApproved.setText("Aprovado");
 
-    jCheckBox6.setText("Solicitado");
+    reportRequested.setText("Solicitado");
 
-    jCheckBox7.setText("in Loco");
+    reportInLoco.setText("in Loco");
 
-    jCheckBox8.setText("Disponível");
+    reportAvailable.setText("Disponível");
 
-    jCheckBox9.setText("Contratado");
+    reportEngaged.setText("Contratado");
 
-    jCheckBox10.setText("Não iniciado");
+    reportNotStarted.setText("Não iniciado");
 
     javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
     jPanel6.setLayout(jPanel6Layout);
@@ -893,35 +913,35 @@ public class GUIStart extends javax.swing.JFrame {
         jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
         .addGroup(jPanel6Layout.createSequentialGroup()
             .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addComponent(jCheckBox10)
+                .addComponent(reportNotStarted)
                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
                     .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(jCheckBox8)
-                        .addComponent(jCheckBox7)
-                        .addComponent(jCheckBox6))
+                        .addComponent(reportAvailable)
+                        .addComponent(reportInLoco)
+                        .addComponent(reportRequested))
                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 44, Short.MAX_VALUE)
                     .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(jCheckBox4)
-                        .addComponent(jCheckBox5)
-                        .addComponent(jCheckBox9))))
+                        .addComponent(reportDefined)
+                        .addComponent(reportApproved)
+                        .addComponent(reportEngaged))))
             .addContainerGap())
     );
     jPanel6Layout.setVerticalGroup(
         jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
         .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
-            .addComponent(jCheckBox10)
+            .addComponent(reportNotStarted)
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 12, Short.MAX_VALUE)
             .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                .addComponent(jCheckBox6)
-                .addComponent(jCheckBox4))
+                .addComponent(reportRequested)
+                .addComponent(reportDefined))
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
             .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                .addComponent(jCheckBox7)
-                .addComponent(jCheckBox5))
+                .addComponent(reportInLoco)
+                .addComponent(reportApproved))
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
             .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                .addComponent(jCheckBox8)
-                .addComponent(jCheckBox9)))
+                .addComponent(reportAvailable)
+                .addComponent(reportEngaged)))
     );
 
     jButton1.setText("Salvar");
@@ -949,11 +969,11 @@ public class GUIStart extends javax.swing.JFrame {
                 .addGroup(jPanel7Layout.createSequentialGroup()
                     .addComponent(jLabel13)
                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                    .addComponent(jTextField5, javax.swing.GroupLayout.DEFAULT_SIZE, 201, Short.MAX_VALUE))
+                    .addComponent(jTextField5, javax.swing.GroupLayout.DEFAULT_SIZE, 183, Short.MAX_VALUE))
                 .addGroup(jPanel7Layout.createSequentialGroup()
                     .addComponent(jLabel12)
                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                    .addComponent(jTextField4, javax.swing.GroupLayout.DEFAULT_SIZE, 240, Short.MAX_VALUE))
+                    .addComponent(jTextField4, javax.swing.GroupLayout.DEFAULT_SIZE, 222, Short.MAX_VALUE))
                 .addGroup(jPanel7Layout.createSequentialGroup()
                     .addComponent(jLabel14)
                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -1032,7 +1052,7 @@ public class GUIStart extends javax.swing.JFrame {
         .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
             .addContainerGap()
             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                .addComponent(jScrollPane8, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 779, Short.MAX_VALUE)
+                .addComponent(jScrollPane8, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 783, Short.MAX_VALUE)
                 .addComponent(jPanel8, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addContainerGap())
     );
@@ -1278,6 +1298,54 @@ public class GUIStart extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jRadioButton1ActionPerformed
 
+    private void jRadioButton1StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jRadioButton1StateChanged
+        if(jRadioButton1.isSelected()) {
+            reportApproved.setEnabled(true);
+            reportAvailable.setEnabled(false);
+            reportDefined.setEnabled(true);
+            reportEngaged.setEnabled(false);
+            reportInLoco.setEnabled(false);
+            reportNotStarted.setEnabled(true);
+            reportRequested.setEnabled(false);
+        }
+    }//GEN-LAST:event_jRadioButton1StateChanged
+
+    private void jRadioButton2StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jRadioButton2StateChanged
+        if (jRadioButton2.isSelected()) {
+            reportApproved.setEnabled(false);
+            reportAvailable.setEnabled(true);
+            reportDefined.setEnabled(false);
+            reportEngaged.setEnabled(true);
+            reportInLoco.setEnabled(false);
+            reportNotStarted.setEnabled(true);
+            reportRequested.setEnabled(false);
+        }
+    }//GEN-LAST:event_jRadioButton2StateChanged
+
+    private void jRadioButton3StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jRadioButton3StateChanged
+        if(jRadioButton3.isSelected()) {
+            reportApproved.setEnabled(false);
+            reportAvailable.setEnabled(true);
+            reportDefined.setEnabled(false);
+            reportEngaged.setEnabled(false);
+            reportInLoco.setEnabled(true);
+            reportNotStarted.setEnabled(true);
+            reportRequested.setEnabled(true);
+        }
+    }//GEN-LAST:event_jRadioButton3StateChanged
+
+    private void jRadioButton4StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jRadioButton4StateChanged
+        if(jRadioButton4.isSelected()) {
+            reportApproved.setEnabled(true);
+            reportAvailable.setEnabled(false);
+            reportDefined.setEnabled(true);
+            reportEngaged.setEnabled(false);
+            reportInLoco.setEnabled(false);
+            reportNotStarted.setEnabled(true);
+            reportRequested.setEnabled(false);
+        }
+    }//GEN-LAST:event_jRadioButton4StateChanged
+
     private void clearSelection(int tableId) {
         if (tableId != PROJECT) {
             projectJTable.clearSelection();
@@ -1421,15 +1489,8 @@ public class GUIStart extends javax.swing.JFrame {
     private javax.swing.JButton jButton_removeProject;
     private javax.swing.JButton jButton_removeWorkman;
     private javax.swing.JCheckBox jCheckBox1;
-    private javax.swing.JCheckBox jCheckBox10;
     private javax.swing.JCheckBox jCheckBox2;
     private javax.swing.JCheckBox jCheckBox3;
-    private javax.swing.JCheckBox jCheckBox4;
-    private javax.swing.JCheckBox jCheckBox5;
-    private javax.swing.JCheckBox jCheckBox6;
-    private javax.swing.JCheckBox jCheckBox7;
-    private javax.swing.JCheckBox jCheckBox8;
-    private javax.swing.JCheckBox jCheckBox9;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -1484,7 +1545,14 @@ public class GUIStart extends javax.swing.JFrame {
     private javax.swing.JMenu lookMenu;
     private javax.swing.JTable materialJTable;
     private javax.swing.JTable projectJTable;
+    private javax.swing.JCheckBox reportApproved;
+    private javax.swing.JCheckBox reportAvailable;
+    private javax.swing.JCheckBox reportDefined;
+    private javax.swing.JCheckBox reportEngaged;
+    private javax.swing.JCheckBox reportInLoco;
+    private javax.swing.JCheckBox reportNotStarted;
     private javax.swing.JPanel reportPanel;
+    private javax.swing.JCheckBox reportRequested;
     private javax.swing.JTable reportTable;
     private javax.swing.JButton saveReportButton;
     private javax.swing.JScrollPane scrlTree;

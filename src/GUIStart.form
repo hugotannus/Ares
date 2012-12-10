@@ -126,9 +126,9 @@
                       <Group type="102" alignment="1" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="1" attributes="0">
-                              <Component id="jPanel3" alignment="0" pref="795" max="32767" attributes="0"/>
+                              <Component id="jPanel3" alignment="0" pref="779" max="32767" attributes="0"/>
                               <Component id="jPanel5" alignment="0" max="32767" attributes="0"/>
-                              <Component id="serviceDescriptionLabel" alignment="1" pref="795" max="32767" attributes="0"/>
+                              <Component id="serviceDescriptionLabel" alignment="1" pref="779" max="32767" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                       </Group>
@@ -189,7 +189,7 @@
                                   <Component id="jButton_removeProject" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
                               </Group>
-                              <Component id="jScrollPane1" alignment="0" pref="367" max="32767" attributes="0"/>
+                              <Component id="jScrollPane1" alignment="0" pref="359" max="32767" attributes="0"/>
                           </Group>
                         </DimensionLayout>
                         <DimensionLayout dim="1">
@@ -295,7 +295,7 @@
                                   <Component id="jButton_removeLogistic" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
                               </Group>
-                              <Component id="jScrollPane4" alignment="0" pref="367" max="32767" attributes="0"/>
+                              <Component id="jScrollPane4" alignment="0" pref="359" max="32767" attributes="0"/>
                           </Group>
                         </DimensionLayout>
                         <DimensionLayout dim="1">
@@ -397,7 +397,7 @@
                                   <Component id="jButton_removeMaterial" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
                               </Group>
-                              <Component id="jScrollPane2" alignment="1" pref="367" max="32767" attributes="0"/>
+                              <Component id="jScrollPane2" alignment="1" pref="359" max="32767" attributes="0"/>
                           </Group>
                         </DimensionLayout>
                         <DimensionLayout dim="1">
@@ -507,7 +507,7 @@
                                   <Component id="jButton_removeWorkman" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
                               </Group>
-                              <Component id="jScrollPane3" alignment="0" pref="367" max="32767" attributes="0"/>
+                              <Component id="jScrollPane3" alignment="0" pref="359" max="32767" attributes="0"/>
                           </Group>
                         </DimensionLayout>
                         <DimensionLayout dim="1">
@@ -630,9 +630,9 @@
                                       <EmptySpace min="184" pref="184" max="184" attributes="0"/>
                                   </Group>
                                   <Component id="jLabel7" alignment="0" min="-2" pref="140" max="-2" attributes="0"/>
-                                  <Component id="jScrollPane5" alignment="0" pref="418" max="32767" attributes="0"/>
+                                  <Component id="jScrollPane5" alignment="0" pref="402" max="32767" attributes="0"/>
                               </Group>
-                              <EmptySpace min="-2" pref="54" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
@@ -1149,7 +1149,7 @@
                       <Group type="102" alignment="1" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="1" attributes="0">
-                              <Component id="jScrollPane8" alignment="0" pref="779" max="32767" attributes="0"/>
+                              <Component id="jScrollPane8" alignment="0" pref="783" max="32767" attributes="0"/>
                               <Component id="jPanel8" alignment="0" max="32767" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
@@ -1262,6 +1262,7 @@
                             <Property name="text" type="java.lang.String" value="Log&#xed;stica"/>
                           </Properties>
                           <Events>
+                            <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="jRadioButton1StateChanged"/>
                             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jRadioButton1ActionPerformed"/>
                           </Events>
                         </Component>
@@ -1272,6 +1273,9 @@
                             </Property>
                             <Property name="text" type="java.lang.String" value="M&#xe3;o-de-obra"/>
                           </Properties>
+                          <Events>
+                            <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="jRadioButton2StateChanged"/>
+                          </Events>
                         </Component>
                         <Component class="javax.swing.JRadioButton" name="jRadioButton3">
                           <Properties>
@@ -1280,6 +1284,9 @@
                             </Property>
                             <Property name="text" type="java.lang.String" value="Material"/>
                           </Properties>
+                          <Events>
+                            <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="jRadioButton3StateChanged"/>
+                          </Events>
                         </Component>
                         <Component class="javax.swing.JRadioButton" name="jRadioButton4">
                           <Properties>
@@ -1288,6 +1295,9 @@
                             </Property>
                             <Property name="text" type="java.lang.String" value="Projeto"/>
                           </Properties>
+                          <Events>
+                            <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="jRadioButton4StateChanged"/>
+                          </Events>
                         </Component>
                       </SubComponents>
                     </Container>
@@ -1305,18 +1315,18 @@
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="102" attributes="0">
                                   <Group type="103" groupAlignment="0" attributes="0">
-                                      <Component id="jCheckBox10" alignment="0" min="-2" max="-2" attributes="0"/>
+                                      <Component id="reportNotStarted" alignment="0" min="-2" max="-2" attributes="0"/>
                                       <Group type="102" alignment="1" attributes="0">
                                           <Group type="103" groupAlignment="0" attributes="0">
-                                              <Component id="jCheckBox8" alignment="0" min="-2" max="-2" attributes="0"/>
-                                              <Component id="jCheckBox7" alignment="0" min="-2" max="-2" attributes="0"/>
-                                              <Component id="jCheckBox6" alignment="0" min="-2" max="-2" attributes="0"/>
+                                              <Component id="reportAvailable" alignment="0" min="-2" max="-2" attributes="0"/>
+                                              <Component id="reportInLoco" alignment="0" min="-2" max="-2" attributes="0"/>
+                                              <Component id="reportRequested" alignment="0" min="-2" max="-2" attributes="0"/>
                                           </Group>
                                           <EmptySpace pref="44" max="32767" attributes="0"/>
                                           <Group type="103" groupAlignment="0" attributes="0">
-                                              <Component id="jCheckBox4" alignment="0" min="-2" max="-2" attributes="0"/>
-                                              <Component id="jCheckBox5" alignment="0" min="-2" max="-2" attributes="0"/>
-                                              <Component id="jCheckBox9" alignment="0" min="-2" max="-2" attributes="0"/>
+                                              <Component id="reportDefined" alignment="0" min="-2" max="-2" attributes="0"/>
+                                              <Component id="reportApproved" alignment="0" min="-2" max="-2" attributes="0"/>
+                                              <Component id="reportEngaged" alignment="0" min="-2" max="-2" attributes="0"/>
                                           </Group>
                                       </Group>
                                   </Group>
@@ -1327,58 +1337,58 @@
                         <DimensionLayout dim="1">
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="102" alignment="1" attributes="0">
-                                  <Component id="jCheckBox10" min="-2" max="-2" attributes="0"/>
+                                  <Component id="reportNotStarted" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace pref="12" max="32767" attributes="0"/>
                                   <Group type="103" groupAlignment="3" attributes="0">
-                                      <Component id="jCheckBox6" alignment="3" min="-2" max="-2" attributes="0"/>
-                                      <Component id="jCheckBox4" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="reportRequested" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="reportDefined" alignment="3" min="-2" max="-2" attributes="0"/>
                                   </Group>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="3" attributes="0">
-                                      <Component id="jCheckBox7" alignment="3" min="-2" max="-2" attributes="0"/>
-                                      <Component id="jCheckBox5" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="reportInLoco" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="reportApproved" alignment="3" min="-2" max="-2" attributes="0"/>
                                   </Group>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="3" attributes="0">
-                                      <Component id="jCheckBox8" alignment="3" min="-2" max="-2" attributes="0"/>
-                                      <Component id="jCheckBox9" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="reportAvailable" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="reportEngaged" alignment="3" min="-2" max="-2" attributes="0"/>
                                   </Group>
                               </Group>
                           </Group>
                         </DimensionLayout>
                       </Layout>
                       <SubComponents>
-                        <Component class="javax.swing.JCheckBox" name="jCheckBox4">
+                        <Component class="javax.swing.JCheckBox" name="reportDefined">
                           <Properties>
                             <Property name="text" type="java.lang.String" value="Definido"/>
                           </Properties>
                         </Component>
-                        <Component class="javax.swing.JCheckBox" name="jCheckBox5">
+                        <Component class="javax.swing.JCheckBox" name="reportApproved">
                           <Properties>
                             <Property name="text" type="java.lang.String" value="Aprovado"/>
                           </Properties>
                         </Component>
-                        <Component class="javax.swing.JCheckBox" name="jCheckBox6">
+                        <Component class="javax.swing.JCheckBox" name="reportRequested">
                           <Properties>
                             <Property name="text" type="java.lang.String" value="Solicitado"/>
                           </Properties>
                         </Component>
-                        <Component class="javax.swing.JCheckBox" name="jCheckBox7">
+                        <Component class="javax.swing.JCheckBox" name="reportInLoco">
                           <Properties>
                             <Property name="text" type="java.lang.String" value="in Loco"/>
                           </Properties>
                         </Component>
-                        <Component class="javax.swing.JCheckBox" name="jCheckBox8">
+                        <Component class="javax.swing.JCheckBox" name="reportAvailable">
                           <Properties>
                             <Property name="text" type="java.lang.String" value="Dispon&#xed;vel"/>
                           </Properties>
                         </Component>
-                        <Component class="javax.swing.JCheckBox" name="jCheckBox9">
+                        <Component class="javax.swing.JCheckBox" name="reportEngaged">
                           <Properties>
                             <Property name="text" type="java.lang.String" value="Contratado"/>
                           </Properties>
                         </Component>
-                        <Component class="javax.swing.JCheckBox" name="jCheckBox10">
+                        <Component class="javax.swing.JCheckBox" name="reportNotStarted">
                           <Properties>
                             <Property name="text" type="java.lang.String" value="N&#xe3;o iniciado"/>
                           </Properties>
@@ -1417,12 +1427,12 @@
                                       <Group type="102" alignment="0" attributes="1">
                                           <Component id="jLabel13" min="-2" max="-2" attributes="0"/>
                                           <EmptySpace max="-2" attributes="0"/>
-                                          <Component id="jTextField5" pref="201" max="32767" attributes="0"/>
+                                          <Component id="jTextField5" pref="183" max="32767" attributes="0"/>
                                       </Group>
                                       <Group type="102" alignment="0" attributes="0">
                                           <Component id="jLabel12" min="-2" max="-2" attributes="0"/>
                                           <EmptySpace max="-2" attributes="0"/>
-                                          <Component id="jTextField4" pref="240" max="32767" attributes="0"/>
+                                          <Component id="jTextField4" pref="222" max="32767" attributes="0"/>
                                       </Group>
                                       <Group type="102" alignment="0" attributes="0">
                                           <Component id="jLabel14" min="-2" max="-2" attributes="0"/>

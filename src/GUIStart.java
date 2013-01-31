@@ -12,6 +12,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.io.IOException;
+import java.rmi.RemoteException;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
@@ -40,7 +41,7 @@ import javax.swing.table.DefaultTableModel;
  */
 public class GUIStart extends javax.swing.JFrame {
 
-    public GUIStart() {
+    public GUIStart() throws RemoteException {
         LoginForm loginForm;
         int mark = 0;
         do {

@@ -44,6 +44,7 @@ public final class DataBaseManager extends UnicastRemoteObject implements DataBa
         materialRowSet = new CachedRowSetImpl();
         logisticRowSet = new CachedRowSetImpl();
         workmanRowSet = new CachedRowSetImpl();
+        
     }
 
     @Override

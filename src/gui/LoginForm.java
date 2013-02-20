@@ -21,7 +21,7 @@ import javax.swing.JFrame;
 public class LoginForm extends JDialog {
     
     private String URL;
-    private String user;
+    private String user; //não funciona (by guilherme)
     private char[] password;
     private boolean canceled;
     

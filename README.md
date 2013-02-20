@@ -10,8 +10,10 @@
 
 # <a name="team_members"></a> Team Members
 * "Hugo Tannús" <hctannus@gmail.com>
+* "Guilherme Ferreira" <guifas3000@gmail.com>
 
 # <a name="project_demo"></a> Project Demo
+
 
 # <a name="install"></a> Installation
 

@@ -334,7 +334,7 @@ public final class DataBaseManager extends UnicastRemoteObject implements DataBa
     public Connection getConnection()
             throws ClassNotFoundException, SQLException {
         Class.forName(DataBaseInput.JDBC_DRIVER);
-        Connection con = DriverManager.getConnection(DataBaseInput.DATABASE_URL,
+         Connection con = DriverManager.getConnection(DataBaseInput.DATABASE_URL,
                 DataBaseInput.USERNAME, DataBaseInput.PASSWORD);
         con.setAutoCommit(false);
         connected = true;

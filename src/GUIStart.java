@@ -105,7 +105,7 @@ public class GUIStart extends javax.swing.JFrame {
     private void changeTheLookAndFeel(int value)
             throws ClassNotFoundException, InstantiationException,
             IllegalAccessException, UnsupportedLookAndFeelException {
-        changeTheLookAndFeel(looks[value].getClassName());
+            changeTheLookAndFeel(looks[value].getClassName());
     }
 
     private void changeTheLookAndFeel(String className) throws ClassNotFoundException, InstantiationException, IllegalAccessException, UnsupportedLookAndFeelException {

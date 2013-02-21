@@ -20,6 +20,7 @@ public class CachedRowSetTester {
         ResultSet rs= st.executeQuery("select * from users");
         CachedRowSet cachedRowSet=new CachedRowSetImpl();
         cachedRowSet.populate(rs);
+        
         rs.close();
         st.close();
         con.close();

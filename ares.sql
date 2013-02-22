@@ -4,120 +4,96 @@ create database ares;
 /*use vernacula02;*/
 use ares;
 
-create table usuario(
+drop table if exists Ares_users;
+create table Ares_users(
 	ID			int 		NOT NULL 	AUTO_INCREMENT,
 	name			varchar(60) 	NOT NULL,
-	u_type			int 		NOT NULL 	DEFAULT 1,
+	user_type		int 		NOT NULL,
 	builds_access		varchar(255)	NOT NULL,
 	company_ID		int		NOT NULL,
-	email			varchar(40)	NOT NULL,
-	PRIMARY KEY (ID)
+	email			varchar(40)	NOT NULL	UNIQUE,
+	
+	PRIMARY KEY (ID),
+	FOREIGN KEY
+		company_ID REFERENCES Companies (ID)
 	);
 
-create table company(
+drop table if exists Companies;
+create table Companies(
 	ID			int		NOT NULL	AUTO_INCREMENT,
 	name			varchar(30)	NOT NULL,
 	address			varchar(255),
 	phone			char(13),
-	email			varchar(40)	NOT NULL,
+	email			varchar(40)	NOT NULL	UNIQUE,
 	city			varchar(30)	NOT NULL,
 	state			char(2)		NOT NULL,
 	PRIMARY KEY (ID)
 	);
 }
 
-create table buid(
+drop table if exists Builds;
+create table Builds(
 	ID                      int             NOT NULL        AUTO_INCREMENT,
-        name                    varchar(30)     NOT NULL,
+        name                    varchar(30)     NOT NULL	UNIQUE,
+	company_ID		int		NOT NULL,
 	respons_ID		int		NOT NULL,
         address                 varchar(255),
         city                    varchar(30)     NOT NULL,
         state                   char(2)         NOT NULL,
 	user_access		varchar(255)	NOT NULL,
-        PRIMARY KEY (ID)
+        PRIMARY KEY (ID),
+	FOREIGN KEY
+		respons_ID REFERENCES Ares_users (ID),
+	FOREIGN KEY
+		company_ID REFERENCES Companies (ID)
         );
 
 
-drop table if exists service;
-create table service (
+drop table if exists Services;
+create table Services (
 	topic_struct		varchar(63)		NOT NULL,
 	ID 			int			NOT NULL,
+	build_ID		int			NOT NULL,
 	name 			varchar(255)		NOT NULL,
 	base_begin		date			NOT NULL,
 	base_end		date			NOT NULL,
 	begin_date 		date			NOT NULL,
 	end_date 		date			NOT NULL,
 	real_begin		date,
-	real_end		date,
-	start_date		date,
-	compl_date 		date,
+	real_end 		date,
 	stop_date		date,
 	budget 			numeric(12,2),
 	comments 		varchar(255),
 	started			bit			NOT NULL	DEFAULT FALSE,
 	stopped			bit			NOT NULL	DEFAULT FALSE,
 	completed		bit			NOT NULL	DEFAULT FALSE,
-	PRIMARY KEY (ID)
+	CONSTRAINT 
+		pk_ServiceID PRIMARY KEY (ID,build_ID),
+	FOREIGN KEY
+		build_ID REFERENCES Builds (ID)
 	);
 
-drop table if exists restrictions;
-create table restrictions (
-	ID		int	 			NOT NULL	AUTO_INCREMENT,
-	service_ID	int				NOT NULL,
-	visible		bit				NOT NULL	DEFAULT TRUE,
+drop table if exists Restrictions;
+create table Restrictions (
+	ID		int	 		NOT NULL	AUTO_INCREMENT,
+	build_ID	int			NOT NULL,
+	service_ID	int			NOT NULL,
+	user_ID		int 			NOT NULL,
+	critical	bit			NOT NULL	DEFAULT FALSE,
+	visible		bit			NOT NULL	DEFAULT TRUE,
 	r_type		varchar(10),
-	name		varchar(255) 			NOT NULL 	DEFAULT 'nome',
-	sponsor		varchar(255) 			NOT NULL 	DEFAULT 'responsavel',
-	defined		bit				NOT NULL	DEFAULT FALSE,
-	approved	bit				NOT	NULL	DEFAULT FALSE,
-	);
-
-drop table if exists project;
-create table project (
-	ID		mediumint	NOT NULL	AUTO_INCREMENT,
-	service_ID	int		NOT NULL,
-	visible		bit		NOT NULL	DEFAULT TRUE,
-	name		varchar(255)	NOT NULL,
-	sponsor		varchar(255)	NOT NULL,
-	defined		bit		NOT NULL	DEFAULT FALSE,
-	approved	bit		NOT NULL	DEFAULT FALSE,
-	PRIMARY KEY (ID)
-	);
-
-drop table if exists logistic;
-create table logistic (
-	ID 		mediumint	NOT NULL	AUTO_INCREMENT,
-	service_ID	int		NOT NULL,
-	visible		bit		NOT NULL	DEFAULT TRUE,
-	name		varchar(255)	NOT NULL,
-	sponsor		varchar(255)	NOT NULL,
-	defined		bit		NOT NULL	DEFAULT FALSE,
-	approved	bit		NOT NULL	DEFAULT FALSE,
-	PRIMARY KEY (ID)
-	);
-
-drop table if exists material;
-create table material (
-	ID 		mediumint	NOT NULL	AUTO_INCREMENT,
-	service_ID	int		NOT NULL,
-	visible		bit		NOT NULL	DEFAULT TRUE,
-	name		varchar(255)	NOT NULL,
-	sponsor		varchar(255)	NOT NULL,
-	requested	bit		NOT NULL	DEFAULT FALSE,
-	inloco		bit		NOT NULL	DEFAULT FALSE,
-	available	bit		NOT NULL	DEFAULT FALSE,
-	PRIMARY KEY (ID)	 
-	);
-
-drop table if exists workman;
-create table workman (
-	ID		mediumint	NOT NULL	AUTO_INCREMENT,
-	service_ID	int		NOT NULL,
-	visible		bit		NOT NULL	DEFAULT TRUE,
-	name		varchar(255)	NOT NULL,
-	sponsor		varchar(255)	NOT NULL,
-	available	bit		NOT NULL	DEFAULT FALSE,
-	engaged		bit		NOT NULL	DEFAULT FALSE,
-	PRIMARY KEY (ID)
+	name		varchar(255) 		NOT NULL 	DEFAULT 'nome',
+	respons		varchar(255) 		NOT NULL 	DEFAULT 'responsavel',
+	defined		bit			NOT NULL	DEFAULT FALSE,
+	approved	bit			NOT NULL	DEFAULT FALSE,
+	requested	bit			NOT NULL	DEFAULT FALSE,
+	inloco		bit			NOT NULL	DEFAULT FALSE,
+	available	bit			NOT NULL	DEFAULT FALSE,
+	engaged		bit			NOT NULL	DEFAULT FALSE,
+	PRIMARY KEY (ID),
+	FOREIGN KEY
+		build_ID REFERENCES Builds (ID),
+	FOREIGN KEY
+		service_ID REFERENCES Services (ID)	
 	);
 

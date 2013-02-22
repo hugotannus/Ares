@@ -21,6 +21,7 @@ import java.util.logging.Logger;
 import javax.sql.rowset.CachedRowSet;
 import javax.sql.rowset.spi.SyncProviderException;
 import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.WindowConstants;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
@@ -1428,6 +1429,7 @@ public class GUIStart extends javax.swing.JFrame {
      */
     public static void main(String args[]) throws SQLException, ClassNotFoundException, IOException {
         GUIStart tela = new GUIStart();
+        tela.setDefaultCloseOperation(javax.swing.JFrame.DO_NOTHING_ON_CLOSE);
         tela.setVisible(true);
     }
     private final int MATERIAL = 0;

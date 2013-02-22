@@ -21,7 +21,6 @@ import java.util.logging.Logger;
 import javax.sql.rowset.CachedRowSet;
 import javax.sql.rowset.spi.SyncProviderException;
 import javax.swing.UnsupportedLookAndFeelException;
-import javax.swing.WindowConstants;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
@@ -106,7 +105,7 @@ public class GUIStart extends javax.swing.JFrame {
     private void changeTheLookAndFeel(int value)
             throws ClassNotFoundException, InstantiationException,
             IllegalAccessException, UnsupportedLookAndFeelException {
-        changeTheLookAndFeel(looks[value].getClassName());
+            changeTheLookAndFeel(looks[value].getClassName());
     }
 
     private void changeTheLookAndFeel(String className) throws ClassNotFoundException, InstantiationException, IllegalAccessException, UnsupportedLookAndFeelException {
@@ -1429,7 +1428,6 @@ public class GUIStart extends javax.swing.JFrame {
      */
     public static void main(String args[]) throws SQLException, ClassNotFoundException, IOException {
         GUIStart tela = new GUIStart();
-        tela.setDefaultCloseOperation(javax.swing.JFrame.DO_NOTHING_ON_CLOSE);
         tela.setVisible(true);
     }
     private final int MATERIAL = 0;

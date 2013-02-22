@@ -16,7 +16,7 @@ import javax.sql.rowset.spi.SyncProviderException;
  * @author Hugo
  */
 public interface DataBaseInterface extends Remote{
-
+    // É essa parada aqui que nós temos que resolver!
     public boolean isConnected() throws RemoteException;
     
     public CachedRowSet executeQuery(String query)

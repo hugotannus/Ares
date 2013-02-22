@@ -98,22 +98,6 @@ public class AresTableModel extends AbstractTableModel {
         System.out.printf("numberOfRows: %d\n", numberOfRows);
         fireTableDataChanged();
     }
-    
-    public void executeQuery(String query) throws SQLException {
-        rowSet = dbManager.executeQuery(query);
-        numberOfRows = rowSet.size();
-        values = new Vector<Object[]>(numberOfRows);
-        for (int row = 0; row < numberOfRows; row++) {
-            rowSet.absolute(row + SQL_ROW_CORRECTION);
-            Object obj[] = new Object[getColumnCount()];
-            for (int col = 0; col < getColumnCount(); col++) {
-                obj[col] = rowSet.getObject(col + SQL_COL_CORRECTION);
-            }
-            values.addElement(obj);
-        }
-        System.out.printf("numberOfRows: %d\n", numberOfRows);
-        fireTableDataChanged();
-    }
 
     @Override
     public Class getColumnClass(int columnIndex) {

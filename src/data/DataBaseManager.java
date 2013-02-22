@@ -53,13 +53,6 @@ public final class DataBaseManager extends UnicastRemoteObject implements DataBa
     }
     
     @Override
-    public CachedRowSet executeQuery(String query) throws SQLException {
-        reportRowSet.setCommand(query);
-        reportRowSet.execute(conn);
-        return reportRowSet;
-    }
-    
-    @Override
     public CachedRowSet executeQuery(short ID, int tableID) throws SQLException {
         switch (tableID) {
             case MATERIAL:
@@ -75,7 +68,6 @@ public final class DataBaseManager extends UnicastRemoteObject implements DataBa
         }
     }
 
-    @Override
     public CachedRowSet executeServiceQuery(int ID) throws SQLException {
         String cmd = String.format("SELECT * FROM service WHERE ID=%d", ID);
         serviceRowSet.setCommand(cmd);
@@ -83,7 +75,7 @@ public final class DataBaseManager extends UnicastRemoteObject implements DataBa
         return serviceRowSet;
     }
 
-    @Override
+    
     public CachedRowSet executeMaterialQuery(short ID) throws SQLException {
         String cmd = String.format("SELECT * FROM material WHERE service_id=%d AND visible=1", ID);
         materialRowSet.setCommand(cmd);
@@ -91,7 +83,7 @@ public final class DataBaseManager extends UnicastRemoteObject implements DataBa
         return materialRowSet;
     }
 
-    @Override
+    
     public CachedRowSet executeProjectQuery(short ID) throws SQLException {
         String cmd = String.format("SELECT * FROM project WHERE service_id=%d AND visible=1", ID);
         projectRowSet.setCommand(cmd);
@@ -99,7 +91,7 @@ public final class DataBaseManager extends UnicastRemoteObject implements DataBa
         return projectRowSet;
     }
 
-    @Override
+    
     public CachedRowSet executeLogisticQuery(short ID) throws SQLException {
         String cmd = String.format("SELECT * FROM logistic WHERE service_id=%d AND visible=1", ID);
         logisticRowSet.setCommand(cmd);
@@ -107,7 +99,7 @@ public final class DataBaseManager extends UnicastRemoteObject implements DataBa
         return logisticRowSet;
     }
 
-    @Override
+    
     public CachedRowSet executeWorkmanQuery(short ID) throws SQLException {
         String cmd = String.format("SELECT * FROM workman WHERE service_id=%d AND visible=1", ID);
         workmanRowSet.setCommand(cmd);
@@ -115,7 +107,7 @@ public final class DataBaseManager extends UnicastRemoteObject implements DataBa
         return workmanRowSet;
     }
 
-    @Override
+    
     public void updateService(String comment, String budget) throws SQLException {
         //System.out.printf("budget: %s.\tService: %s.\n", budget, service);
         if (budget.length() == 0) {
@@ -168,7 +160,7 @@ public final class DataBaseManager extends UnicastRemoteObject implements DataBa
         workmanRowSet.updateRow();
     }
 
-    @Override
+    
     public void updateProjectCell(int row, int col, Object obj) throws SQLException {
         projectRowSet.absolute(row);
         projectRowSet.updateObject(col, obj);
@@ -238,7 +230,7 @@ public final class DataBaseManager extends UnicastRemoteObject implements DataBa
         workmanRowSet.last();
     }
 
-    @Override
+    
     public void addProjectRow(short serviceID, String name, String sponsor) throws SQLException {
         projectRowSet.moveToInsertRow();
         projectRowSet.updateNull(1);
@@ -252,7 +244,7 @@ public final class DataBaseManager extends UnicastRemoteObject implements DataBa
         projectRowSet.moveToCurrentRow();
     }
 
-    @Override
+    
 
     public CachedRowSet getRowSet(int tableID) {
         switch (tableID) {
@@ -269,32 +261,32 @@ public final class DataBaseManager extends UnicastRemoteObject implements DataBa
         }
     }
 
-    @Override
+    
     public CachedRowSet getServiceRowSet() {
         return serviceRowSet;
     }
 
-    @Override
+    
     public CachedRowSet getLogisticRowSet() {
         return logisticRowSet;
     }
 
-    @Override
+    
     public CachedRowSet getMaterialRowSet() {
         return materialRowSet;
     }
 
-    @Override
+    
     public CachedRowSet getProjectRowSet() {
         return projectRowSet;
     }
 
-    @Override
+    
     public CachedRowSet getWorkmanRowSet() {
         return workmanRowSet;
     }
 
-    @Override
+    
     public void acceptChanges() throws SyncProviderException, SQLException {
         if (isConnected()) {
             logisticRowSet.acceptChanges(conn);
@@ -308,7 +300,7 @@ public final class DataBaseManager extends UnicastRemoteObject implements DataBa
         }
     }
 
-    @Override
+    
     public void acceptChanges(int tableID) throws SyncProviderException, SQLException {
         if (isConnected()) {
             switch (tableID) {
@@ -330,7 +322,7 @@ public final class DataBaseManager extends UnicastRemoteObject implements DataBa
         }
     }
 
-    @Override
+    
     public Connection getConnection()
             throws ClassNotFoundException, SQLException {
         Class.forName(DataBaseInput.JDBC_DRIVER);

@@ -5,7 +5,7 @@
 package data;
 
 import com.sun.rowset.CachedRowSetImpl;
-import comunication.DataBaseInterface;
+import comunication.ServerServicesInterface;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.sql.Connection;
@@ -18,7 +18,7 @@ import javax.sql.rowset.spi.SyncProviderException;
  *
  * @author hugo
  */
-public final class DataBaseManager extends UnicastRemoteObject implements DataBaseInterface {
+public final class DataBaseManager extends UnicastRemoteObject {
 
     private CachedRowSet serviceRowSet;
     private CachedRowSet materialRowSet;
@@ -31,7 +31,7 @@ public final class DataBaseManager extends UnicastRemoteObject implements DataBa
     private final int PROJECT = 2;
     private final int WORKMAN = 3;
     private Connection conn;
-    private boolean connected = false;
+    private boolean connected;
 
     public DataBaseManager(String userName, char[] password)
             throws ClassNotFoundException, SQLException, RemoteException {
@@ -46,13 +46,8 @@ public final class DataBaseManager extends UnicastRemoteObject implements DataBa
         workmanRowSet = new CachedRowSetImpl();
         
     }
-
-    @Override
-    public boolean isConnected() {
-        return connected;
-    }
     
-    @Override
+    
     public CachedRowSet executeQuery(short ID, int tableID) throws SQLException {
         switch (tableID) {
             case MATERIAL:
@@ -122,7 +117,7 @@ public final class DataBaseManager extends UnicastRemoteObject implements DataBa
         serviceRowSet.close();
     }
 
-    @Override
+
     public void updateCellTable(int tableID, int row, int col, Object obj) throws SQLException {
         System.out.printf("Número da Linha: %d\n", row);
         switch (tableID) {
@@ -167,7 +162,7 @@ public final class DataBaseManager extends UnicastRemoteObject implements DataBa
         projectRowSet.updateRow();
     }
 
-    @Override
+
     public void addRow(int tableID, short serviceID, String name, String sponsor) throws SQLException {
         switch (tableID) {
             case MATERIAL:
@@ -288,7 +283,7 @@ public final class DataBaseManager extends UnicastRemoteObject implements DataBa
 
     
     public void acceptChanges() throws SyncProviderException, SQLException {
-        if (isConnected()) {
+        //if (isConnected()) {
             logisticRowSet.acceptChanges(conn);
             workmanRowSet.acceptChanges(conn);
             materialRowSet.acceptChanges(conn);
@@ -297,12 +292,12 @@ public final class DataBaseManager extends UnicastRemoteObject implements DataBa
             workmanRowSet.close();
             materialRowSet.close();
             projectRowSet.close();
-        }
+        //}
     }
 
     
     public void acceptChanges(int tableID) throws SyncProviderException, SQLException {
-        if (isConnected()) {
+       // if (isConnected()) {
             switch (tableID) {
                 case MATERIAL:
                     materialRowSet.acceptChanges(conn);
@@ -319,7 +314,7 @@ public final class DataBaseManager extends UnicastRemoteObject implements DataBa
                 default:
                     this.acceptChanges();
             }
-        }
+        //}
     }
 
     
@@ -333,7 +328,6 @@ public final class DataBaseManager extends UnicastRemoteObject implements DataBa
         return con;
     }
 
-    @Override
     public void closeConnection() throws SQLException {
         connected = false;
         conn.close();

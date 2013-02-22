@@ -15,8 +15,10 @@ import javax.sql.rowset.spi.SyncProviderException;
  *
  * @author Hugo
  */
-public interface DataBaseInterface extends Remote{
+public interface ServerServicesInterface extends Remote{
     // É essa parada aqui que nós temos que resolver!
+    
+    public boolean login(String user, String password) throws RemoteException;
     
     public boolean isConnected() throws RemoteException;
     

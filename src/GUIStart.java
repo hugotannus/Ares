@@ -1,9 +1,3 @@
-
-import commons.Service;
-import data.DataBaseManager;
-import data.DataStructBuilder;
-import gui.AresTableModel;
-import gui.LoginForm;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.event.ItemEvent;
@@ -11,20 +5,29 @@ import java.awt.event.ItemListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+
+import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+
+import java.sql.SQLException;
+import javax.sql.rowset.CachedRowSet;
+
 import java.io.IOException;
 import java.rmi.RemoteException;
-import java.sql.SQLException;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.sql.rowset.CachedRowSet;
-import javax.sql.rowset.spi.SyncProviderException;
-import javax.swing.UnsupportedLookAndFeelException;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-import javax.swing.table.DefaultTableModel;
 
+import commons.Service;
+import data.DataStructBuilder;
+import gui.AresTableModel;
+import gui.LoginForm;
+import comunication.ServerServicesInterface;
+import comunication.RMIComms;
+import javax.sql.rowset.spi.SyncProviderException;
 /*
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
@@ -41,7 +44,16 @@ import javax.swing.table.DefaultTableModel;
  */
 public class GUIStart extends javax.swing.JFrame {
 
+    private ServerServicesInterface aresServices;
+    private RMIComms comms;
+    private final String serverIP = "192.168.25.3";
+    private final String serverRemoteObjectName = "AresRemoteAPI";
+    private final int serverPort = 8001;
+    
     public GUIStart() throws RemoteException {
+        
+        setupRMIComms();
+        
         LoginForm loginForm;
         int mark = 0;
         do {
@@ -51,16 +63,9 @@ public class GUIStart extends javax.swing.JFrame {
                 System.out.println("Programa finalizado com sucesso! (by Hugo)\n");
                 System.exit(0);
             }
-            try {
-                dbManager = new DataBaseManager(loginForm.getUser(), loginForm.getPassword());
-            } catch (ClassNotFoundException ex) {
-                Logger.getLogger(GUIStart.class.getName()).log(Level.SEVERE, null, ex);
-                System.exit(1);
-            } catch (SQLException ex) {
-                Logger.getLogger(GUIStart.class.getName()).log(Level.SEVERE, null, ex);
-                System.exit(1);
-            }
-        } while (!dbManager.isConnected());
+            aresServices.login(loginForm.getUser(), loginForm.getPassword());
+            
+        } while (!aresServices.isConnected());
 
         DataStructBuilder structBuilder;
         try {
@@ -101,6 +106,23 @@ public class GUIStart extends javax.swing.JFrame {
         this.addWindowListener(exitListener);
         setComponentsEnabled(servicePanel, false);
     }
+    
+    
+    private void setupRMIComms() {
+        comms = new RMIComms();
+        
+        comms.setUpClient(serverIP, serverPort);
+        try {
+            aresServices = (ServerServicesInterface) comms.lookup(serverRemoteObjectName);
+        } catch (RemoteException ex) {
+            
+            System.out.println("Erro ao obter objeto remoto.\n");
+            Logger.getLogger(GUIStart.class.getName()).log(Level.SEVERE, null, ex);
+            
+            
+        }
+    }
+    
 
     private void changeTheLookAndFeel(int value)
             throws ClassNotFoundException, InstantiationException,
@@ -1141,9 +1163,13 @@ public class GUIStart extends javax.swing.JFrame {
     private void treeServicosValueChanged(javax.swing.event.TreeSelectionEvent evt) {//GEN-FIRST:event_treeServicosValueChanged
         if (currentService != null && currentService.isLeaf()) {
             try {
-                dbManager.acceptChanges();
-                dbManager.updateService(jTextArea1.getText(), jTextField1.getText());
+                aresServices.acceptChanges();
+                aresServices.updateService(jTextArea1.getText(), jTextField1.getText());
+            } catch (SyncProviderException ex) {
+                Logger.getLogger(GUIStart.class.getName()).log(Level.SEVERE, null, ex);
             } catch (SQLException ex) {
+                Logger.getLogger(GUIStart.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (RemoteException ex) {
                 Logger.getLogger(GUIStart.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
@@ -1430,6 +1456,7 @@ public class GUIStart extends javax.swing.JFrame {
         GUIStart tela = new GUIStart();
         tela.setVisible(true);
     }
+    
     private final int MATERIAL = 0;
     private final int LOGISTIC = 1;
     private final int PROJECT = 2;
@@ -1438,7 +1465,6 @@ public class GUIStart extends javax.swing.JFrame {
     private String lookNames[];
     private Map< String, String > nameMap;
     private ItemHandler handler;
-    private DataBaseManager dbManager;
     private Service currentService;
     private javax.swing.tree.TreeModel treeModel;
     private javax.swing.ButtonGroup group; // grupo para botões de opção

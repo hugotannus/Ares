@@ -5,9 +5,7 @@
 package data;
 
 import com.sun.rowset.CachedRowSetImpl;
-import comunication.ServerServicesInterface;
 import java.rmi.RemoteException;
-import java.rmi.server.UnicastRemoteObject;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -18,7 +16,7 @@ import javax.sql.rowset.spi.SyncProviderException;
  *
  * @author hugo
  */
-public final class DataBaseManager extends UnicastRemoteObject {
+public final class DataBaseManager{
 
     private CachedRowSet serviceRowSet;
     private CachedRowSet materialRowSet;
@@ -26,17 +24,21 @@ public final class DataBaseManager extends UnicastRemoteObject {
     private CachedRowSet projectRowSet;
     private CachedRowSet workmanRowSet;
     private CachedRowSet reportRowSet;
+    
     private final int MATERIAL = 0;
     private final int LOGISTIC = 1;
     private final int PROJECT = 2;
     private final int WORKMAN = 3;
+    
     private Connection conn;
     private boolean connected;
+    
+    static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
 
     public DataBaseManager(String userName, char[] password)
             throws ClassNotFoundException, SQLException, RemoteException {
         System.out.printf("userName: %s\tpswd: %s\n", userName, password);
-        conn = getConnection();
+        conn = getConnection(userName, password);
         connected = true;
 
         serviceRowSet = new CachedRowSetImpl();
@@ -318,9 +320,13 @@ public final class DataBaseManager extends UnicastRemoteObject {
     }
 
     
-    public Connection getConnection()
+    public boolean isConnected(){
+        return connected;
+    }
+    
+    public Connection getConnection(String userName, char[] password)
             throws ClassNotFoundException, SQLException {
-        Class.forName(DataBaseInput.JDBC_DRIVER);
+        Class.forName(JDBC_DRIVER);
          Connection con = DriverManager.getConnection(DataBaseInput.DATABASE_URL,
                 DataBaseInput.USERNAME, DataBaseInput.PASSWORD);
         con.setAutoCommit(false);

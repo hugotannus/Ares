@@ -4,11 +4,10 @@
  */
 package comunication;
 
+import commons.AresPackage;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
-import java.sql.Connection;
 import java.sql.SQLException;
-import javax.sql.rowset.CachedRowSet;
 import javax.sql.rowset.spi.SyncProviderException;
 
 /**
@@ -18,11 +17,14 @@ import javax.sql.rowset.spi.SyncProviderException;
 public interface ServerServicesInterface extends Remote{
     // É essa parada aqui que nós temos que resolver!
     
-    public boolean login(String user, String password) throws RemoteException;
+    public boolean login(String user, char[] password) throws RemoteException;
     
     public boolean isConnected() throws RemoteException;
     
-    public CachedRowSet executeQuery(short ID, int tableID)
+    public void logout()
+            throws SQLException, RemoteException;
+    
+    public AresPackage executeQuery(short ID, int tableID)
             throws SQLException, RemoteException;
 
     public void updateService(String comment, String budget)
@@ -39,7 +41,4 @@ public interface ServerServicesInterface extends Remote{
     
     public void acceptChanges(int tableID)
             throws SyncProviderException, SQLException, RemoteException;
-
-    public void closeConnection()
-            throws SQLException, RemoteException;
 }

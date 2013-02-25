@@ -33,13 +33,14 @@
  */
 package gui;
 
-import data.DataBaseManager;
 import java.sql.SQLException;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.sql.rowset.CachedRowSet;
 import javax.swing.table.AbstractTableModel;
+
+import comunication.ServerServicesInterface;
 
 /**
  *
@@ -48,7 +49,7 @@ import javax.swing.table.AbstractTableModel;
 public class AresTableModel extends AbstractTableModel {
 
     private final String[] columnNames;
-    private DataBaseManager dbManager;
+    private ServerServicesInterface aresServices;
     private CachedRowSet rowSet;
     private Class[] types;
     private Vector<Object[]> values;
@@ -59,13 +60,13 @@ public class AresTableModel extends AbstractTableModel {
     // é preciso deslocar a referência de colunas em mais duas unidades.
     private final int SQL_COL_CORRECTION = 3;
 
-    public AresTableModel(String[] columnNames, Class[] types, DataBaseManager dbManager, int tableID) {
+    public AresTableModel(String[] columnNames, Class[] types, ServerServicesInterface aresServices, int tableID) {
         //super(new Object[][]{}, columnNames);
         this.columnNames = columnNames;
         this.types = types;
         this.TABLE_ID = tableID;
-        this.dbManager = dbManager;
-        this.rowSet = dbManager.getRowSet(tableID);
+        this.aresServices = aresServices;
+        this.rowSet = aresServices.getRowSet(tableID);
     }
 
     public void addRow(short service_ID) {

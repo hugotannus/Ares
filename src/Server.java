@@ -1,6 +1,5 @@
 import comunication.RMIComms;
 import comunication.ServerServices;
-import java.io.File;
 import java.rmi.RemoteException;
 /**
  *
@@ -19,8 +18,6 @@ public class Server {
 
 			comms.bind("AresRemoteAPI", new ServerServices());
 
-			File dir = new File("sd");
-			dir.mkdir();
 		} catch (RemoteException e) {
 			System.out.println("Server - " + e.getMessage());
 		}

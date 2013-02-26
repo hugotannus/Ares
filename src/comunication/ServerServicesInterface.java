@@ -4,7 +4,6 @@
  */
 package comunication;
 
-import commons.AresPackage;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.sql.SQLException;
@@ -24,7 +23,7 @@ public interface ServerServicesInterface extends Remote{
     public void logout()
             throws SQLException, RemoteException;
     
-    public AresPackage executeQuery(short ID, int tableID)
+    public String executeQuery(short ID, int tableID)
             throws SQLException, RemoteException;
 
     public void updateService(String comment, String budget)

@@ -4,14 +4,14 @@
  */
 package comunication;
 
-import commons.AresPackage;
 import data.DataBaseManager;
+import java.io.StringWriter;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.sql.rowset.CachedRowSet;
+import javax.sql.rowset.WebRowSet;
 import javax.sql.rowset.spi.SyncProviderException;
 
 /**
@@ -59,12 +59,14 @@ public class ServerServices extends UnicastRemoteObject implements ServerService
     }
 
     @Override
-    public AresPackage executeQuery(short ID, int tableID) throws SQLException, RemoteException {
-        CachedRowSet crs = dbmanager.executeQuery(ID, tableID);
+    public String executeQuery(short ID, int tableID) throws SQLException, RemoteException {
+        WebRowSet wrs = dbmanager.executeQuery(ID, tableID);
         
-        AresPackage result = AresPackage.cachedRowSetToAresPackage(crs);
+        StringWriter sw = new StringWriter();
         
-        return result;
+        wrs.writeXml(sw);
+        
+        return sw.toString();
     }
 
     @Override

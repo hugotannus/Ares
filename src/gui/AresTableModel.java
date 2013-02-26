@@ -37,10 +37,11 @@ import java.sql.SQLException;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.sql.rowset.CachedRowSet;
+import javax.sql.rowset.WebRowSet;
 import javax.swing.table.AbstractTableModel;
 
 import comunication.ServerServicesInterface;
+import java.rmi.RemoteException;
 
 /**
  *
@@ -50,7 +51,7 @@ public class AresTableModel extends AbstractTableModel {
 
     private final String[] columnNames;
     private ServerServicesInterface aresServices;
-    private CachedRowSet rowSet;
+    private WebRowSet rowSet;
     private Class[] types;
     private Vector<Object[]> values;
     private int numberOfRows;
@@ -74,10 +75,13 @@ public class AresTableModel extends AbstractTableModel {
         System.out.println("Tentou adicionar um projeto...");
         System.out.printf("Tamanho do rowSet antes: %d...\n", rowSet.size());
         try {
-            dbManager.addRow(TABLE_ID, service_ID, "nome", "responsavel");
+            aresServices.addRow(TABLE_ID, service_ID, "nome", "responsavel");
         } catch (SQLException ex) {
             Logger.getLogger(AresTableModel.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (RemoteException ex) {
+            Logger.getLogger(AresTableModel.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
         System.out.printf("... e depois: %d.\n", rowSet.size());
 
         numberOfRows++;
@@ -85,7 +89,7 @@ public class AresTableModel extends AbstractTableModel {
     }
 
     public void executeQuery(short serviceID) throws SQLException {
-        rowSet = dbManager.executeQuery(serviceID, TABLE_ID);
+        rowSet = aresServices.executeQuery(serviceID, TABLE_ID);
         numberOfRows = rowSet.size();
         values = new Vector<Object[]>(numberOfRows);
         for (int row = 0; row < numberOfRows; row++) {

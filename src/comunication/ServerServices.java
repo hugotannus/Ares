@@ -93,4 +93,15 @@ public class ServerServices extends UnicastRemoteObject implements ServerService
     public void acceptChanges(int tableID) throws SyncProviderException, SQLException, RemoteException {
         dbmanager.acceptChanges(tableID);
     }
+
+    @Override
+    public String getRowSet(int tableID) throws SQLException {
+        WebRowSet wrs = dbmanager.getRowSet(tableID);
+        
+        StringWriter sw = new StringWriter();
+        
+        wrs.writeXml(sw);
+        
+        return sw.toString();
+    }
 }

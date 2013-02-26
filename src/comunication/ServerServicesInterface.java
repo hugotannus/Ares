@@ -13,16 +13,16 @@ import javax.sql.rowset.spi.SyncProviderException;
  *
  * @author Hugo
  */
-public interface ServerServicesInterface extends Remote{
+public interface ServerServicesInterface extends Remote {
     // É essa parada aqui que nós temos que resolver!
-    
+
     public boolean login(String user, char[] password) throws RemoteException;
-    
+
     public boolean isConnected() throws RemoteException;
-    
+
     public void logout()
             throws SQLException, RemoteException;
-    
+
     public String executeQuery(short ID, int tableID)
             throws SQLException, RemoteException;
 
@@ -35,9 +35,11 @@ public interface ServerServicesInterface extends Remote{
     public void addRow(int tableID, short serviceID, String name, String sponsor)
             throws SQLException, RemoteException;
 
+    public String getRowSet(int tableID) throws SQLException, RemoteException;
+
     public void acceptChanges()
             throws SyncProviderException, SQLException, RemoteException;
-    
+
     public void acceptChanges(int tableID)
             throws SyncProviderException, SQLException, RemoteException;
 }

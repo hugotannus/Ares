@@ -4,12 +4,12 @@
  */
 package data;
 
-import com.sun.rowset.CachedRowSetImpl;
+import com.sun.rowset.WebRowSetImpl;
 import java.rmi.RemoteException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import javax.sql.rowset.CachedRowSet;
+import javax.sql.rowset.WebRowSet;
 import javax.sql.rowset.spi.SyncProviderException;
 
 /**
@@ -18,12 +18,12 @@ import javax.sql.rowset.spi.SyncProviderException;
  */
 public final class DataBaseManager{
 
-    private CachedRowSet serviceRowSet;
-    private CachedRowSet materialRowSet;
-    private CachedRowSet logisticRowSet;
-    private CachedRowSet projectRowSet;
-    private CachedRowSet workmanRowSet;
-    private CachedRowSet reportRowSet;
+    private WebRowSet serviceRowSet;
+    private WebRowSet materialRowSet;
+    private WebRowSet logisticRowSet;
+    private WebRowSet projectRowSet;
+    private WebRowSet workmanRowSet;
+    private WebRowSet reportRowSet;
     
     private final int MATERIAL = 0;
     private final int LOGISTIC = 1;
@@ -41,16 +41,16 @@ public final class DataBaseManager{
         conn = getConnection(userName, password);
         connected = true;
 
-        serviceRowSet = new CachedRowSetImpl();
-        projectRowSet = new CachedRowSetImpl();
-        materialRowSet = new CachedRowSetImpl();
-        logisticRowSet = new CachedRowSetImpl();
-        workmanRowSet = new CachedRowSetImpl();
+        serviceRowSet = new WebRowSetImpl();
+        projectRowSet = new WebRowSetImpl();
+        materialRowSet = new WebRowSetImpl();
+        logisticRowSet = new WebRowSetImpl();
+        workmanRowSet = new WebRowSetImpl();
         
     }
     
     
-    public CachedRowSet executeQuery(short ID, int tableID) throws SQLException {
+    public WebRowSet executeQuery(short ID, int tableID) throws SQLException {
         switch (tableID) {
             case MATERIAL:
                 return executeMaterialQuery(ID);
@@ -65,7 +65,7 @@ public final class DataBaseManager{
         }
     }
 
-    public CachedRowSet executeServiceQuery(int ID) throws SQLException {
+    public WebRowSet executeServiceQuery(int ID) throws SQLException {
         String cmd = String.format("SELECT * FROM service WHERE ID=%d", ID);
         serviceRowSet.setCommand(cmd);
         serviceRowSet.execute(conn);
@@ -73,7 +73,7 @@ public final class DataBaseManager{
     }
 
     
-    public CachedRowSet executeMaterialQuery(short ID) throws SQLException {
+    public WebRowSet executeMaterialQuery(short ID) throws SQLException {
         String cmd = String.format("SELECT * FROM material WHERE service_id=%d AND visible=1", ID);
         materialRowSet.setCommand(cmd);
         materialRowSet.execute(conn);
@@ -81,7 +81,7 @@ public final class DataBaseManager{
     }
 
     
-    public CachedRowSet executeProjectQuery(short ID) throws SQLException {
+    public WebRowSet executeProjectQuery(short ID) throws SQLException {
         String cmd = String.format("SELECT * FROM project WHERE service_id=%d AND visible=1", ID);
         projectRowSet.setCommand(cmd);
         projectRowSet.execute(conn);
@@ -89,7 +89,7 @@ public final class DataBaseManager{
     }
 
     
-    public CachedRowSet executeLogisticQuery(short ID) throws SQLException {
+    public WebRowSet executeLogisticQuery(short ID) throws SQLException {
         String cmd = String.format("SELECT * FROM logistic WHERE service_id=%d AND visible=1", ID);
         logisticRowSet.setCommand(cmd);
         logisticRowSet.execute(conn);
@@ -97,7 +97,7 @@ public final class DataBaseManager{
     }
 
     
-    public CachedRowSet executeWorkmanQuery(short ID) throws SQLException {
+    public WebRowSet executeWorkmanQuery(short ID) throws SQLException {
         String cmd = String.format("SELECT * FROM workman WHERE service_id=%d AND visible=1", ID);
         workmanRowSet.setCommand(cmd);
         workmanRowSet.execute(conn);
@@ -243,7 +243,7 @@ public final class DataBaseManager{
 
     
 
-    public CachedRowSet getRowSet(int tableID) {
+    public WebRowSet getRowSet(int tableID) {
         switch (tableID) {
             case MATERIAL:
                 return getMaterialRowSet();
@@ -259,27 +259,27 @@ public final class DataBaseManager{
     }
 
     
-    public CachedRowSet getServiceRowSet() {
+    public WebRowSet getServiceRowSet() {
         return serviceRowSet;
     }
 
     
-    public CachedRowSet getLogisticRowSet() {
+    public WebRowSet getLogisticRowSet() {
         return logisticRowSet;
     }
 
     
-    public CachedRowSet getMaterialRowSet() {
+    public WebRowSet getMaterialRowSet() {
         return materialRowSet;
     }
 
     
-    public CachedRowSet getProjectRowSet() {
+    public WebRowSet getProjectRowSet() {
         return projectRowSet;
     }
 
     
-    public CachedRowSet getWorkmanRowSet() {
+    public WebRowSet getWorkmanRowSet() {
         return workmanRowSet;
     }
 

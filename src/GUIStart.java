@@ -11,7 +11,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import java.sql.SQLException;
-import javax.sql.rowset.CachedRowSet;
+import javax.sql.rowset.WebRowSet;
 
 import java.io.IOException;
 import java.rmi.RemoteException;
@@ -1404,7 +1404,7 @@ public class GUIStart extends javax.swing.JFrame {
     }
 
     private void loadServiceData(Service service) throws SQLException {
-        CachedRowSet rowSet = dbManager.executeServiceQuery(service.ID);
+        WebRowSet rowSet = dbManager.executeServiceQuery(service.ID);
         if (rowSet.next()) {
             currentService.budget = rowSet.getString(6);
             currentService.comments = rowSet.getString(7);

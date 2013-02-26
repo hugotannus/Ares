@@ -41,6 +41,7 @@ import javax.sql.rowset.WebRowSet;
 import javax.swing.table.AbstractTableModel;
 
 import comunication.ServerServicesInterface;
+import java.io.StringReader;
 import java.rmi.RemoteException;
 
 /**
@@ -67,7 +68,15 @@ public class AresTableModel extends AbstractTableModel {
         this.types = types;
         this.TABLE_ID = tableID;
         this.aresServices = aresServices;
-        this.rowSet = aresServices.getRowSet(tableID);
+        try {
+            String xmlData = aresServices.getRowSet(tableID);
+            StringReader reader = new StringReader(xmlData);
+            this.rowSet.readXml(reader);
+        } catch (SQLException ex) {
+            Logger.getLogger(AresTableModel.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (RemoteException ex) {
+            Logger.getLogger(AresTableModel.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     public void addRow(short service_ID) {
@@ -81,15 +90,17 @@ public class AresTableModel extends AbstractTableModel {
         } catch (RemoteException ex) {
             Logger.getLogger(AresTableModel.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         System.out.printf("... e depois: %d.\n", rowSet.size());
 
         numberOfRows++;
         this.fireTableRowsInserted(numberOfRows, numberOfRows);
     }
 
-    public void executeQuery(short serviceID) throws SQLException {
-        rowSet = aresServices.executeQuery(serviceID, TABLE_ID);
+    public void executeQuery(short serviceID) throws SQLException, RemoteException {
+        String xmlData = aresServices.executeQuery(serviceID, TABLE_ID);
+        StringReader reader = new StringReader(xmlData);
+        rowSet.readXml(reader);
         numberOfRows = rowSet.size();
         values = new Vector<Object[]>(numberOfRows);
         for (int row = 0; row < numberOfRows; row++) {
@@ -141,15 +152,12 @@ public class AresTableModel extends AbstractTableModel {
         return (Boolean) getValueAt(row, column - 1);
     }
 
-    public void removeRow(int row) {
+    public void removeRow(int row) throws SQLException, RemoteException {
         values.remove(row);
-        try {
-            dbManager.updateCellTable(TABLE_ID,
-                    (row + SQL_ROW_CORRECTION), 7, Boolean.FALSE);
-        } catch (SQLException ex) {
-            Logger.getLogger(AresTableModel.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
+
+        aresServices.updateCellTable(TABLE_ID,
+                (row + SQL_ROW_CORRECTION), 7, Boolean.FALSE);
+
         numberOfRows--;
         this.fireTableRowsDeleted(row, row);
     }
@@ -159,13 +167,16 @@ public class AresTableModel extends AbstractTableModel {
         Object obj[] = values.elementAt(row);
         obj[column] = aValue;
         try {
-            dbManager.updateCellTable(TABLE_ID,
+            aresServices.updateCellTable(TABLE_ID,
                     row + SQL_ROW_CORRECTION,
                     column + SQL_COL_CORRECTION,
                     aValue);
         } catch (SQLException ex) {
             Logger.getLogger(AresTableModel.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (RemoteException ex) {
+            Logger.getLogger(AresTableModel.class.getName()).log(Level.SEVERE, null, ex);
         }
+
         fireTableCellUpdated(row, column);
     }
 

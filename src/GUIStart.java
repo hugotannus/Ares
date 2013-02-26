@@ -1269,25 +1269,49 @@ public class GUIStart extends javax.swing.JFrame {
     private void jButton_removeProjectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_removeProjectActionPerformed
         int row = projectJTable.getSelectedRow();
         AresTableModel model = (AresTableModel) projectJTable.getModel();
-        model.removeRow(row);
+        try {
+            model.removeRow(row);
+        } catch (SQLException ex) {
+            Logger.getLogger(GUIStart.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (RemoteException ex) {
+            Logger.getLogger(GUIStart.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_jButton_removeProjectActionPerformed
 
     private void jButton_removeLogisticActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_removeLogisticActionPerformed
         int row = logisticJTable.getSelectedRow();
         AresTableModel model = (AresTableModel) logisticJTable.getModel();
-        model.removeRow(row);
+        try {
+            model.removeRow(row);
+        } catch (SQLException ex) {
+            Logger.getLogger(GUIStart.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (RemoteException ex) {
+            Logger.getLogger(GUIStart.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_jButton_removeLogisticActionPerformed
 
     private void jButton_removeMaterialActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_removeMaterialActionPerformed
         int row = materialJTable.getSelectedRow();
         AresTableModel model = (AresTableModel) materialJTable.getModel();
-        model.removeRow(row);
+        try {
+            model.removeRow(row);
+        } catch (SQLException ex) {
+            Logger.getLogger(GUIStart.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (RemoteException ex) {
+            Logger.getLogger(GUIStart.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_jButton_removeMaterialActionPerformed
 
     private void jButton_removeWorkmanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_removeWorkmanActionPerformed
         int row = workmanJTable.getSelectedRow();
         AresTableModel model = (AresTableModel) workmanJTable.getModel();
-        model.removeRow(row);
+        try {
+            model.removeRow(row);
+        } catch (SQLException ex) {
+            Logger.getLogger(GUIStart.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (RemoteException ex) {
+            Logger.getLogger(GUIStart.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_jButton_removeWorkmanActionPerformed
 
     private void jTextField1FocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTextField1FocusGained

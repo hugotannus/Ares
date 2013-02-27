@@ -1,5 +1,5 @@
 
-package deprecated;
+package obsolete;
 
 /*
  * Classe designada para o requisito "Material" de cada pacote de trabalho.

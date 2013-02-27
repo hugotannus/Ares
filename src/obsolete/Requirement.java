@@ -1,4 +1,4 @@
-package deprecated;
+package obsolete;
 
 
 import java.util.Date;

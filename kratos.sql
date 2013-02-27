@@ -1,11 +1,11 @@
-drop database if exists ares;
-create database ares;
+drop database if exists kratos;
+create database kratos;
 
 /*use vernacula02;*/
-use ares;
+use kratos;
 
-drop table if exists Ares_users;
-create table Ares_users(
+drop table if exists Users;
+create table Users(
 	ID			int 		NOT NULL 	AUTO_INCREMENT,
 	name			varchar(60) 	NOT NULL,
 	user_type		int 		NOT NULL,

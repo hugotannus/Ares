@@ -4,17 +4,17 @@
  */
 package deprecated;
 
+import deprecated.Requirement;
+
 /**
  *
  * @author Hugo
  */
-public class Logistic extends Requirement{
-    
-    public boolean defined;
-    
-    public Logistic(String description) {
+public class ServiceProvider extends Requirement{
+
+    String fornecedor;
+    public ServiceProvider(String description) {
         super(description);
-        defined = false;
     }
     
 }

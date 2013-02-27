@@ -3,7 +3,8 @@
 .dist/
 store/
 nbproject/
-src/tests/
+# src/tests/
+# src/deprecated/
 
 # test directory
 test/

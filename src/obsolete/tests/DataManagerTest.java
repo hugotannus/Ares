@@ -3,7 +3,7 @@
  * and open the template in the editor.
  */
 
-package tests;
+package obsolete.tests;
 
 import data.DataBaseManager;
 import java.util.Scanner;

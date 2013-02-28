@@ -33,6 +33,7 @@
  */
 package gui;
 
+import com.sun.rowset.WebRowSetImpl;
 import java.sql.SQLException;
 import java.util.Vector;
 import java.util.logging.Level;
@@ -69,12 +70,8 @@ public class AresTableModel extends AbstractTableModel {
         this.TABLE_ID = tableID;
         this.aresServices = aresServices;
         try {
-            String xmlData = aresServices.getRowSet(tableID);
-            StringReader reader = new StringReader(xmlData);
-            this.rowSet.readXml(reader);
+            this.rowSet = new WebRowSetImpl();
         } catch (SQLException ex) {
-            Logger.getLogger(AresTableModel.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (RemoteException ex) {
             Logger.getLogger(AresTableModel.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -100,6 +97,7 @@ public class AresTableModel extends AbstractTableModel {
     public void executeQuery(short serviceID) throws SQLException, RemoteException {
         String xmlData = aresServices.executeQuery(serviceID, TABLE_ID);
         StringReader reader = new StringReader(xmlData);
+        rowSet.release();
         rowSet.readXml(reader);
         numberOfRows = rowSet.size();
         values = new Vector<Object[]>(numberOfRows);

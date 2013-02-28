@@ -6,6 +6,7 @@ package comunication;
 
 import data.DataBaseManager;
 import java.io.StringWriter;
+import java.io.Writer;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.sql.SQLException;
@@ -96,12 +97,21 @@ public class ServerServices extends UnicastRemoteObject implements ServerService
 
     @Override
     public String getRowSet(int tableID) throws SQLException {
+        String str = "";
+        System.out.printf("tableID %d\n", tableID);
         WebRowSet wrs = dbmanager.getRowSet(tableID);
         
-        StringWriter sw = new StringWriter();
+        System.out.println("Imprimindo linhas da tabela:");
+        while (wrs.next()) {
+            System.out.println(wrs.getString(3));
+        }
+        System.out.println("Lista finalizada!");        
         
-        wrs.writeXml(sw);
-        
-        return sw.toString();
+        if(wrs.size() > 0) {
+            Writer sw = new StringWriter();
+            wrs.writeXml(sw);
+            str = sw.toString();
+        }
+        return str;
     }
 }

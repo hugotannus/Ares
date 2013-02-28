@@ -1164,8 +1164,8 @@ public class GUIStart extends javax.swing.JFrame {
     private void treeServicosValueChanged(javax.swing.event.TreeSelectionEvent evt) {//GEN-FIRST:event_treeServicosValueChanged
         if (currentService != null && currentService.isLeaf()) {
             try {
-                aresServices.acceptChanges();
                 aresServices.updateService(jTextArea1.getText(), jTextField1.getText());
+                aresServices.acceptChanges();
             } catch (SyncProviderException ex) {
                 Logger.getLogger(GUIStart.class.getName()).log(Level.SEVERE, null, ex);
             } catch (SQLException ex) {
@@ -1438,8 +1438,8 @@ public class GUIStart extends javax.swing.JFrame {
         rowSet.readXml(sr);
 
         if (rowSet.next()) {
-            currentService.budget = rowSet.getString(6);
-            currentService.comments = rowSet.getString(7);
+            currentService.budget = rowSet.getString("budget");
+            currentService.comments = rowSet.getString("comments");
         }
     }
 

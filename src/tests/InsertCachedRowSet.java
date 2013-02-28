@@ -1,10 +1,11 @@
-package data;
+package tests;
 
 import java.sql.*;
 
 import javax.sql.rowset.CachedRowSet;
 
 import com.sun.rowset.CachedRowSetImpl;
+import data.DataBaseManager;
 
 public class InsertCachedRowSet {
     static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";

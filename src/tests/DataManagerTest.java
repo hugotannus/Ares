@@ -3,8 +3,9 @@
  * and open the template in the editor.
  */
 
-package data;
+package tests;
 
+import data.DataBaseManager;
 import java.util.Scanner;
 import javax.sql.rowset.CachedRowSet;
 

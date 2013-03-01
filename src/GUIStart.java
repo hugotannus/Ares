@@ -50,8 +50,8 @@ public class GUIStart extends javax.swing.JFrame {
 
     private ServerServicesInterface aresServices;
     private RMIComms comms;
-    private final String serverIP = "127.0.0.1";
-    // private final String serverIP = "192.168.25.3";
+    //private final String serverIP = "127.0.0.1";
+    private final String serverIP = "192.168.25.14";
     private final String serverRemoteObjectName = "AresRemoteAPI";
     private final int serverPort = 8001;
 

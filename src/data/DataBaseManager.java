@@ -9,8 +9,12 @@ import java.rmi.RemoteException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.HashMap;
 import javax.sql.rowset.WebRowSet;
 import javax.sql.rowset.spi.SyncProviderException;
+
+
+//TODO GIGANTESCO: Arrumar a classe DataBaseManager, e demais necessárias, para que elas utilizem a DataBox;
 
 /**
  *
@@ -18,31 +22,31 @@ import javax.sql.rowset.spi.SyncProviderException;
  */
 public final class DataBaseManager {
 
-    private WebRowSet serviceRowSet;
-    private WebRowSet materialRowSet;
-    private WebRowSet logisticRowSet;
-    private WebRowSet projectRowSet;
-    private WebRowSet workmanRowSet;
-    private WebRowSet reportRowSet;
+    
+    private HashMap<Integer, DataBox> dataBag;
+    
     private final int MATERIAL = 0;
     private final int LOGISTIC = 1;
     private final int PROJECT = 2;
     private final int WORKMAN = 3;
+    private final int SERVICE = 4;
     private Connection conn;
     private boolean connected;
     static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
 
-    public DataBaseManager(String userName, char[] password)
+    public DataBaseManager()
             throws ClassNotFoundException, SQLException, RemoteException {
-        System.out.printf("userName: %s\tpswd: %s\n", userName, password);
-        conn = getConnection(userName, password);
+        
+        this.dataBag = new HashMap<Integer, DataBox>();
+        conn = getConnection(DataBaseInput.USERNAME, DataBaseInput.PASSWORD.toCharArray());
         connected = true;
-
-        serviceRowSet = new WebRowSetImpl();
-        projectRowSet = new WebRowSetImpl();
-        materialRowSet = new WebRowSetImpl();
-        logisticRowSet = new WebRowSetImpl();
-        workmanRowSet = new WebRowSetImpl();
+    }
+    
+    public void login(int user_id, String userName, char[] password) throws SQLException, ClassNotFoundException{
+        System.out.printf("userName: %s\tpswd: %s\n", userName, password);
+        
+        //TODO pesquisa no banco de dados para validar o login;
+        
     }
 
     public WebRowSet executeQuery(short ID, int tableID) throws SQLException {
@@ -55,8 +59,10 @@ public final class DataBaseManager {
                 return executeProjectQuery(ID);
             case WORKMAN:
                 return executeWorkmanQuery(ID);
-            default:
+            case SERVICE:
                 return executeServiceQuery(ID);
+            default:
+                throw new SQLException("Tabela não encontrada no banco de dados!");
         }
     }
 
@@ -130,7 +136,6 @@ public final class DataBaseManager {
             case WORKMAN:
                 updateWorkmanCell(row, col, obj);
                 break;
-            default:
         }
     }
 
@@ -172,8 +177,6 @@ public final class DataBaseManager {
             case WORKMAN:
                 addWorkmanRow(serviceID, name, sponsor);
                 break;
-            default:
-                ;
         }
         System.out.printf("ServiceID: %d", serviceID);
     }
@@ -243,8 +246,11 @@ public final class DataBaseManager {
                 return getProjectRowSet();
             case WORKMAN:
                 return getWorkmanRowSet();
-            default:
+            case SERVICE:
                 return getServiceRowSet();
+            default:
+                return null;
+                
         }
     }
 
@@ -300,6 +306,25 @@ public final class DataBaseManager {
                 this.acceptChanges();
         }
         //}
+    }
+    
+    public void cleanRowSet(int tableID) throws SQLException{
+        switch (tableID) {
+            case MATERIAL:
+                materialRowSet.release();
+                break;
+            case LOGISTIC:
+                logisticRowSet.release();
+                break;
+            case PROJECT:
+                projectRowSet.release();
+                break;
+            case WORKMAN:
+                workmanRowSet.release();
+                break;
+            case SERVICE:
+                serviceRowSet.release();
+        }
     }
 
     public boolean isConnected() {

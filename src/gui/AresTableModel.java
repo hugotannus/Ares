@@ -34,16 +34,15 @@
 package gui;
 
 import com.sun.rowset.WebRowSetImpl;
+import comunication.ServerServicesInterface;
+import java.io.StringReader;
+import java.rmi.RemoteException;
 import java.sql.SQLException;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.sql.rowset.WebRowSet;
 import javax.swing.table.AbstractTableModel;
-
-import comunication.ServerServicesInterface;
-import java.io.StringReader;
-import java.rmi.RemoteException;
 
 /**
  *

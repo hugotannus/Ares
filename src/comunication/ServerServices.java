@@ -23,35 +23,45 @@ public class ServerServices extends UnicastRemoteObject implements ServerService
 
     private boolean connected;
     private DataBaseManager dbmanager;
-    private static int user_ID = 0; 
+    private static int user_ID = 0;
 
-    public ServerServices() throws RemoteException {
+    public ServerServices() throws RemoteException{
         super();
         connected = false;
-        dbmanager = new DataBaseManager();
+        try {
+            dbmanager = new DataBaseManager();
+        } catch (Exception ex) {
+            Logger.getLogger(ServerServices.class.getName()).log(Level.SEVERE, null, ex);
+            throw new RemoteException("Erro criando o módulo gerenciador de "
+                    + "banco de dados. Por favor contate o admisnistrador do "
+                    + "sistema (Se ele não resolver, chame sua mãe).");
+        }
     }
 
     @Override
     public int login(String user, char[] password) throws RemoteException {
-        try {
-            
+
             connected = true;
             int id = getUserID();
-            boolean logged = dbmanager.login(user, password, id);
-            
-            if(!logged) {
-                throw new RemoteException("Usuário ou senha inválidos!! Sai daí pedreiro!");
+
+
+            try {
+                dbmanager.login(id, user, password);
+            } catch (Exception e) {
+                resetUserID();
+                throw new RemoteException(e.getMessage() + "\nNão foi possível realizar conexão com o "
+                        + "banco de dados. Usuário ou senha podem estar incorretos.");
             }
-            
+
             return id;
-        } catch (Exception ex) {
-            Logger.getLogger(ServerServices.class.getName()).log(Level.SEVERE, null, ex);
-            throw new RemoteException("Não foi possível realizar conexão com o banco de dados. Usuário ou senha podem estar incorretos.");
-        }
     }
     
-    private int getUserID(){
-        
+    private void resetUserID(){
+        ServerServices.user_ID--;
+    }
+
+    private int getUserID() {
+
         return ServerServices.user_ID++;
     }
 
@@ -66,19 +76,19 @@ public class ServerServices extends UnicastRemoteObject implements ServerService
             return;
         }
 
-        acceptChanges();
-        dbmanager.closeConnection(user_id);
+        acceptChanges(user_id);
+        dbmanager.logout(user_id);
         connected = false;
     }
 
     @Override
     public String executeQuery(int user_id, short ID, int tableID) throws SQLException, RemoteException {
         WebRowSet wrs = dbmanager.executeQuery(user_id, ID, tableID);
-        
+
         StringWriter sw = new StringWriter();
-        
+
         wrs.writeXml(sw);
-        
+
         return sw.toString();
     }
 
@@ -107,14 +117,14 @@ public class ServerServices extends UnicastRemoteObject implements ServerService
         String str = "";
         System.out.printf("tableID %d\n", tableID);
         WebRowSet wrs = dbmanager.getRowSet(user_id, tableID);
-        
+
         System.out.println("Imprimindo linhas da tabela:");
         while (wrs.next()) {
             System.out.println(wrs.getString(3));
         }
-        System.out.println("Lista finalizada!");        
-        
-        if(wrs.size() > 0) {
+        System.out.println("Lista finalizada!");
+
+        if (wrs.size() > 0) {
             Writer sw = new StringWriter();
             wrs.writeXml(sw);
             str = sw.toString();

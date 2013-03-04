@@ -54,6 +54,7 @@ public class GUIStart extends javax.swing.JFrame {
     private final String serverIP = "192.168.25.14";
     private final String serverRemoteObjectName = "AresRemoteAPI";
     private final int serverPort = 8001;
+    private int userID;
 
     public GUIStart() throws RemoteException {
 
@@ -68,7 +69,7 @@ public class GUIStart extends javax.swing.JFrame {
                 System.out.println("Programa finalizado com sucesso! (by Hugo)\n");
                 System.exit(0);
             }
-            aresServices.login(loginForm.getUser(), loginForm.getPassword());
+            userID = aresServices.login(loginForm.getUser(), loginForm.getPassword());
 
         } while (!aresServices.isConnected());
 
@@ -1164,8 +1165,8 @@ public class GUIStart extends javax.swing.JFrame {
     private void treeServicosValueChanged(javax.swing.event.TreeSelectionEvent evt) {//GEN-FIRST:event_treeServicosValueChanged
         if (currentService != null && currentService.isLeaf()) {
             try {
-                aresServices.updateService(jTextArea1.getText(), jTextField1.getText());
-                aresServices.acceptChanges();
+                aresServices.updateService(userID, jTextArea1.getText(), jTextField1.getText());
+                aresServices.acceptChanges(userID);
             } catch (SyncProviderException ex) {
                 Logger.getLogger(GUIStart.class.getName()).log(Level.SEVERE, null, ex);
             } catch (SQLException ex) {
@@ -1194,13 +1195,13 @@ public class GUIStart extends javax.swing.JFrame {
 
                     AresTableModel model;
                     model = (AresTableModel) projectJTable.getModel();
-                    model.executeQuery(currentService.ID);
+                    model.executeQuery(userID, currentService.ID);
                     model = (AresTableModel) materialJTable.getModel();
-                    model.executeQuery(currentService.ID);
+                    model.executeQuery(userID, currentService.ID);
                     model = (AresTableModel) logisticJTable.getModel();
-                    model.executeQuery(currentService.ID);
+                    model.executeQuery(userID, currentService.ID);
                     model = (AresTableModel) workmanJTable.getModel();
-                    model.executeQuery(currentService.ID);
+                    model.executeQuery(userID, currentService.ID);
 
                     jTextArea1.setText(currentService.comments);
                     jTextField1.setText(currentService.budget);
@@ -1223,13 +1224,13 @@ public class GUIStart extends javax.swing.JFrame {
     private void jButton_addWorkmanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_addWorkmanActionPerformed
         clearSelection(WORKMAN);
         AresTableModel model = (AresTableModel) workmanJTable.getModel();
-        model.addRow(currentService.ID);
+        model.addRow(userID, currentService.ID);
     }//GEN-LAST:event_jButton_addWorkmanActionPerformed
 
     private void jButton_addProjectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_addProjectActionPerformed
         clearSelection(PROJECT);
         AresTableModel model = (AresTableModel) projectJTable.getModel();
-        model.addRow(currentService.ID);
+        model.addRow(userID, currentService.ID);
     }//GEN-LAST:event_jButton_addProjectActionPerformed
 
     private void workmanJTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_workmanJTableMouseClicked
@@ -1255,13 +1256,13 @@ public class GUIStart extends javax.swing.JFrame {
     private void jButton_addMaterialActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_addMaterialActionPerformed
         clearSelection(MATERIAL);
         AresTableModel model = (AresTableModel) materialJTable.getModel();
-        model.addRow(currentService.ID);
+        model.addRow(userID, currentService.ID);
     }//GEN-LAST:event_jButton_addMaterialActionPerformed
 
     private void jButton_addLogisticActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_addLogisticActionPerformed
         clearSelection(LOGISTIC);
         AresTableModel model = (AresTableModel) logisticJTable.getModel();
-        model.addRow(currentService.ID);
+        model.addRow(userID, currentService.ID);
     }//GEN-LAST:event_jButton_addLogisticActionPerformed
 
     private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
@@ -1271,7 +1272,7 @@ public class GUIStart extends javax.swing.JFrame {
         int row = projectJTable.getSelectedRow();
         AresTableModel model = (AresTableModel) projectJTable.getModel();
         try {
-            model.removeRow(row);
+            model.removeRow(userID, row);
         } catch (SQLException ex) {
             Logger.getLogger(GUIStart.class.getName()).log(Level.SEVERE, null, ex);
         } catch (RemoteException ex) {
@@ -1283,7 +1284,7 @@ public class GUIStart extends javax.swing.JFrame {
         int row = logisticJTable.getSelectedRow();
         AresTableModel model = (AresTableModel) logisticJTable.getModel();
         try {
-            model.removeRow(row);
+            model.removeRow(userID, row);
         } catch (SQLException ex) {
             Logger.getLogger(GUIStart.class.getName()).log(Level.SEVERE, null, ex);
         } catch (RemoteException ex) {
@@ -1295,7 +1296,7 @@ public class GUIStart extends javax.swing.JFrame {
         int row = materialJTable.getSelectedRow();
         AresTableModel model = (AresTableModel) materialJTable.getModel();
         try {
-            model.removeRow(row);
+            model.removeRow(userID, row);
         } catch (SQLException ex) {
             Logger.getLogger(GUIStart.class.getName()).log(Level.SEVERE, null, ex);
         } catch (RemoteException ex) {
@@ -1307,7 +1308,7 @@ public class GUIStart extends javax.swing.JFrame {
         int row = workmanJTable.getSelectedRow();
         AresTableModel model = (AresTableModel) workmanJTable.getModel();
         try {
-            model.removeRow(row);
+            model.removeRow(userID, row);
         } catch (SQLException ex) {
             Logger.getLogger(GUIStart.class.getName()).log(Level.SEVERE, null, ex);
         } catch (RemoteException ex) {
@@ -1430,7 +1431,7 @@ public class GUIStart extends javax.swing.JFrame {
     }
 
     private void loadServiceData(Service service) throws SQLException, RemoteException {
-        String result = aresServices.executeQuery(service.ID, SERVICE);
+        String result = aresServices.executeQuery(userID, service.ID, SERVICE);
 
         StringReader sr = new StringReader(result);
 
@@ -1513,9 +1514,9 @@ public class GUIStart extends javax.swing.JFrame {
             if (confirm == 0) {
                 if (currentService.isLeaf()) {
                     try {
-                        aresServices.updateService(jTextArea1.getText(), jTextField1.getText());
-                        aresServices.acceptChanges();
-                        aresServices.logout();
+                        aresServices.updateService(userID, jTextArea1.getText(), jTextField1.getText());
+                        aresServices.acceptChanges(userID);
+                        aresServices.logout(userID);
                     } catch (SQLException ex) {
                         Logger.getLogger(GUIStart.class.getName()).log(Level.SEVERE, null, ex);
                     } catch (RemoteException ex) {

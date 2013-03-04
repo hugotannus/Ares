@@ -75,12 +75,12 @@ public class AresTableModel extends AbstractTableModel {
         }
     }
 
-    public void addRow(short service_ID) {
+    public void addRow(int user_id, short service_ID) {
         values.addElement(new Object[]{"nome", "responsável", false, false, false});
         System.out.println("Tentou adicionar um projeto...");
         System.out.printf("Tamanho do rowSet antes: %d...\n", rowSet.size());
         try {
-            aresServices.addRow(TABLE_ID, service_ID, "nome", "responsavel");
+            aresServices.addRow(user_id, TABLE_ID, service_ID, "nome", "responsavel");
         } catch (SQLException ex) {
             Logger.getLogger(AresTableModel.class.getName()).log(Level.SEVERE, null, ex);
         } catch (RemoteException ex) {
@@ -93,19 +93,25 @@ public class AresTableModel extends AbstractTableModel {
         this.fireTableRowsInserted(numberOfRows, numberOfRows);
     }
 
-    public void executeQuery(short serviceID) throws SQLException, RemoteException {
-        String xmlData = aresServices.executeQuery(serviceID, TABLE_ID);
+    public void executeQuery(int user_id, short serviceID) throws SQLException, RemoteException {
+        String xmlData = aresServices.executeQuery(user_id, serviceID, TABLE_ID);
         StringReader reader = new StringReader(xmlData);
         rowSet.release();
         rowSet.readXml(reader);
+        
         numberOfRows = rowSet.size();
+        
         values = new Vector<Object[]>(numberOfRows);
+        
         for (int row = 0; row < numberOfRows; row++) {
+        
             rowSet.absolute(row + SQL_ROW_CORRECTION);
             Object obj[] = new Object[getColumnCount()];
+            
             for (int col = 0; col < getColumnCount(); col++) {
                 obj[col] = rowSet.getObject(col + SQL_COL_CORRECTION);
             }
+            
             values.addElement(obj);
         }
         System.out.printf("numberOfRows: %d\n", numberOfRows);
@@ -149,22 +155,21 @@ public class AresTableModel extends AbstractTableModel {
         return (Boolean) getValueAt(row, column - 1);
     }
 
-    public void removeRow(int row) throws SQLException, RemoteException {
+    public void removeRow(int user_id, int row) throws SQLException, RemoteException {
         values.remove(row);
 
-        aresServices.updateCellTable(TABLE_ID,
+        aresServices.updateCellTable(user_id, TABLE_ID,
                 (row + SQL_ROW_CORRECTION), 7, Boolean.FALSE);
 
         numberOfRows--;
         this.fireTableRowsDeleted(row, row);
     }
 
-    @Override
-    public void setValueAt(Object aValue, int row, int column) {
+    public void setValueAt(int user_id, Object aValue, int row, int column) {
         Object obj[] = values.elementAt(row);
         obj[column] = aValue;
         try {
-            aresServices.updateCellTable(TABLE_ID,
+            aresServices.updateCellTable(user_id, TABLE_ID,
                     row + SQL_ROW_CORRECTION,
                     column + SQL_COL_CORRECTION,
                     aValue);

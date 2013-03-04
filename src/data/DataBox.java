@@ -1,8 +1,10 @@
 package data;
 
 import com.sun.rowset.WebRowSetImpl;
+import java.sql.Connection;
 import java.sql.SQLException;
 import javax.sql.rowset.WebRowSet;
+import javax.sql.rowset.spi.SyncProviderException;
 
 /**
  *
@@ -50,5 +52,18 @@ class DataBox {
         this.projectRowSet.release();
         this.serviceRowSet.release();
         this.workmanRowSet.release();
+    }
+    
+    public void saveData(Connection conn) throws SyncProviderException, SQLException{
+        logisticRowSet.acceptChanges(conn);
+        workmanRowSet.acceptChanges(conn);
+        materialRowSet.acceptChanges(conn);
+        projectRowSet.acceptChanges(conn);
+        
+        logisticRowSet.close();
+        workmanRowSet.close();
+        materialRowSet.close();
+        projectRowSet.close();
+        
     }
 }

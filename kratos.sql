@@ -8,6 +8,7 @@ drop table if exists Users;
 create table Users(
 	ID			int 		NOT NULL 	AUTO_INCREMENT,
 	name			varchar(60) 	NOT NULL,
+	passphrase		varchar(255)	NOT NULL,
 	user_type		int 		NOT NULL,
 	builds_access		varchar(255)	NOT NULL,
 	company_ID		int		NOT NULL,

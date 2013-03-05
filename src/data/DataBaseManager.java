@@ -46,18 +46,18 @@ public final class DataBaseManager {
         System.out.printf("userName: %s\tpswd: %s\n", userName, password);
         
         // Lê todos os usuários do banco de dados
-        String cmd = String.format("SELECT * FROM users WHERE username=%s AND password=%s", userName, password);
-        usersRowSet.setCommand(cmd);
-        usersRowSet.execute(conn);
-        
-        int size = usersRowSet.size();
-        
-        if(size != 1){
-            throw new SQLException("Usuário ou senha inválidos!! Sai daí pedreiro!");
-        }
+//        String cmd = String.format("SELECT * FROM users WHERE username=%s AND password=%s", userName, password);
+//        usersRowSet.setCommand(cmd);
+//        usersRowSet.execute(conn);
+//        
+//        int size = usersRowSet.size();
+//        
+//        if(size != 1){
+//            throw new SQLException("Usuário ou senha inválidos!! Sai daí pedreiro!");
+//        }
         
         dataBag.put(user_id, new DataBox());
-        usersRowSet.release();
+//        usersRowSet.release();
 
     }
 
@@ -149,7 +149,7 @@ public final class DataBaseManager {
     }
 
     public void updateService(int user_id, String comment, String budget) throws SQLException {
-        System.out.printf("budget: %s.\tService: %s.\n", budget, comment);
+        System.out.println("-------------------------------------------");
         if (budget.length() == 0) {
             budget = null;
         }
@@ -166,15 +166,20 @@ public final class DataBaseManager {
         WebRowSet serviceRowSet;
 
         serviceRowSet = dataBag.get(user_id).getServiceRowSet();
-
-
         serviceRowSet.first();
-
+        
+        System.out.printf("User %d enviou: \t", user_id);
+        System.out.printf("Service %d\tbudget: %s.\tComment: %s.\n", serviceRowSet.getInt("ID"), budget, comment);
+        
         serviceRowSet.updateString("budget", budget);
         serviceRowSet.updateString("comments", comment);
+        System.out.printf("SERVER: Alterou células do serviço (user_id %d)\n", user_id);
         serviceRowSet.updateRow();
+        System.out.printf("SERVER: Salvou alterações no WebRowSet (user_id %d)\n", user_id);
         serviceRowSet.acceptChanges(conn);
+        System.out.printf("SERVER: Atualizações salvas no banco (user_id %d)\n", user_id);
         serviceRowSet.close();
+        System.out.println("------------------------------------");
     }
 
     public void updateCellTable(int user_id, int tableID, int row, int col, Object obj) throws SQLException {

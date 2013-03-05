@@ -151,7 +151,7 @@
     <target name="package-server-app" depends="jar">
 
         <property name="server-app.jar.name" value="AresServer"/>
-
+        
         <!-- don't edit below this line -->
         <property name="server-app.dir" value="apps"/>
         <property name="server-app.jar" value="${server-app.dir}/${server-app.jar.name}.jar"/>
@@ -161,8 +161,13 @@
         <mkdir dir="${server-app.dir}"/>
 
         <jar destfile="${server-app.dir}/temp_final.jar" filesetmanifest="skip">
-            <zipgroupfileset dir=".dist" includes="*.jar"/>
+<!--             <zipgroupfileset dir=".dist" includes="*.jar"/> -->
+
             <zipgroupfileset dir=".dist/lib" includes="*.jar"/>
+            <zipfileset dir=".build/classes" includes="Server.class"/>
+            <zipfileset dir=".build/classes/commons" includes="*.class"/>
+            <zipfileset dir=".build/classes/comunication" includes="*.class"/>
+            <zipfileset dir=".build/classes/data" includes="*.class"/>
             <zipfileset dir="." includes="*.png"/>
             <zipfileset dir="." includes="server.policy"/>
 

@@ -48,7 +48,7 @@ public class ServerServices extends UnicastRemoteObject implements ServerService
             try {
                 dbmanager.login(id, user, password);
             } catch (Exception e) {
-                resetUserID();
+//                resetUserID();
                 throw new RemoteException(e.getMessage() + "\nNão foi possível realizar conexão com o "
                         + "banco de dados. Usuário ou senha podem estar incorretos.");
             }

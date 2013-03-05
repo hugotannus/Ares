@@ -18,3 +18,7 @@
 	To use
 
 # <a name="usage"></a> Usage
+	Dont use
+
+# <a name="known bugs"></a> Ants
+	* Two users editing and saving the same atribute at the same time causes loss of information

@@ -170,13 +170,11 @@ public final class DataBaseManager {
 
         serviceRowSet.first();
 
-
         serviceRowSet.updateString("budget", budget);
         serviceRowSet.updateString("comments", comment);
         serviceRowSet.updateRow();
         serviceRowSet.acceptChanges(conn);
         serviceRowSet.close();
-
     }
 
     public void updateCellTable(int user_id, int tableID, int row, int col, Object obj) throws SQLException {

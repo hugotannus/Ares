@@ -1,5 +1,7 @@
 import comunication.RMIComms;
 import comunication.ServerServices;
+import java.net.Inet4Address;
+import java.net.InetAddress;
 import java.rmi.RemoteException;
 /**
  *
@@ -25,7 +27,8 @@ public class Server {
 	}
 
 	public static void main(String[] args) {
-		Server serv = new Server("localhost", 8001);
+//            InetAddress ip = new Inet4Address();
+            Server serv = new Server("192.168.25.14", 8001);
 
 		System.out.println("Server created. Running...");
 	}

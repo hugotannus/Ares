@@ -32,6 +32,7 @@ import comunication.RMIComms;
 import java.io.StringReader;
 import java.io.StringWriter;
 import javax.sql.rowset.spi.SyncProviderException;
+import javax.swing.JFrame;
 /*
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
@@ -111,6 +112,7 @@ public class GUIStart extends javax.swing.JFrame {
         lookSubMenus[mark].setSelected(true);
         this.addWindowListener(exitListener);
         setComponentsEnabled(servicePanel, false);
+        this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
     }
 
     private void setupRMIComms() {

@@ -165,9 +165,9 @@
 
             <zipgroupfileset dir=".dist/lib" includes="*.jar"/>
             <zipfileset dir=".build/classes" includes="Server.class"/>
-            <zipfileset dir=".build/classes/commons" includes="*.class"/>
-            <zipfileset dir=".build/classes/comunication" includes="*.class"/>
-            <zipfileset dir=".build/classes/data" includes="*.class"/>
+            <zipfileset dir=".build/classes" includes="commons/*"/>
+            <zipfileset dir=".build/classes" includes="comunication/*"/>
+            <zipfileset dir=".build/classes" includes="data/*"/>
             <zipfileset dir="." includes="*.png"/>
             <zipfileset dir="." includes="server.policy"/>
 

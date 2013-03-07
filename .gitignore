@@ -3,6 +3,7 @@
 .dist/
 store/
 nbproject/
+apps/
 # src/tests/
 # src/deprecated/
 

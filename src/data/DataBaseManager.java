@@ -176,8 +176,12 @@ public final class DataBaseManager {
         System.out.printf("SERVER: Alterou células do serviço (user_id %d)\n", user_id);
         serviceRowSet.updateRow();
         System.out.printf("SERVER: Salvou alterações no WebRowSet (user_id %d)\n", user_id);
-        serviceRowSet.acceptChanges(conn);
-        System.out.printf("SERVER: Atualizações salvas no banco (user_id %d)\n", user_id);
+        try{
+            serviceRowSet.acceptChanges(conn);
+            System.out.printf("SERVER: Atualizações salvas no banco (user_id %d)\n", user_id);
+        }catch(SyncProviderException e){
+            throw new SyncProviderException("SPE: Could not save the changes.");
+        }
         serviceRowSet.close();
         System.out.println("------------------------------------");
     }

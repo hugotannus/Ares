@@ -1172,7 +1172,6 @@ public class GUIStart extends javax.swing.JFrame {
                 aresServices.updateService(userID, jTextArea1.getText(), jTextField1.getText());
                 aresServices.acceptChanges(userID);
             } catch (SyncProviderException ex) {
-                System.out.println("aqui!!!!!!!!!!!!!!!!!!!!!");
                 if(ex.getMessage().contains("SPE:")){
                     javax.swing.JOptionPane.showMessageDialog(null, "Erro ao salvar as informações,"
                             + " alguém as modificou antes de você.", "Erro!", javax.swing.JOptionPane.ERROR_MESSAGE);

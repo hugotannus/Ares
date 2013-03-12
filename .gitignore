@@ -1,9 +1,9 @@
 # built application directory
 .build/
 .dist/
-store/
-nbproject/
-apps/
+store/*
+nbproject/*
+apps/*
 # src/tests/
 # src/deprecated/
 

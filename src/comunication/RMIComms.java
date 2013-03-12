@@ -1,7 +1,11 @@
 package comunication;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.rmi.*;
 import java.rmi.registry.*;
+
 /**
  *
  * @author guilherme
@@ -16,21 +20,37 @@ public class RMIComms {
 
     public void setUpServer(String serverIP, int registryPort) {
         try {
+            File f = new File("server.policy");
+            
+            FileWriter datilografador = new FileWriter(f);
+            datilografador.write("grant {\n	permission java.security.AllPermission;\n};");
+            
+            datilografador.close();
+            f.deleteOnExit();
+            
             System.setProperty("java.rmi.server.hostname", serverIP);
             System.setProperty("java.security.policy", "server.policy");
             System.setSecurityManager(new RMISecurityManager());
             r = LocateRegistry.createRegistry(registryPort);
-        } catch (RemoteException e) {
+        } catch (IOException e) {
             System.out.println("setUpServer - " + e.getMessage());
         }
     }
 
     public void setUpClient(String registryIP, int registryPort) {
         try {
+            File f = new File("client.policy");
+            
+            FileWriter datilografador = new FileWriter(f);
+            datilografador.write("grant {\n	permission java.security.AllPermission;\n};");
+            
+            datilografador.close();
+            f.deleteOnExit();
+            
             System.setProperty("java.security.policy", "client.policy");
             System.setSecurityManager(new RMISecurityManager());
             r = LocateRegistry.getRegistry(registryIP, registryPort);
-        } catch (RemoteException e) {
+        } catch (IOException e) {
             System.out.println("setUpClient - " + e.getMessage());
         }
     }

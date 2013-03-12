@@ -51,8 +51,8 @@ public class GUIStart extends javax.swing.JFrame {
 
     private ServerServicesInterface aresServices;
     private RMIComms comms;
-    private final String serverIP = "127.0.0.1";
-    //private final String serverIP = "192.168.25.2";
+    //private final String serverIP = "127.0.0.1";
+    private final String serverIP = "192.168.25.2";
     private final String serverRemoteObjectName = "AresRemoteAPI";
     private final int serverPort = 8001;
     private int userID;
@@ -89,14 +89,6 @@ public class GUIStart extends javax.swing.JFrame {
             Logger.getLogger(GUIStart.class.getName()).log(Level.SEVERE, null, ex);
             System.exit(1);
         }
-
-        nameMap = new HashMap<String, String>();
-        nameMap.put("definido", "defined");
-        nameMap.put("aprovado", "approved");
-        nameMap.put("solicitado", "requested");
-        nameMap.put("in loco", "inloco");
-        nameMap.put("disponível", "available");
-        nameMap.put("contratdo", "engaged");
 
         looks = javax.swing.UIManager.getInstalledLookAndFeels();
         lookNames = new String[looks.length];
@@ -147,7 +139,7 @@ public class GUIStart extends javax.swing.JFrame {
 
         @Override
         public void itemStateChanged(ItemEvent event) {
-            System.out.println("Mudou o estado...");
+//            System.out.println("Mudou o estado...");
             for (int count = 0; count < lookSubMenus.length; count++) {
                 if (lookSubMenus[count].isSelected()) {
                     try {
@@ -1183,7 +1175,7 @@ public class GUIStart extends javax.swing.JFrame {
             }
         }
         currentService = (Service) treeServicos.getLastSelectedPathComponent();
-        System.out.printf("Noh selecionado: %s\n", currentService);
+//        System.out.printf("Noh selecionado: %s\n", currentService);
 
         serviceDescriptionLabel.setText(currentService.getDescricao());
         startDateLabel.setText(currentService.dataInicio.toString());
@@ -1224,7 +1216,7 @@ public class GUIStart extends javax.swing.JFrame {
                 setComponentsEnabled(servicePanel, false);
             }
         }
-        System.out.println("-----------------------------");
+//        System.out.println("-----------------------------");
 
     }//GEN-LAST:event_treeServicosValueChanged
 
@@ -1503,7 +1495,6 @@ public class GUIStart extends javax.swing.JFrame {
     private final int SERVICE = 4;
     private final int ALL = 100;
     private String lookNames[];
-    private Map< String, String> nameMap;
     private ItemHandler handler;
     private Service currentService;
     private javax.swing.tree.TreeModel treeModel;

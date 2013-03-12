@@ -149,7 +149,7 @@ public final class DataBaseManager {
     }
 
     public void updateService(int user_id, String comment, String budget) throws SQLException {
-        System.out.println("-------------------------------------------");
+//        System.out.println("-------------------------------------------");
         if (budget.length() == 0) {
             budget = null;
         }
@@ -168,22 +168,26 @@ public final class DataBaseManager {
         serviceRowSet = dataBag.get(user_id).getServiceRowSet();
         serviceRowSet.first();
         
-        System.out.printf("User %d enviou: \t", user_id);
-        System.out.printf("Service %d\tbudget: %s.\tComment: %s.\n", serviceRowSet.getInt("ID"), budget, comment);
-        
+//        System.out.printf("User %d enviou: \t", user_id);
+//        System.out.printf("Service %d\tbudget: %s.\tComment: %s.\n", serviceRowSet.getInt("ID"), budget, comment);
+//        
         serviceRowSet.updateString("budget", budget);
         serviceRowSet.updateString("comments", comment);
-        System.out.printf("SERVER: Alterou células do serviço (user_id %d)\n", user_id);
+//        System.out.printf("SERVER: Alterou células do serviço (user_id %d)\n", user_id);
         serviceRowSet.updateRow();
-        System.out.printf("SERVER: Salvou alterações no WebRowSet (user_id %d)\n", user_id);
-        serviceRowSet.acceptChanges(conn);
-        System.out.printf("SERVER: Atualizações salvas no banco (user_id %d)\n", user_id);
+//        System.out.printf("SERVER: Salvou alterações no WebRowSet (user_id %d)\n", user_id);
+        try{
+            serviceRowSet.acceptChanges(conn);
+//            System.out.printf("SERVER: Atualizações salvas no banco (user_id %d)\n", user_id);
+        }catch(SyncProviderException e){
+            throw new SyncProviderException("SPE: Could not save the changes.");
+        }
         serviceRowSet.close();
-        System.out.println("------------------------------------");
+//        System.out.println("------------------------------------");
     }
 
     public void updateCellTable(int user_id, int tableID, int row, int col, Object obj) throws SQLException {
-        System.out.printf("Número da Linha: %d\n", row);
+//        System.out.printf("Número da Linha: %d\n", row);
 
         if (!dataBag.containsKey(user_id)) {
             throw new SQLException("Usuário não existente ou não logado. Sem permissões para realizar esta operação.");
@@ -262,7 +266,7 @@ public final class DataBaseManager {
                 addWorkmanRow(user_id, serviceID, name, sponsor);
                 break;
         }
-        System.out.printf("ServiceID: %d", serviceID);
+//        System.out.printf("ServiceID: %d", serviceID);
     }
 
     private void addMaterialRow(int user_id, short serviceID, String name, String sponsor) throws SQLException {

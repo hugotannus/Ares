@@ -52,7 +52,7 @@ public class GUIStart extends javax.swing.JFrame {
     private ServerServicesInterface aresServices;
     private RMIComms comms;
     //private final String serverIP = "127.0.0.1";
-    private final String serverIP = "192.168.25.14";
+    private final String serverIP = "192.168.25.2";
     private final String serverRemoteObjectName = "AresRemoteAPI";
     private final int serverPort = 8001;
     private int userID;
@@ -90,14 +90,6 @@ public class GUIStart extends javax.swing.JFrame {
             System.exit(1);
         }
 
-        nameMap = new HashMap<String, String>();
-        nameMap.put("definido", "defined");
-        nameMap.put("aprovado", "approved");
-        nameMap.put("solicitado", "requested");
-        nameMap.put("in loco", "inloco");
-        nameMap.put("disponível", "available");
-        nameMap.put("contratdo", "engaged");
-
         looks = javax.swing.UIManager.getInstalledLookAndFeels();
         lookNames = new String[looks.length];
         for (int i = 0; i < looks.length; i++) {
@@ -119,6 +111,7 @@ public class GUIStart extends javax.swing.JFrame {
         comms = new RMIComms();
 
         comms.setUpClient(serverIP, serverPort);
+
         try {
             aresServices = (ServerServicesInterface) comms.lookup(serverRemoteObjectName);
         } catch (RemoteException ex) {
@@ -146,7 +139,7 @@ public class GUIStart extends javax.swing.JFrame {
 
         @Override
         public void itemStateChanged(ItemEvent event) {
-            System.out.println("Mudou o estado...");
+//            System.out.println("Mudou o estado...");
             for (int count = 0; count < lookSubMenus.length; count++) {
                 if (lookSubMenus[count].isSelected()) {
                     try {
@@ -300,7 +293,7 @@ public class GUIStart extends javax.swing.JFrame {
             new Class [] {
                 java.lang.String.class, java.lang.String.class, java.lang.Boolean.class, java.lang.Boolean.class
             },
-            aresServices, PROJECT)
+            aresServices, PROJECT, userID)
     );
     projectJTable.setCellSelectionEnabled(true);
     projectJTable.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
@@ -364,7 +357,7 @@ public class GUIStart extends javax.swing.JFrame {
         new Class [] {
             java.lang.String.class, java.lang.String.class, java.lang.Boolean.class, java.lang.Boolean.class
         },
-        aresServices, LOGISTIC)
+        aresServices, LOGISTIC, userID)
     );
     logisticJTable.addMouseListener(new java.awt.event.MouseAdapter() {
         public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -423,7 +416,7 @@ public class GUIStart extends javax.swing.JFrame {
         new Class [] {
             java.lang.String.class, java.lang.String.class, java.lang.Boolean.class, java.lang.Boolean.class, java.lang.Boolean.class
         },
-        aresServices, MATERIAL)
+        aresServices, MATERIAL, userID)
     );
     materialJTable.addMouseListener(new java.awt.event.MouseAdapter() {
         public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -472,7 +465,7 @@ public class GUIStart extends javax.swing.JFrame {
         new Class [] {
             java.lang.String.class, java.lang.String.class, java.lang.Boolean.class, java.lang.Boolean.class
         },
-        aresServices, WORKMAN)
+        aresServices, WORKMAN, userID)
     );
     workmanJTable.addMouseListener(new java.awt.event.MouseAdapter() {
         public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -667,10 +660,10 @@ public class GUIStart extends javax.swing.JFrame {
                     .addComponent(jCheckBox3)
                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(budgetLabel))
-                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, 350, javax.swing.GroupLayout.PREFERRED_SIZE))
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
             .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addComponent(jScrollPane5)
+                .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 413, Short.MAX_VALUE)
                 .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE))
             .addContainerGap())
@@ -706,7 +699,7 @@ public class GUIStart extends javax.swing.JFrame {
             .addGroup(servicePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                 .addComponent(jPanel3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 762, Short.MAX_VALUE)
                 .addComponent(jPanel5, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(serviceDescriptionLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(serviceDescriptionLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 779, Short.MAX_VALUE))
             .addContainerGap())
     );
     servicePanelLayout.setVerticalGroup(
@@ -915,7 +908,7 @@ public class GUIStart extends javax.swing.JFrame {
             .addComponent(jRadioButton3)
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
             .addComponent(jRadioButton4)
-            .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addContainerGap(12, Short.MAX_VALUE))
     );
 
     jPanel6.setBorder(javax.swing.BorderFactory.createTitledBorder("Status"));
@@ -957,7 +950,7 @@ public class GUIStart extends javax.swing.JFrame {
         jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
         .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
             .addComponent(reportNotStarted)
-            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
             .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                 .addComponent(reportRequested)
                 .addComponent(reportDefined))
@@ -1054,7 +1047,7 @@ public class GUIStart extends javax.swing.JFrame {
             .addComponent(jButton2)
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
             .addComponent(jButton1)
-            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 12, Short.MAX_VALUE)
             .addComponent(jButton3)
             .addGap(20, 20, 20))
         .addComponent(jPanel7, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -1090,7 +1083,7 @@ public class GUIStart extends javax.swing.JFrame {
             .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
             .addComponent(jScrollPane8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addContainerGap(40, Short.MAX_VALUE))
+            .addContainerGap(34, Short.MAX_VALUE))
     );
 
     jTabbedPane1.addTab("Relatórios(2)", jPanel1);
@@ -1167,10 +1160,14 @@ public class GUIStart extends javax.swing.JFrame {
     private void treeServicosValueChanged(javax.swing.event.TreeSelectionEvent evt) {//GEN-FIRST:event_treeServicosValueChanged
         if (currentService != null && currentService.isLeaf()) {
             try {
+                aresServices.acceptChanges(userID);
                 aresServices.updateService(userID, jTextArea1.getText(), jTextField1.getText());
                 aresServices.acceptChanges(userID);
             } catch (SyncProviderException ex) {
-                Logger.getLogger(GUIStart.class.getName()).log(Level.SEVERE, null, ex);
+                if(ex.getMessage().contains("SPE:")){
+                    javax.swing.JOptionPane.showMessageDialog(null, "Erro ao salvar as informações,"
+                            + " alguém as modificou antes de você.", "Erro!", javax.swing.JOptionPane.ERROR_MESSAGE);
+                }
             } catch (SQLException ex) {
                 Logger.getLogger(GUIStart.class.getName()).log(Level.SEVERE, null, ex);
             } catch (RemoteException ex) {
@@ -1178,7 +1175,7 @@ public class GUIStart extends javax.swing.JFrame {
             }
         }
         currentService = (Service) treeServicos.getLastSelectedPathComponent();
-        System.out.printf("Noh selecionado: %s\n", currentService);
+//        System.out.printf("Noh selecionado: %s\n", currentService);
 
         serviceDescriptionLabel.setText(currentService.getDescricao());
         startDateLabel.setText(currentService.dataInicio.toString());
@@ -1219,7 +1216,7 @@ public class GUIStart extends javax.swing.JFrame {
                 setComponentsEnabled(servicePanel, false);
             }
         }
-        System.out.println("-----------------------------");
+//        System.out.println("-----------------------------");
 
     }//GEN-LAST:event_treeServicosValueChanged
 
@@ -1498,7 +1495,6 @@ public class GUIStart extends javax.swing.JFrame {
     private final int SERVICE = 4;
     private final int ALL = 100;
     private String lookNames[];
-    private Map< String, String> nameMap;
     private ItemHandler handler;
     private Service currentService;
     private javax.swing.tree.TreeModel treeModel;
@@ -1519,7 +1515,7 @@ public class GUIStart extends javax.swing.JFrame {
                         aresServices.updateService(userID, jTextArea1.getText(), jTextField1.getText());
                         aresServices.acceptChanges(userID);
                         aresServices.logout(userID);
-                    } catch (SQLException ex) {
+                    }catch (SQLException ex) {
                         Logger.getLogger(GUIStart.class.getName()).log(Level.SEVERE, null, ex);
                     } catch (RemoteException ex) {
                         Logger.getLogger(GUIStart.class.getName()).log(Level.SEVERE, null, ex);

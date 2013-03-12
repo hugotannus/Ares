@@ -55,10 +55,16 @@ class DataBox {
     }
     
     public void saveData(Connection conn) throws SyncProviderException, SQLException{
-        logisticRowSet.acceptChanges(conn);
-        workmanRowSet.acceptChanges(conn);
-        materialRowSet.acceptChanges(conn);
-        projectRowSet.acceptChanges(conn);
+        
+        try{
+            logisticRowSet.acceptChanges(conn);
+            workmanRowSet.acceptChanges(conn);
+            materialRowSet.acceptChanges(conn);
+            projectRowSet.acceptChanges(conn);
+        }catch(SyncProviderException e){
+            throw new SyncProviderException("SPE: Could not save the changes.");
+        }
+        
         
         logisticRowSet.close();
         workmanRowSet.close();

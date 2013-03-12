@@ -30,8 +30,15 @@ public class ServerServices extends UnicastRemoteObject implements ServerService
         connected = false;
         try {
             dbmanager = new DataBaseManager();
+            System.out.println("dbmanager created...");
         } catch (Exception ex) {
             Logger.getLogger(ServerServices.class.getName()).log(Level.SEVERE, null, ex);
+            javax.swing.JOptionPane.showMessageDialog(null,
+                    "Erro criando o módulo gerenciador de "
+                    + "banco de dados. Por favor contate o admisnistrador do "
+                    + "sistema (Se ele não resolver, chame sua mãe).",
+                    "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+            
             throw new RemoteException("Erro criando o módulo gerenciador de "
                     + "banco de dados. Por favor contate o admisnistrador do "
                     + "sistema (Se ele não resolver, chame sua mãe).");
@@ -40,20 +47,20 @@ public class ServerServices extends UnicastRemoteObject implements ServerService
 
     @Override
     public int login(String user, char[] password) throws RemoteException {
+        
+        connected = true;
+        int id = getUserID();
 
-            connected = true;
-            int id = getUserID();
 
-
-            try {
-                dbmanager.login(id, user, password);
-            } catch (Exception e) {
+        try {
+            dbmanager.login(id, user, password);
+        } catch (Exception e) {
 //                resetUserID();
-                throw new RemoteException(e.getMessage() + "\nNão foi possível realizar conexão com o "
-                        + "banco de dados. Usuário ou senha podem estar incorretos.");
-            }
-
-            return id;
+            throw new RemoteException(e.getMessage() + "\nNão foi possível realizar conexão com o "
+                    + "banco de dados. Usuário ou senha podem estar incorretos.");
+        }
+        
+        return id;
     }
     
     private void resetUserID(){

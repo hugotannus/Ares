@@ -61,13 +61,15 @@ public class AresTableModel extends AbstractTableModel {
     // Como não estamos pegando as colunas 'service_ID' e 'ID', então,
     // é preciso deslocar a referência de colunas em mais duas unidades.
     private final int SQL_COL_CORRECTION = 3;
+    private int userID;
 
-    public AresTableModel(String[] columnNames, Class[] types, ServerServicesInterface aresServices, int tableID) {
+    public AresTableModel(String[] columnNames, Class[] types, ServerServicesInterface aresServices, int tableID, int user_id) {
         //super(new Object[][]{}, columnNames);
         this.columnNames = columnNames;
         this.types = types;
         this.TABLE_ID = tableID;
         this.aresServices = aresServices;
+        this.userID = user_id;
         try {
             this.rowSet = new WebRowSetImpl();
         } catch (SQLException ex) {
@@ -77,8 +79,8 @@ public class AresTableModel extends AbstractTableModel {
 
     public void addRow(int user_id, short service_ID) {
         values.addElement(new Object[]{"nome", "responsável", false, false, false});
-        System.out.println("Tentou adicionar um projeto...");
-        System.out.printf("Tamanho do rowSet antes: %d...\n", rowSet.size());
+//        System.out.println("Tentou adicionar um projeto...");
+//        System.out.printf("Tamanho do rowSet antes: %d...\n", rowSet.size());
         try {
             aresServices.addRow(user_id, TABLE_ID, service_ID, "nome", "responsavel");
         } catch (SQLException ex) {
@@ -87,13 +89,14 @@ public class AresTableModel extends AbstractTableModel {
             Logger.getLogger(AresTableModel.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        System.out.printf("... e depois: %d.\n", rowSet.size());
+//        System.out.printf("... e depois: %d.\n", rowSet.size());
 
         numberOfRows++;
         this.fireTableRowsInserted(numberOfRows, numberOfRows);
     }
 
     public void executeQuery(int user_id, short serviceID) throws SQLException, RemoteException {
+//        System.out.printf("executeQuery: user: %d  service: %d\n", user_id, serviceID);
         String xmlData = aresServices.executeQuery(user_id, serviceID, TABLE_ID);
         StringReader reader = new StringReader(xmlData);
         rowSet.release();
@@ -114,7 +117,7 @@ public class AresTableModel extends AbstractTableModel {
             
             values.addElement(obj);
         }
-        System.out.printf("numberOfRows: %d\n", numberOfRows);
+//        System.out.printf("numberOfRows: %d\n", numberOfRows);
         fireTableDataChanged();
     }
 
@@ -165,11 +168,12 @@ public class AresTableModel extends AbstractTableModel {
         this.fireTableRowsDeleted(row, row);
     }
 
-    public void setValueAt(int user_id, Object aValue, int row, int column) {
+    @Override
+    public void setValueAt(Object aValue, int row, int column){
         Object obj[] = values.elementAt(row);
         obj[column] = aValue;
         try {
-            aresServices.updateCellTable(user_id, TABLE_ID,
+            aresServices.updateCellTable(userID, TABLE_ID,
                     row + SQL_ROW_CORRECTION,
                     column + SQL_COL_CORRECTION,
                     aValue);

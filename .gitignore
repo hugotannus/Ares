@@ -4,6 +4,9 @@
 store/*
 nbproject/*
 apps/*
+apps/
+nbproject/
+
 # src/tests/
 # src/deprecated/
 
@@ -14,6 +17,7 @@ test/
 *.txt
 *.doc
 *.xls
+*.jar
 
 # especific files
 src/data/DataBaseInput.java

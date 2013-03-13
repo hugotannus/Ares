@@ -16,7 +16,7 @@ create table Users(
 	
 	PRIMARY KEY (ID),
 	FOREIGN KEY
-		company_ID REFERENCES Companies (ID)
+		company_ID REFERENCES Companies (ID),
 	);
 
 drop table if exists Companies;
@@ -30,7 +30,6 @@ create table Companies(
 	state			char(2)		NOT NULL,
 	PRIMARY KEY (ID)
 	);
-}
 
 drop table if exists Builds;
 create table Builds(

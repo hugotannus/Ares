@@ -45,19 +45,19 @@ public final class DataBaseManager {
     public void login(int user_id, String userName, char[] password) throws SQLException, ClassNotFoundException {
         System.out.printf("userName: %s\tpswd: %s\n", userName, password);
         
-        // Lê todos os usuários do banco de dados
-//        String cmd = String.format("SELECT * FROM users WHERE username=%s AND password=%s", userName, password);
-//        usersRowSet.setCommand(cmd);
-//        usersRowSet.execute(conn);
-//        
-//        int size = usersRowSet.size();
-//        
-//        if(size != 1){
-//            throw new SQLException("Usuário ou senha inválidos!! Sai daí pedreiro!");
-//        }
+//         Lê todos os usuários do banco de dados
+        String cmd = String.format("SELECT * FROM Users WHERE name=%s AND passphrase=%s", userName, password);
+        usersRowSet.setCommand(cmd);
+        usersRowSet.execute(conn);
+        
+        int size = usersRowSet.size();
+        
+        if(size != 1){
+            throw new SQLException("Usuário ou senha inválidos!! Sai daí pedreiro!");
+        }
         
         dataBag.put(user_id, new DataBox());
-//        usersRowSet.release();
+        usersRowSet.release();
 
     }
 
@@ -84,7 +84,7 @@ public final class DataBaseManager {
     }
 
     public WebRowSet executeServiceQuery(int user_id, int ID) throws SQLException {
-        String cmd = String.format("SELECT * FROM service WHERE ID=%d", ID);
+        String cmd = String.format("SELECT * FROM Services WHERE ID=%d", ID);
 
         WebRowSet rowSet;
 
@@ -97,7 +97,7 @@ public final class DataBaseManager {
     }
 
     public WebRowSet executeMaterialQuery(int user_id, short ID) throws SQLException {
-        String cmd = String.format("SELECT * FROM material WHERE service_id=%d AND visible=1", ID);
+        String cmd = String.format("SELECT * FROM Restrictions WHERE r_type=\"material\" AND service_id=%d AND visible=1", ID);
 
         WebRowSet rowSet;
 
@@ -110,7 +110,7 @@ public final class DataBaseManager {
     }
 
     public WebRowSet executeProjectQuery(int user_id, short ID) throws SQLException {
-        String cmd = String.format("SELECT * FROM project WHERE service_id=%d AND visible=1", ID);
+        String cmd = String.format("SELECT * FROM Restrictions WHERE r_type=\"project\" AND service_id=%d AND visible=1", ID);
 
         WebRowSet rowSet;
 
@@ -123,7 +123,7 @@ public final class DataBaseManager {
     }
 
     public WebRowSet executeLogisticQuery(int user_id, short ID) throws SQLException {
-        String cmd = String.format("SELECT * FROM logistic WHERE service_id=%d AND visible=1", ID);
+        String cmd = String.format("SELECT * FROM Restrictions WHERE r_type=\"logistic\" AND service_id=%d AND visible=1", ID);
 
         WebRowSet rowSet;
 
@@ -136,7 +136,7 @@ public final class DataBaseManager {
     }
 
     public WebRowSet executeWorkmanQuery(int user_id, short ID) throws SQLException {
-        String cmd = String.format("SELECT * FROM workman WHERE service_id=%d AND visible=1", ID);
+        String cmd = String.format("SELECT * FROM Restrictions WHERE r_type=\"workman\" AND service_id=%d AND visible=1", ID);
 
         WebRowSet rowSet;
 

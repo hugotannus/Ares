@@ -18,8 +18,6 @@ import javax.sql.rowset.WebRowSet;
 import java.io.IOException;
 import java.rmi.RemoteException;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -30,7 +28,6 @@ import gui.LoginForm;
 import comunication.ServerServicesInterface;
 import comunication.RMIComms;
 import java.io.StringReader;
-import java.io.StringWriter;
 import javax.sql.rowset.spi.SyncProviderException;
 import javax.swing.JFrame;
 /*
@@ -295,7 +292,7 @@ public class GUIStart extends javax.swing.JFrame {
             },
             aresServices, PROJECT, userID)
     );
-    projectJTable.setCellSelectionEnabled(true);
+    projectJTable.setColumnSelectionAllowed(false);
     projectJTable.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
     projectJTable.addMouseListener(new java.awt.event.MouseAdapter() {
         public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -1181,9 +1178,7 @@ public class GUIStart extends javax.swing.JFrame {
         startDateLabel.setText(currentService.dataInicio.toString());
         endDateLabel.setText(currentService.dataTermino.toString());
 
-        if (currentService == null) {
-            return;
-        } else {
+        if (currentService != null) {
             serviceDescriptionLabel.setText(currentService.getDescricao());
             if (currentService.isLeaf()) {
 

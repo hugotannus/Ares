@@ -30,7 +30,7 @@ public class Server {
 
 	public static void main(String[] args) {
             //Server serv = new Server("192.168.25.14", 8001);
-            Server serv = new Server("localhost", 8001);
+            Server serv = new Server("192.168.25.2", 8001);
             System.out.println("Server created. Running...");
 
             javax.swing.JOptionPane.showMessageDialog(null, "Server created. Running...",

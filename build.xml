@@ -125,14 +125,18 @@ todas as bibliotecas e dependências necessárias para executá-la.
         <mkdir dir="${client-app.dir}"/>
 
         <jar destfile="${client-app.dir}/temp_final.jar" filesetmanifest="skip">
-            <zipgroupfileset dir=".dist" includes="*.jar"/>
             <zipgroupfileset dir=".dist/lib" includes="*.jar"/>
+            <zipfileset dir=".build/classes" includes="GUIStart*"/>
+            <zipfileset dir=".build/classes" includes="commons/*.class"/>
+            <zipfileset dir=".build/classes" includes="comunication/*.class"/>
+            <zipfileset dir=".build/classes" includes="data/*.class"/>
+            <zipfileset dir=".build/classes" includes="gui/*.class"/>
             <zipfileset dir="." includes="*.png"/>
-            <zipfileset dir="." includes="client.policy"/>
+            <!--<zipfileset dir="." includes="client.policy"/>-->
 
             <manifest>
                 <attribute name="Main-Class" value="${main.class}"/>
-                <attribute name="SplashScreen-Image" value="SplashScreenImg.png"/>
+                <!--<attribute name="SplashScreen-Image" value="SplashScreenImg.png"/>-->
             </manifest>
         </jar>
 
@@ -165,15 +169,15 @@ todas as bibliotecas e dependências necessárias para executá-la.
 
             <zipgroupfileset dir=".dist/lib" includes="*.jar"/>
             <zipfileset dir=".build/classes" includes="Server.class"/>
-            <zipfileset dir=".build/classes/commons" includes="*.class"/>
-            <zipfileset dir=".build/classes/comunication" includes="*.class"/>
-            <zipfileset dir=".build/classes/data" includes="*.class"/>
+            <zipfileset dir=".build/classes" includes="commons/*.class"/>
+            <zipfileset dir=".build/classes" includes="comunication/*.class"/>
+            <zipfileset dir=".build/classes" includes="data/*.class"/>
             <zipfileset dir="." includes="*.png"/>
-            <zipfileset dir="." includes="server.policy"/>
+            <!--<zipfileset dir="." includes="server.policy"/>-->
 
             <manifest>
                 <attribute name="Main-Class" value="Server"/>
-                <attribute name="SplashScreen-Image" value="SplashScreenImg.png"/>
+                <!--<attribute name="SplashScreen-Image" value="SplashScreenImg.png"/>-->
             </manifest>
         </jar>
 

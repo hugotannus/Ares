@@ -33,6 +33,8 @@ public class DataStructBuilder {
             throws ClassNotFoundException, SQLException, IOException {
         Class.forName(DataBaseInput.JDBC_DRIVER);
         
+        System.out.printf("Username: %s\t Password :%s\n", DataBaseInput.USERNAME, DataBaseInput.PASSWORD);
+        System.out.println("");
         startingRowSet = new JdbcRowSetImpl();
         startingRowSet.setUrl(DataBaseInput.DATABASE_URL);
         startingRowSet.setUsername(DataBaseInput.USERNAME);
